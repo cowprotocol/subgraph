@@ -3,7 +3,7 @@ import { Settlement } from "../../generated/schema"
 
 export namespace settlements {
 
-    export function getOrCreateSettlement(txHash: Bytes, tradeTimestamp: BigInt, feeAmount: BigInt): void { 
+    export function getOrCreateSettlement(txHash: Bytes, tradeTimestamp: BigInt): void { 
 
         let settlementId = txHash.toHexString()
 

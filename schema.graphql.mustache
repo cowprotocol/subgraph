@@ -7,6 +7,8 @@ type User @entity {
   firstTradeTimestamp: BigInt!
   "List of orders placed by this user"
   ordersPlaced: [Order!]! @derivedFrom(field: "owner")
+  "determine if user has solved a settlement"
+  isSolver: Boolean!
 }
 
 type Token @entity {
@@ -79,6 +81,8 @@ type Trade @entity {
 type Settlement @entity {
   "TxHash"
   id: ID!
+  "Solver user"
+  solver: User!
   "Transaction hash"
   txHash: Bytes!
   "First trade timestamp"

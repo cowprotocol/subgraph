@@ -55,13 +55,11 @@ export function handleTrade(event: Trade): void {
   let sellToken = tokens.getOrCreateToken(sellTokenAddress, timestamp)
   let buyToken = tokens.getOrCreateToken(buyTokenAddress, timestamp)
 
-  let tokenCurrentSellAmount = sellToken.totalVolume
-  let tokenCurrentBuyAmount = buyToken.totalVolume
+  let tokenCurrentSellAmount = sellToken.sellAmount
+  let tokenCurrentBuyAmount = buyToken.buyAmount
 
-  sellToken.totalVolume = tokenCurrentSellAmount.plus(sellAmount)
-  buyToken.totalVolume = tokenCurrentBuyAmount.plus(buyAmount)
-  sellToken.totalVolume = tokenCurrentSellAmount.plus(sellAmount)
-  buyToken.totalVolume = tokenCurrentBuyAmount.plus(buyAmount)
+  sellToken.sellAmount =  tokenCurrentSellAmount.plus(sellAmount)
+  buyToken.buyAmount =  tokenCurrentBuyAmount.plus(buyAmount)
 
   trades.getOrCreateTrade(event, buyToken, sellToken)
 

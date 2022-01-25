@@ -83,6 +83,8 @@ export function handleTrade(event: Trade): void {
 
   let order = orders.getOrCreateOrderForTrade(orderId, timestamp, owner)
 
+  sellToken.save()
+  buyToken.save()
   order.save()
 
   users.getOrCreateUser(timestamp, ownerAddress)

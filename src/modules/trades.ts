@@ -15,7 +15,6 @@ export namespace trades {
         let sellAmount = event.params.sellAmount
         let buyAmount = event.params.buyAmount
         let txGasPrice = event.transaction.gasPrice
-        let txGasLimit = event.transaction.gasLimit
         let feeAmount = event.params.feeAmount
         let solver = event.transaction.from
 
@@ -41,7 +40,6 @@ export namespace trades {
         trade.sellAmount = sellAmount
         trade.order = orderId
         trade.gasPrice = txGasPrice
-        trade.gasLimit = txGasLimit
         trade.feeAmount = feeAmount
         trade.save()
     }

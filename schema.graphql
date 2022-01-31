@@ -54,8 +54,6 @@ type Trade @entity {
   timestamp: BigInt!
   "Transaction's gas price"
   gasPrice: BigInt!
-  "Transaction's gas limit"
-  gasLimit: BigInt!
   "Trade's fee amount"
   feeAmount: BigInt! 
   "Trade event transaction hash"

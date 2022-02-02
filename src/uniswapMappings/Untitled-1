@@ -1,0 +1,9 @@
+{
+  bundles(first: 5) {
+    ethPriceUSD
+  }
+  tokens(where: {derivedETH_gt: 0}) {
+    derivedETH
+    symbol
+  }
+}

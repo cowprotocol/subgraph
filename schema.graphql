@@ -17,15 +17,17 @@ type Token @entity {
   "Token address"
   address: Bytes!
   "First token trade block timestamp"
-  firstTradeTimestamp: BigInt!
+  firstTradeTimestamp: BigInt
   "Token name fetched by ERC20 contract call"
   name: String!
   "Token symbol fetched by contract call"
   symbol: String!
   "Token decimals fetched by contract call"
   decimals: Int!
-  "Sum of total amount traded for this token"
-  totalVolume: BigInt!
+  # derived price in ETH
+  derivedETH: BigDecimal!
+  # pools token is in that are allow listed for USD pricing
+  allowedPools: [UniswapPool!]!
 }
 
 type Order @entity {
@@ -83,4 +85,32 @@ type Settlement @entity {
   firstTradeTimestamp: BigInt!
   "Collection of trades"
   trades: [Trade!] @derivedFrom(field: "settlement")
+}
+
+# stores for USD calculations
+type Bundle @entity {
+  id: ID!
+  # price of ETH in usd
+  ethPriceUSD: BigDecimal!
+}
+
+type UniswapPool @entity {
+  # pool address
+  id: ID!
+  # token0
+  token0: Token!
+  # token1
+  token1: Token!
+  # in range liquidity
+  liquidity: BigInt!
+  # token0 per token1
+  token0Price: BigDecimal!
+  # token1 per token0
+  token1Price: BigDecimal!
+  # current tick
+  tick: BigInt
+  # total token 0 across all ticks
+  totalValueLockedToken0: BigDecimal!
+  # total token 1 across all ticks
+  totalValueLockedToken1: BigDecimal!
 }

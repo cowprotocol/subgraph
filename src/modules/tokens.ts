@@ -1,6 +1,7 @@
 import { Address, BigInt } from "@graphprotocol/graph-ts"
 import { ERC20 } from "../../generated/GPV2Settlement/ERC20"
 import { Token } from "../../generated/schema"
+import { ZERO_BD } from "../utils/constants"
 
 const DEFAULT_DECIMALS = 18
 
@@ -24,9 +25,13 @@ export namespace tokens {
               : DEFAULT_DECIMALS
           token.name = !tokenName.reverted ? tokenName.value : ""
           token.symbol = !tokenSymbol.reverted ? tokenSymbol.value : ""
-          token.totalVolume = BigInt.fromI32(0)
-
-          token.save()
+          token.derivedETH = ZERO_BD
+          token.allowedPools = []
+      
+        }
+        // adding timestamp for token created by uniswap logic
+        if (!token.firstTradeTimestamp) {
+          token.firstTradeTimestamp = timestamp
         }
       
       

@@ -1,10 +1,19 @@
 # CoW-subgraph
 
-Implements a subgraph for the CoW Protocol 
+Implements a subgraph for the [CoW Protocol](https://github.com/gnosis/gp-v2-contracts)
 
 *So far this is a work in progress.*
 
-It's working on mainnet, rinkeby and gnosis chain network.
+- [Subgraph on mainnet](https://thegraph.com/hosted-service/subgraph/gnosis/cow)
+- [Subgraph on rinkeby](https://thegraph.com/hosted-service/subgraph/gnosis/cow-rinkeby)
+- [Subgraph on gnosis chain network](https://thegraph.com/hosted-service/subgraph/gnosis/cow-gc)
+
+For more information about:
+
+The Cow Protocol: https://docs.cow.fi/
+The Graph: https://thegraph.com/docs/en/
+
+There is also a GP v1 subgraph here: https://github.com/gnosis/dex-subgraph
 
 ## Available entities
 
@@ -24,25 +33,16 @@ Notice order entity has 3 different timestamps. Each timestamp will be filled de
 - On invalidate order event
 - On pre sign event
 
-## Some links
-
-- Docs about Cowswap: https://docs.cowswap.exchange/
-- GP v2 contracts repo: https://github.com/gnosis/gp-v2-contracts/
-- Mainnet deployment on hosted service: https://thegraph.com/hosted-service/subgraph/gnosis/cow
-- There is also a GP v1 subgraph here: https://github.com/gnosis/dex-subgraph
-
-## Setup
+## Setup of your own test subgraph
 
 *Requisites:* You must have access to a console and have yarn installed. More info about [yarn](https://classic.yarnpkg.com/lang/en/docs/)
 
-
-1.- Install The Graph CLI globally as suggested in The Graph [docs](https://thegraph.com/docs/en/developer/quick-start/) by running the following:
-
+1.- Clone this repo
 ```
-$ yarn global add @graphprotocol/graph-cli
+git clone git@github.com:gnosis/cow-subgraph.git
 ```
 
-2.- Clone this repo and install the dependencies by executing:
+2.- Install the dependencies by executing:
 
 ```
 $ yarn

@@ -40,8 +40,12 @@ export function handlePoolCreated(event: PoolCreated): void {
     }
 
     token0.decimals = decimals.toI32()
+<<<<<<< HEAD
     token0.priceEth = ZERO_BD
     token0.priceUsd = ZERO_BD
+=======
+    token0.derivedETH = ZERO_BD
+>>>>>>> [WIP] First working version - MVP. Downgrade graph version and merged with uniswap prices.
     token0.allowedPools = []
   }
 

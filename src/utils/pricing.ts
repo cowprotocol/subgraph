@@ -117,38 +117,3 @@ export function findEthPerToken(token: Token): BigDecimal {
   }
   return priceSoFar // nothing was found return 0
 }
-
-/**
- * Accepts tokens and amounts, return tracked amount based on token allowed
- * If one token on allowed, return amount in that token converted to USD * 2.
- * If both are, return sum of two amounts
- * If neither is, return 0
- */
-export function getTrackedAmountUSD(
-  tokenAmount0: BigDecimal,
-  token0: Token,
-  tokenAmount1: BigDecimal,
-  token1: Token
-): BigDecimal {
-  let bundle = Bundle.load('1')
-  let price0USD = token0.derivedETH.times(bundle.ethPriceUSD)
-  let price1USD = token1.derivedETH.times(bundle.ethPriceUSD)
-
-  // both are allowed tokens, return sum of both amounts
-  if (ALLOWED_TOKENS.includes(token0.id) && ALLOWED_TOKENS.includes(token1.id)) {
-    return tokenAmount0.times(price0USD).plus(tokenAmount1.times(price1USD))
-  }
-
-  // take double value of the alloweded token amount
-  if (ALLOWED_TOKENS.includes(token0.id) && !ALLOWED_TOKENS.includes(token1.id)) {
-    return tokenAmount0.times(price0USD).times(BigDecimal.fromString('2'))
-  }
-
-  // take double value of the alloweded token amount
-  if (!ALLOWED_TOKENS.includes(token0.id) && ALLOWED_TOKENS.includes(token1.id)) {
-    return tokenAmount1.times(price1USD).times(BigDecimal.fromString('2'))
-  }
-
-  // neither token is on white list, tracked amount is 0
-  return ZERO_BD
-}

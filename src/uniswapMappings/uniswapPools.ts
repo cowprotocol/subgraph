@@ -9,7 +9,7 @@ import {
 } from '../../generated/templates/Pool/Pool'
 import { convertTokenToDecimal } from '../utils'
 import { ZERO_BD } from '../utils/constants'
-import { findEthPerToken, getEthPriceInUSD, getTrackedAmountUSD, sqrtPriceX96ToTokenPrices } from '../utils/pricing'
+import { findEthPerToken, getEthPriceInUSD, sqrtPriceX96ToTokenPrices } from '../utils/pricing'
 
 export function handleInitialize(event: Initialize): void {
   let pool = UniswapPool.load(event.address.toHexString())

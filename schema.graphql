@@ -25,7 +25,9 @@ type Token @entity {
   "Token decimals fetched by contract call"
   decimals: Int!
   # derived price in ETH
-  derivedETH: BigDecimal!
+  priceEth: BigDecimal!
+  # derived price in ETH
+  priceUsd: BigDecimal!
   # pools token is in that are allow listed for USD pricing
   allowedPools: [UniswapPool!]!
 }

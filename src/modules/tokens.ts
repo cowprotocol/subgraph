@@ -25,7 +25,8 @@ export namespace tokens {
               : DEFAULT_DECIMALS
           token.name = !tokenName.reverted ? tokenName.value : ""
           token.symbol = !tokenSymbol.reverted ? tokenSymbol.value : ""
-          token.derivedETH = ZERO_BD
+          token.priceEth = ZERO_BD
+          token.priceUsd = ZERO_BD
           token.allowedPools = []
       
         }

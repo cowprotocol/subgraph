@@ -40,7 +40,8 @@ export function handlePoolCreated(event: PoolCreated): void {
     }
 
     token0.decimals = decimals.toI32()
-    token0.derivedETH = ZERO_BD
+    token0.priceEth = ZERO_BD
+    token0.priceUsd = ZERO_BD
     token0.allowedPools = []
   }
 
@@ -56,7 +57,8 @@ export function handlePoolCreated(event: PoolCreated): void {
       return
     }
     token1.decimals = decimals.toI32()
-    token1.derivedETH = ZERO_BD
+    token1.priceEth = ZERO_BD
+    token1.priceUsd = ZERO_BD
     token1.allowedPools = []
   }
 

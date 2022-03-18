@@ -24,8 +24,10 @@ export function handleInitialize(event: Initialize): void {
   bundle.save()
 
   // update token prices
-  token0.derivedETH = findEthPerToken(token0 as Token)
-  token1.derivedETH = findEthPerToken(token1 as Token)
+  token0.priceEth = findEthPerToken(token0 as Token)
+  token0.priceUsd = token0.priceEth.times(bundle.ethPriceUSD)
+  token1.priceEth = findEthPerToken(token1 as Token)
+  token1.priceUsd = token1.priceEth.times(bundle.ethPriceUSD)
   token0.save()
   token1.save()
 }
@@ -131,8 +133,10 @@ export function handleSwap(event: SwapEvent): void {
   // update USD pricing
   bundle.ethPriceUSD = getEthPriceInUSD()
   bundle.save()
-  token0.derivedETH = findEthPerToken(token0 as Token)
-  token1.derivedETH = findEthPerToken(token1 as Token)
+  token0.priceEth = findEthPerToken(token0 as Token)
+  token0.priceUsd = token0.priceEth.times(bundle.ethPriceUSD)
+  token1.priceEth = findEthPerToken(token1 as Token)
+  token1.priceUsd = token1.priceEth.times(bundle.ethPriceUSD)
 
   pool.save()
   token0.save()

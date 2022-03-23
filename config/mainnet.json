@@ -1,4 +1,7 @@
 {
     "network": "mainnet",
-    "startBlock": 12593264
+    "startBlock": 12593264,
+    "uniV3Factory": "0x1f98431c8ad98523631ae4a59f267346ea31f984",
+    "uniV3StartBlock": 12369621,
+    "allowedPoolsType": "UniswapPool"
 }

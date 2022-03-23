@@ -28,7 +28,6 @@ export namespace tokens {
           token.priceEth = ZERO_BD
           token.priceUsd = ZERO_BD
           token.allowedPools = []
-      
         }
         // adding timestamp for token created by uniswap logic
         if (!token.firstTradeTimestamp) {

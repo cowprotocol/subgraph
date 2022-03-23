@@ -1,4 +1,7 @@
 {
     "network": "rinkeby",
-    "startBlock": 9055570
-}
+    "startBlock": 9055570,
+    "uniV3Factory": "0x1f98431c8ad98523631ae4a59f267346ea31f984",
+    "uniV3StartBlock": 8528030,
+    "allowedPoolsType": "UniswapPool"
+},

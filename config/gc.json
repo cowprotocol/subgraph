@@ -1,4 +1,5 @@
 {
     "network": "xdai",
-    "startBlock": 16465100
+    "startBlock": 16465100,
+    "allowedPoolsType": "BigInt"
 }

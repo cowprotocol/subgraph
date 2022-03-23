@@ -1,5 +1,5 @@
 type User @entity {
-  "Address to HexString"
+  "Trade event order owner"
   id: ID!
   "Owner's address"
   address: Bytes!
@@ -7,8 +7,6 @@ type User @entity {
   firstTradeTimestamp: BigInt!
   "List of orders placed by this user"
   ordersPlaced: [Order!]! @derivedFrom(field: "owner")
-  "Determine if user has solved a settlement"
-  isSolver: Boolean!
 }
 
 type Token @entity {
@@ -29,22 +27,20 @@ type Token @entity {
   "Derived price in USD" 
   priceUsd: BigDecimal!
   "Pools token is in that are allow listed for USD pricing"
-  allowedPools: [BigInt!]!
+  allowedPools: [{{allowedPoolsType}}!]!
 }
 
 type Order @entity {
   "Trade's OrderUid to hex string"
   id: ID!
-  "Trader's account"
+  "Trade's owner or presign User"
   owner: User
-  "Block's timestamp on trade event"
+  "block's timestamp on trade event"
   tradesTimestamp: BigInt
-  "Block's timestamp on invalidate event"
+  "block's timestamp on invalidate event"
   invalidateTimestamp: BigInt
-  "Block's timestamp on presign event"
+  "block's timestamp on presign event"
   presignTimestamp: BigInt
-  "Boolean value for is presigned"
-  isSigned: Boolean
   "Array of trades on the order"
   trades: [Trade!] @derivedFrom(field: "order")
   "Boolean value true by default unless is invalidated by the event"
@@ -79,8 +75,6 @@ type Trade @entity {
 type Settlement @entity {
   "TxHash"
   id: ID!
-  "Solver user"
-  solver: User!
   "Transaction hash"
   txHash: Bytes!
   "First trade timestamp"
@@ -89,3 +83,33 @@ type Settlement @entity {
   trades: [Trade!] @derivedFrom(field: "settlement")
 }
 
+{{#uniV3Factory}}
+# stores for USD calculations
+type Bundle @entity {
+  "Singleton #1"
+  id: ID!
+  "Price of ETH in usd"
+  ethPriceUSD: BigDecimal!
+}
+
+type UniswapPool @entity {
+  "Pool address"
+  id: ID!
+  "Token0"
+  token0: Token!
+  "Token1"
+  token1: Token!
+  "In range liquidity"
+  liquidity: BigInt!
+  "Token0 per token1"
+  token0Price: BigDecimal!
+  "Token1 per token0"
+  token1Price: BigDecimal!
+  "Current tick"
+  tick: BigInt
+  "Total token 0 across all ticks"
+  totalValueLockedToken0: BigDecimal!
+  "Total token 1 across all ticks"
+  totalValueLockedToken1: BigDecimal!
+}
+{{/uniV3Factory}}

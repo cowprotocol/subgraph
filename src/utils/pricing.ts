@@ -95,12 +95,8 @@ export function findEthPerToken(token: Token): BigDecimal {
           // allowed token is token1
           let token1 = Token.load(pool.token1)
           // get the derived ETH in pool
-<<<<<<< HEAD
           let token1PriceEth = token1.priceEth ? token1.priceEth as BigDecimal : ONE_BD
           let ethLocked = pool.totalValueLockedToken1.times(token1PriceEth)
-=======
-          let ethLocked = pool.totalValueLockedToken1.times(token1.priceEth)
->>>>>>> rename for priceEth and added priceUsd
           if (ethLocked.gt(largestLiquidityETH) && ethLocked.gt(MINIMUM_ETH_LOCKED)) {
             largestLiquidityETH = ethLocked
             // token1 per our token * Eth per token1
@@ -110,12 +106,8 @@ export function findEthPerToken(token: Token): BigDecimal {
         if (pool.token1 == token.id) {
           let token0 = Token.load(pool.token0)
           // get the derived ETH in pool
-<<<<<<< HEAD
           let token0PriceEth = token0.priceEth ? token0.priceEth as BigDecimal : ONE_BD
           let ethLocked = pool.totalValueLockedToken0.times(token0PriceEth)
-=======
-          let ethLocked = pool.totalValueLockedToken0.times(token0.priceEth)
->>>>>>> rename for priceEth and added priceUsd
           if (ethLocked.gt(largestLiquidityETH) && ethLocked.gt(MINIMUM_ETH_LOCKED)) {
             largestLiquidityETH = ethLocked
             // token0 per our token * ETH per token0

@@ -17,4 +17,8 @@ export let WETH_ADDRESS = new Map<string, Address>()
 WETH_ADDRESS.set('xdai', Address.fromString('0x6a023ccd1ff6f2045c3309768ead9e68f978f6e1'))
 
 export let STABLECOIN_ADDRESS = new Map<string, Address>()
+<<<<<<< HEAD
 STABLECOIN_ADDRESS.set('xdai', Address.fromString('0xe91d153e0b41518a2ce8dd3d7944fa863463a97d'))
+=======
+STABLECOIN_ADDRESS.set('xdai', Address.fromString('0xe91d153e0b41518a2ce8dd3d7944fa863463a97d'))
+>>>>>>> Added conditional deployment for supporting uniV2 on gnosis chain

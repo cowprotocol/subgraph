@@ -22,10 +22,12 @@ type Token @entity {
   symbol: String!
   "Token decimals fetched by contract call"
   decimals: Int!
+  "Total volume managed in CowSwap"
+  totalVolume: BigInt
   "Derived price in ETH"
-  priceEth: BigDecimal!
+  priceEth: BigDecimal
   "Derived price in USD" 
-  priceUsd: BigDecimal!
+  priceUsd: BigDecimal
   "Pools token is in that are allow listed for USD pricing"
   allowedPools: [{{allowedPoolsType}}!]!
 }

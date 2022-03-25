@@ -6,8 +6,11 @@ import {
   Trade
 } from "../generated/GPV2Settlement/GPV2Settlement"
 import { tokens, trades, orders, users } from "./modules"
+import { getPrices } from "./utils/getPrices"
+import { MINUS_ONE_BD } from "./utils/constants"
+import { dataSource } from "@graphprotocol/graph-ts"
 
-export function handleInteraction(event: Interaction): void {}
+export function handleInteraction(event: Interaction): void { }
 
 export function handleOrderInvalidated(event: OrderInvalidated): void {
 
@@ -34,7 +37,7 @@ export function handlePreSignature(event: PreSignature): void {
   users.getOrCreateUser(timestamp, ownerAddress)
 }
 
-export function handleSettlement(event: Settlement): void {}
+export function handleSettlement(event: Settlement): void { }
 
 
 export function handleTrade(event: Trade): void {
@@ -45,6 +48,7 @@ export function handleTrade(event: Trade): void {
   let buyTokenAddress = event.params.buyToken
   let sellAmount = event.params.sellAmount
   let buyAmount = event.params.buyAmount
+  let network = dataSource.network()
 
   let timestamp = event.block.timestamp
 
@@ -58,7 +62,25 @@ export function handleTrade(event: Trade): void {
   buyToken.totalVolume =  tokenCurrentBuyAmount.plus(buyAmount)
 
   trades.getOrCreateTrade(event, buyToken, sellToken)
- 
+
+  if (network == 'xdai') {
+    let sellTokenPrices = getPrices(sellTokenAddress)
+    let buyTokenPrices = getPrices(buyTokenAddress)
+    if (sellTokenPrices.get("usd") != MINUS_ONE_BD &&
+      sellTokenPrices.get("eth") != MINUS_ONE_BD) {
+      sellToken.priceUsd = sellTokenPrices.get("usd")
+      sellToken.priceEth = sellTokenPrices.get("eth")
+    }
+    if (buyTokenPrices.get("usd") != MINUS_ONE_BD &&
+      buyTokenPrices.get("eth") != MINUS_ONE_BD) {
+      buyToken.priceUsd = buyTokenPrices.get("usd")
+      buyToken.priceEth = buyTokenPrices.get("eth")
+    }
+  }
+
+  sellToken.save()
+  buyToken.save()
+
   let order = orders.getOrCreateOrderForTrade(orderId, timestamp, owner)
 
   sellToken.save()

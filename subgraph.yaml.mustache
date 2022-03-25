@@ -27,6 +27,12 @@ dataSources:
           file: ./abis/GPV2Settlement.json
         - name: ERC20
           file: ./abis/ERC20.json
+        {{#usesUniV2}}
+        - name: UniswapV2Factory
+          file: ./abis/UniswapV2Factory.json
+        - name: UniswapV2Pair
+          file: ./abis/UniswapV2Pair.json
+        {{/usesUniV2}}
       eventHandlers:
         - event: Interaction(indexed address,uint256,bytes4)
           handler: handleInteraction

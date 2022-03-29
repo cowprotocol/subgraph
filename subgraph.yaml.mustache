@@ -48,7 +48,7 @@ dataSources:
 {{#uniV3Factory}}
   - kind: ethereum/contract
     name: Factory
-    network: mainnet
+    network: {{ network }}
     source:
       address: "{{ uniV3Factory }}"
       abi: Factory
@@ -80,7 +80,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: Pool
-    network: mainnet
+    network: {{ network }}
     source:
       abi: Pool
     mapping:

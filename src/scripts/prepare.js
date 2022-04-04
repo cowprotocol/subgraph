@@ -1,6 +1,8 @@
-const assert = require('assert');
+const assert = require('assert')
 const {series} = require('async')
-const {exec} = require('child_process');
+const {exec} = require('child_process')
+
+require('dotenv').config()
 
 // const DEV_SUBGRAPH = process.env.DEV_SUBGRAPH
 // assert(DEV_SUBGRAPH, 'DEV_SUBGRAPH env var is required')

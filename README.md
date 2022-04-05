@@ -37,40 +37,33 @@ Notice order entity has 3 different timestamps. Each timestamp will be filled de
 
 *Requisites:* You must have access to a console and have yarn installed. More info about [yarn](https://classic.yarnpkg.com/lang/en/docs/)
 
-1.- Clone this repo
-```
-git clone git@github.com:gnosis/cow-subgraph.git
-```
+1. Install the dependencies by executing:
 
-2.- Install the dependencies by executing:
-
-```
+```bash
 $ yarn
 ```
 
-3.- Go to The Graph [hosted service](https://thegraph.com/hosted-service/dashboard) and log in using your github credentials. 
+2. Go to The Graph [hosted service](https://thegraph.com/hosted-service/dashboard) and log in using your github credentials. 
 
-4.- Copy your access token and run the following
+3. Copy your access token and run the following:
 
-```
+```bash
 $ graph auth --product hosted-service <YourAccessToken>
 ```
 
-5.- Using your browser create a new subgraph in the dashboard by clicking "Add Subgraph" button and complete the form. Notice your subgraph will be named as the following: "YourGithubAccount/SubgraphName"
+5. In your browser, create a new subgraph in the dashboard by clicking "Add Subgraph" button. Complete the form. Notice your subgraph will be named: `YourGithubAccount/SubgraphName`
 
-6.- Edit the package.json file using your favorite editor. Replace <YourGithubUser/YourSubgraph> with the value obtained in the previous step. Replace <Network> field too with the desired network you want to deploy, ```mainnet``` for ethereum mainnet, ```rinkeby``` for ethereum rinkeby or ```gc``` for gnosis chain. (Remove the "<" and the ">" characters)
+6. Create your own environment and edit so it points to your testing subgraph:
 
-7.- Execute the following commands:
+```bash
+cp .env.example .env
 ```
-$ yarn deploy:dev
+
+7. Deploy:
+```bash
+yarn deploy
 ```
 
 If everything went well you'll have a copy of this subgraph running on your hosted service account indexing your desired network.
 
-Please notice a subgraph can only index a single network, if you want to index another network you should create a new sugraph and do same steps starting from step 3.
-
----------
-
-If you have any suggestion about this work feel free to create a task or a pull request with your own changes to be considered. 
-
-Mooooh!
+Please notice a subgraph can only index a single network, if you want to index another network you should create a new subgraph and do same steps starting from step 3.

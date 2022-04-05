@@ -3,5 +3,9 @@ build/
 *.log
 generated/
 node_modules/
+<<<<<<< HEAD
 subgraph.yaml
 schema.graphql
+=======
+.env
+>>>>>>> Simplify deploying to your test subgraph (#2)

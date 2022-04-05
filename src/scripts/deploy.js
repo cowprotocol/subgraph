@@ -1,8 +1,10 @@
-const assert = require('assert');
-const {series} = require('async');
-const { default: chalk } = require('chalk');
-const {exec} = require('child_process');
+const assert = require('assert')
+const {series} = require('async')
+const { default: chalk } = require('chalk')
+const {exec} = require('child_process')
 const {confirm} = require('./utils')
+
+require('dotenv').config()
 
 const NETWORK = process.env.NETWORK
 assert(NETWORK, 'NETWORK env var is required')

@@ -4,18 +4,22 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "prepare:mainnet": "mustache config/mainnet.json subgraph.yaml.mustache > subgraph.yaml",
-    "prepare:rinkeby": "mustache config/rinkeby.json subgraph.yaml.mustache > subgraph.yaml",
-    "prepare:gc": "mustache config/gc.json subgraph.yaml.mustache > subgraph.yaml",
-    "deploy": "yarn deploy:mainnet",
-    "deploy:mainnet": "yarn prepare:mainnet && yarn codegen && graph deploy gnosis/cow --node https://api.thegraph.com/deploy/",
-    "deploy:rinkeby": "yarn prepare:rinkeby && yarn codegen && graph deploy gnosis/cow-rinkeby --node https://api.thegraph.com/deploy/",
-    "deploy:gc": "yarn prepare:gc && yarn codegen && graph deploy gnosis/cow-gc --node https://api.thegraph.com/deploy/",
-    "deploy:dev": "yarn prepare:<Network> && yarn codegen && graph <YourGithubUser/YourSubgraph> --node https://api.thegraph.com/deploy/"
+    "prepare": "cross-env NETWORK=mainnet node src/scripts/prepare.js",
+    "prepare:mainnet": "yarn prepare",
+    "prepare:rinkeby": "cross-env NETWORK=rinkeby yarn prepare",
+    "prepare:gc": "cross-env NETWORK=gc yarn prepare",
+    "deploy": "node src/scripts/deploy.js",
+    "deploy:mainnet": "cross-env NETWORK=mainnet SUBGRAPH=gnosis/cow yarn deploy",
+    "deploy:rinkeby": "cross-env NETWORK=rinkeby SUBGRAPH=gnosis/cow-rinkeby yarn deploy",
+    "deploy:gc": "cross-env NETWORK=gc SUBGRAPH=gnosis/cow-gc yarn deploy"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.25.0",
     "@graphprotocol/graph-ts": "0.24.1",
     "mustache": "^4.2.0"
+  },
+  "devDependencies": {
+    "chalk": "^2.4.1",
+    "cross-env": "^7.0.3"
   }
 }

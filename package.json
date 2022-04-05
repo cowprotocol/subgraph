@@ -26,5 +26,9 @@
     "@graphprotocol/graph-cli": "0.20.0",
     "@graphprotocol/graph-ts": "0.20.0",
     "mustache": "^4.2.0"
+  },
+  "devDependencies": {
+    "chalk": "^2.4.1",
+    "cross-env": "^7.0.3"
   }
 }

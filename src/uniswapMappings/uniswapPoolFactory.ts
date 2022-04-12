@@ -43,6 +43,7 @@ export function handlePoolCreated(event: PoolCreated): void {
     token0.priceEth = ZERO_BD
     token0.priceUsd = ZERO_BD
     token0.allowedPools = []
+    token0.numberOfTrades = 0
   }
 
   if (token1 === null) {
@@ -60,6 +61,7 @@ export function handlePoolCreated(event: PoolCreated): void {
     token1.priceEth = ZERO_BD
     token1.priceUsd = ZERO_BD
     token1.allowedPools = []
+    token1.numberOfTrades = 0
   }
 
   // update white listed pools

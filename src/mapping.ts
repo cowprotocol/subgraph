@@ -8,7 +8,8 @@ import {
 import { tokens, trades, orders, users } from "./modules"
 import { getPrices } from "./utils/getPrices"
 import { MINUS_ONE_BD } from "./utils/constants"
-import { dataSource } from "@graphprotocol/graph-ts"
+import { BigDecimal, BigInt, dataSource } from "@graphprotocol/graph-ts"
+import { convertTokenToDecimal } from "./utils"
 
 export function handleInteraction(event: Interaction): void { }
 
@@ -34,7 +35,7 @@ export function handlePreSignature(event: PreSignature): void {
 
   order.save()
 
-  users.getOrCreateUser(timestamp, ownerAddress)
+  users.getOrCreateSigner(owner, timestamp, ownerAddress)
 }
 
 export function handleSettlement(event: Settlement): void { }
@@ -61,8 +62,6 @@ export function handleTrade(event: Trade): void {
   sellToken.totalVolume =  tokenCurrentSellAmount.plus(sellAmount)
   buyToken.totalVolume =  tokenCurrentBuyAmount.plus(buyAmount)
 
-  trades.getOrCreateTrade(event, buyToken, sellToken)
-
   if (network == 'xdai') {
     let sellTokenPrices = getPrices(sellTokenAddress)
     let buyTokenPrices = getPrices(buyTokenAddress)
@@ -78,6 +77,45 @@ export function handleTrade(event: Trade): void {
     }
   }
 
+  let buyPrevNumberOfTrades = buyToken.numberOfTrades
+  buyToken.numberOfTrades = buyPrevNumberOfTrades + 1
+
+  let sellPrevNumberOfTrades = sellToken.numberOfTrades
+  sellToken.numberOfTrades = sellPrevNumberOfTrades + 1
+
+  let buyTokenPrevTotalVolumeUsd = buyToken.totalVolumeUsd
+  let buyTokenPrevTotalVolumeEth = buyToken.totalVolumeEth
+  let sellTokenPrevTotalVolumeUsd = sellToken.totalVolumeUsd
+  let sellTokenPrevTotalVolumeEth = sellToken.totalVolumeEth
+
+  let buyCurrentAmountDecimals = convertTokenToDecimal(buyAmount, BigInt.fromI32(buyToken.decimals))
+  let sellCurrentAmountDecimals = convertTokenToDecimal(sellAmount, BigInt.fromI32(sellToken.decimals))
+
+  if (buyToken.priceUsd != null) {
+    let buyTokenPriceUsd = buyToken.priceUsd as BigDecimal
+    let buyCurrentTradeUsd = buyCurrentAmountDecimals.times(buyTokenPriceUsd)
+    buyToken.totalVolumeUsd = buyTokenPrevTotalVolumeUsd.plus(buyCurrentTradeUsd)
+  }
+  if (sellToken.priceUsd != null) {
+    let sellTokenPriceUsd = sellToken.priceUsd as BigDecimal
+    let sellCurrentTradeUsd = sellCurrentAmountDecimals.times(sellTokenPriceUsd)
+    sellToken.totalVolumeUsd = sellTokenPrevTotalVolumeUsd.plus(sellCurrentTradeUsd)
+  }
+  if (buyToken.priceEth != null) {
+    let buyTokenPriceEth = buyToken.priceEth as BigDecimal
+    let buyCurrentTradeEth = buyCurrentAmountDecimals.times(buyTokenPriceEth)
+    buyToken.totalVolumeEth = buyTokenPrevTotalVolumeEth.plus(buyCurrentTradeEth)
+  }
+  if (sellToken.priceEth != null) {
+    let sellTokenPriceEth = sellToken.priceEth as BigDecimal
+    let sellCurrentTradeEth = sellCurrentAmountDecimals.times(sellTokenPriceEth)
+    sellToken.totalVolumeEth = sellTokenPrevTotalVolumeEth.plus(sellCurrentTradeEth)
+  }
+
+  // this call need to go after price update
+  // it uses the prices of each token calculated above.
+  trades.getOrCreateTrade(event, buyToken, sellToken)
+
   sellToken.save()
   buyToken.save()
 
@@ -87,5 +125,4 @@ export function handleTrade(event: Trade): void {
   buyToken.save()
   order.save()
 
-  users.getOrCreateUser(timestamp, ownerAddress)
 }

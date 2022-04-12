@@ -4,11 +4,26 @@ type User @entity {
   "Owner's address"
   address: Bytes!
   "First trade block timestamp"
-  firstTradeTimestamp: BigInt!
+  firstTradeTimestamp: BigInt
   "List of orders placed by this user"
   ordersPlaced: [Order!]! @derivedFrom(field: "owner")
+<<<<<<< HEAD
   "Determine if user has solved a settlement"
   isSolver: Boolean!
+=======
+  "Is a solver"
+  isSolver: Boolean
+  "Solved trades" 
+  numberOfTrades: Int! # write a how to do it in the query or add the prop. 
+  "total amount solved by the user in Eth"
+  solvedAmountEth: BigDecimal
+  "total amount solved by the user in Usd"
+  solvedAmountUsd: BigDecimal
+  "total amount traded by the user in Usd"
+  tradedAmountUsd: BigDecimal
+  "total amount traded by the user in Eth"
+  tradedAmountEth: BigDecimal
+>>>>>>> Added volumes, daily totals and pairs
 }
 
 type Token @entity {
@@ -32,6 +47,14 @@ type Token @entity {
   priceUsd: BigDecimal
   "Pools token is in that are allow listed for USD pricing"
   allowedPools: [{{allowedPoolsType}}!]!
+  "History of trading for this token"
+  history: [TokenTradingEvent!]! @derivedFrom(field: "token")
+  "Total trades"
+  numberOfTrades: Int! 
+  "Total volume in Usd"
+  totalVolumeUsd: BigDecimal
+  "Total volume in Eth"
+  totalVolumeEth: BigDecimal 
 }
 
 type Order @entity {
@@ -76,6 +99,14 @@ type Trade @entity {
   buyToken: Token!
   "Order"
   order: Order!
+  "Buy amount in Eth"
+  buyAmountEth: BigDecimal
+  "Sell amount in Eth"
+  sellAmountEth: BigDecimal
+  "Buy amount in Usd"
+  buyAmountUsd: BigDecimal
+  "Sell amount in Usd"
+  sellAmountUsd: BigDecimal
 }
 
 type Settlement @entity {
@@ -89,9 +120,14 @@ type Settlement @entity {
   firstTradeTimestamp: BigInt!
   "Collection of trades"
   trades: [Trade!] @derivedFrom(field: "settlement")
+  "User who solved the settlement"
+  solver: User
+#  "Transaction cost in Eth"
+#  txCostEth: BigDecimal!
+#  "Transaction cost in USD"
+#  txCostUsd: BigDecimal!
 }
 
-{{#uniV3Factory}}
 # stores for USD calculations
 type Bundle @entity {
   "Singleton #1"
@@ -120,4 +156,178 @@ type UniswapPool @entity {
   "Total token 1 across all ticks"
   totalValueLockedToken1: BigDecimal!
 }
+<<<<<<< HEAD
 {{/uniV3Factory}}
+=======
+
+type Total @entity {
+  "This is a singleton entity to contain accumulators for all values. Id will be always 1"
+  id: ID!
+  "Total number of tokens traded"
+  tokens: BigInt!
+  "Total number of orders placed"
+  orders: BigInt!
+  "Total number of traders"
+  traders: BigInt!
+  "Total number of batches settled"
+  settlements: BigInt!
+  "Total traded volume in USD"
+  volumeUsd: BigDecimal
+  "Total traded volume in ETH"
+  volumeEth: BigDecimal
+  "Total fees in USD"
+  feesUsd: BigDecimal
+  "Total fees in Eth"
+  feesEth: BigDecimal
+}
+
+type DailyTotal @entity {
+  "Day timestamp"
+  id: ID!
+  "Start day timestamp"
+  timestamp: BigInt!
+  "Total number of tokens traded"
+  totalTokens: BigInt!
+  "Total number of orders placed"
+  orders: BigInt!
+  "Total number of batches settled"
+  settlements: BigInt!
+  "Total traded volume in USD"
+  volumeUsd: BigDecimal
+  "Total traded volume in ETH"
+  volumeEth: BigDecimal
+  "Total fees in USD"
+  feesUsd: BigDecimal
+  "Total fees in Eth"
+  feesEth: BigDecimal
+  "Traded tokens"
+  tokens: [Token!]!
+}
+
+type HourlyTotal @entity {
+  "Hour timestamp"
+  id: ID!
+  "Start hour timestamp"
+  timestamp: BigInt!
+  "Total number of tokens traded"
+  totalTokens: BigInt!
+  "Total number of orders placed"
+  orders: BigInt!
+  "Total number of batches settled"
+  settlements: BigInt!
+  "Total traded volume in USD"
+  volumeUsd: BigDecimal
+  "Total traded volume in ETH"
+  volumeEth: BigDecimal
+  "Total fees in USD"
+  feesUsd: BigDecimal
+  "Total fees in Eth"
+  feesEth: BigDecimal
+  "Traded tokens"
+  tokens: [Token!]!
+}
+
+type TokenDailyTotal @entity {
+  "TokenAddress + timestamp day"
+  id: ID!
+  "Token address"
+  token: Token!
+  "Start day timestamp"
+  timestamp: BigInt!
+  "Total volume traded that day in token"
+  totalVolume: BigInt!
+  "Total amount traded that day in USD"
+  totalVolumeUsd: BigDecimal!
+  "Total amount traded that day in ETH"
+  totalVolumeEth: BigDecimal!
+  "Number of trades that day"
+  totalTrades: BigInt!
+  "First trade price"
+  openPrice: BigDecimal!
+  "Last trade price"
+  closePrice: BigDecimal!
+  "Higher trade price"
+  higherPrice: BigDecimal!
+  "Lower trade price"
+  lowerPrice: BigDecimal!
+  "Average trade price"
+  averagePrice: BigDecimal!
+}
+
+type TokenHourlyTotal @entity {
+  "TokenAddress + timestamp hour"
+  id: ID!
+  "Token address"
+  token: Token!
+  "Start hour timestamp"
+  timestamp: BigInt!
+  "Total volume traded that day in token"
+  totalVolume: BigInt!
+  "Total amount traded that hour in USD"
+  totalVolumeUsd: BigDecimal!
+  "Total amount traded that hour in ETH"
+  totalVolumeEth: BigDecimal!
+  "Number of trades that hour"
+  totalTrades: BigInt!
+  "First trade price"
+  openPrice: BigDecimal!
+  "Last trade price"
+  closePrice: BigDecimal!
+  "Higher trade price"
+  higherPrice: BigDecimal!
+  "Lower trade price"
+  lowerPrice: BigDecimal!
+  "Average trade price"
+  averagePrice: BigDecimal!
+}
+
+type TokenTradingEvent @entity {
+  "Id built using token-timestamp"
+  id: ID!
+  "Token"
+  token: Token!
+  "Trade"
+  trade: Trade!
+  "Timestamp"
+  timestamp: BigInt!
+  "Amount in Eth"
+  amountEth: BigDecimal!
+  "Amount in Usd"
+  amountUsd: BigDecimal!
+}
+
+type Pair @entity {
+  "token0-token1 sorted by token0 < token1"
+  id: ID!
+  token0: Token!
+  token1: Token!
+  volumeToken0: BigInt
+  volumeToken1: BigInt
+  volumeTradedEth: BigDecimal
+  volumeTradedUsd: BigDecimal
+}
+
+type PairDaily @entity {
+  "token0-token1-timestamp sorted by token0 < token1"
+  id: ID!
+  token0: Token!
+  token1: Token!
+  timestamp: BigInt
+  volumeToken0: BigInt
+  volumeToken1: BigInt
+  volumeTradedEth: BigDecimal
+  volumeTradedUsd: BigDecimal
+}
+
+type PairHourly @entity {
+  "token0-token1-timestamp sorted by token0 < token1"
+  id: ID!
+  token0: Token!
+  token1: Token!
+  timestamp: BigInt
+  volumeToken0: BigInt
+  volumeToken1: BigInt
+  volumeTradedEth: BigDecimal
+  volumeTradedUsd: BigDecimal
+}
+>>>>>>> Added volumes, daily totals and pairs

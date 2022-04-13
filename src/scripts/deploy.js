@@ -40,4 +40,9 @@ series([
       }
     })    
   }
-]);
+], function(error) {
+  if(error) {
+    console.log(`${chalk.red('\n\n🚩 There was an error preparing the subgraph 🚩')}: \n\n ${error}`)
+    return
+  }
+});

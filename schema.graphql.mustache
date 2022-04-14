@@ -7,12 +7,8 @@ type User @entity {
   firstTradeTimestamp: BigInt
   "List of orders placed by this user"
   ordersPlaced: [Order!]! @derivedFrom(field: "owner")
-<<<<<<< HEAD
   "Determine if user has solved a settlement"
   isSolver: Boolean!
-=======
-  "Is a solver"
-  isSolver: Boolean
   "Solved trades" 
   numberOfTrades: Int! # write a how to do it in the query or add the prop. 
   "total amount solved by the user in Eth"
@@ -23,7 +19,6 @@ type User @entity {
   tradedAmountUsd: BigDecimal
   "total amount traded by the user in Eth"
   tradedAmountEth: BigDecimal
->>>>>>> Added volumes, daily totals and pairs
 }
 
 type Token @entity {
@@ -112,8 +107,6 @@ type Trade @entity {
 type Settlement @entity {
   "TxHash"
   id: ID!
-  "Solver user"
-  solver: User!
   "Transaction hash"
   txHash: Bytes!
   "First trade timestamp"
@@ -128,6 +121,7 @@ type Settlement @entity {
 #  txCostUsd: BigDecimal!
 }
 
+{{#uniV3Factory}}
 # stores for USD calculations
 type Bundle @entity {
   "Singleton #1"
@@ -156,9 +150,7 @@ type UniswapPool @entity {
   "Total token 1 across all ticks"
   totalValueLockedToken1: BigDecimal!
 }
-<<<<<<< HEAD
 {{/uniV3Factory}}
-=======
 
 type Total @entity {
   "This is a singleton entity to contain accumulators for all values. Id will be always 1"
@@ -330,4 +322,3 @@ type PairHourly @entity {
   volumeTradedEth: BigDecimal
   volumeTradedUsd: BigDecimal
 }
->>>>>>> Added volumes, daily totals and pairs

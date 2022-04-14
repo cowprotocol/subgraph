@@ -7,11 +7,7 @@ import { totals } from "./totals"
 
 export namespace settlements {
 
-<<<<<<< HEAD
-    export function getOrCreateSettlement(txHash: Bytes, tradeTimestamp: BigInt, solver: string): void { 
-=======
     export function getOrCreateSettlement(txHash: Bytes, tradeTimestamp: BigInt, solver: Address, txGasPrice: BigInt): void { 
->>>>>>> Added volumes, daily totals and pairs
 
         let settlementId = txHash.toHexString()
         let network = dataSource.network()

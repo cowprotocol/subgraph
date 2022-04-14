@@ -7,8 +7,8 @@ type User @entity {
   firstTradeTimestamp: BigInt
   "List of orders placed by this user"
   ordersPlaced: [Order!]! @derivedFrom(field: "owner")
-  "Is a solver"
-  isSolver: Boolean
+  "Determine if user has solved a settlement"
+  isSolver: Boolean!
   "Solved trades" 
   numberOfTrades: Int! # write a how to do it in the query or add the prop. 
   "total amount solved by the user in Eth"

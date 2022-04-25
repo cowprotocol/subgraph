@@ -4,20 +4,10 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "prepare": "cross-env NETWORK=mainnet node src/scripts/prepare.js",
-    "prepare:mainnet": "yarn prepare",
-    "prepare:rinkeby": "cross-env NETWORK=rinkeby yarn prepare",
-    "prepare:gc": "cross-env NETWORK=gc yarn prepare",
     "deploy": "node src/scripts/deploy.js",
     "deploy:mainnet": "cross-env NETWORK=mainnet SUBGRAPH=gnosis/cow yarn deploy",
     "deploy:rinkeby": "cross-env NETWORK=rinkeby SUBGRAPH=gnosis/cow-rinkeby yarn deploy",
     "deploy:gc": "cross-env NETWORK=gc SUBGRAPH=gnosis/cow-gc yarn deploy",
-    "prepare:mainnetyaml": "mustache config/mainnet.json subgraph.yaml.mustache > subgraph.yaml",
-    "prepare:rinkebyyaml": "mustache config/rinkeby.json subgraph.yaml.mustache > subgraph.yaml",
-    "prepare:gcyaml": "mustache config/gc.json subgraph.yaml.mustache > subgraph.yaml",
-    "prepare:mainnetschema": "mustache config/mainnet.json schema.graphql.mustache > schema.graphql",
-    "prepare:rinkebyschema": "mustache config/rinkeby.json schema.graphql.mustache > schema.graphql",
-    "prepare:gcschema": "mustache config/gc.json schema.graphql.mustache > schema.graphql"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.20.0",

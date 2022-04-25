@@ -65,6 +65,8 @@ type Order @entity {
   presignTimestamp: BigInt
   "Array of trades on the order"
   trades: [Trade!] @derivedFrom(field: "order")
+  "Boolean value to show if the order is signed"
+  isSigned: Boolean!
   "Boolean value true by default unless is invalidated by the event"
   isValid: Boolean!
 }

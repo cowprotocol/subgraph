@@ -52,8 +52,8 @@ export namespace users {
         
         user.isSolver = true
         user.numberOfTrades = prevNumOfTrades + 1
-        user.tradedAmountUsd = prevSolvedAmountUsd.plus(solvedAmountUsd)
-        user.tradedAmountEth = prevSolvedAmountEth.plus(solvedAmountEth)
+        user.solvedAmountUsd = prevSolvedAmountUsd.plus(solvedAmountUsd)
+        user.solvedAmountEth = prevSolvedAmountEth.plus(solvedAmountEth)
         
         user.save()
     }

@@ -289,36 +289,56 @@ type TokenTradingEvent @entity {
 }
 
 type Pair @entity {
-  "token0-token1 sorted by token0 < token1"
+  "Token0-token1 sorted by token0 < token1"
   id: ID!
+  "The token 0 address lower than token1"
   token0: Token!
+  "The token 1 address greater than token0"
   token1: Token!
+  "Total volume of token 0 traded"
   volumeToken0: BigInt
+  "Total volume of token 1 traded"
   volumeToken1: BigInt
+  "Total volume in Eth"
   volumeTradedEth: BigDecimal
+  "Total volume in Usd"
   volumeTradedUsd: BigDecimal
 }
 
 type PairDaily @entity {
   "token0-token1-timestamp sorted by token0 < token1"
   id: ID!
+  "The token 0 address lower than token1"
   token0: Token!
+  "The token 1 address greater than token0"
   token1: Token!
+  "Start day timestamp"
   timestamp: BigInt
+  "Total volume of token 0 traded"
   volumeToken0: BigInt
+  "Total volume of token 1 traded"
   volumeToken1: BigInt
+  "Total volume in Eth"
   volumeTradedEth: BigDecimal
+  "Total volume in Usd"
   volumeTradedUsd: BigDecimal
 }
 
 type PairHourly @entity {
   "token0-token1-timestamp sorted by token0 < token1"
   id: ID!
+  "The token 0 address lower than token1"
   token0: Token!
+  "The token 1 address greater than token0"
   token1: Token!
+  "Start hour timestamp"
   timestamp: BigInt
+  "Total volume of token 0 traded"
   volumeToken0: BigInt
+  "Total volume of token 1 traded"
   volumeToken1: BigInt
+  "Total volume in Eth"
   volumeTradedEth: BigDecimal
+  "Total volume in Usd"
   volumeTradedUsd: BigDecimal
 }

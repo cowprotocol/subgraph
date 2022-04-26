@@ -7,7 +7,7 @@
     "deploy": "node src/scripts/deploy.js",
     "deploy:mainnet": "cross-env NETWORK=mainnet SUBGRAPH=gnosis/cow yarn deploy",
     "deploy:rinkeby": "cross-env NETWORK=rinkeby SUBGRAPH=gnosis/cow-rinkeby yarn deploy",
-    "deploy:gc": "cross-env NETWORK=gc SUBGRAPH=gnosis/cow-gc yarn deploy",
+    "deploy:gc": "cross-env NETWORK=gc SUBGRAPH=gnosis/cow-gc yarn deploy"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.20.0",

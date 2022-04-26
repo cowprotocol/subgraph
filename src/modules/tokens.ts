@@ -169,9 +169,8 @@ export namespace tokens {
         if (priceBD.gt(total.higherPrice)) {
           total.higherPrice = priceBD
         }
-        // TODO: check next line cast.
-        let totalTradeBD = BigDecimal.fromString(total.totalTrades.toString())
-        total.averagePrice = total.totalVolumeUsd.div(totalTradeBD)
+        let totalTradesBD = total.totalTrades.toBigDecimal()
+        total.averagePrice = total.totalVolumeUsd.div(totalTradesBD)
       }
     }
     if (tokenPrice) {
@@ -216,9 +215,8 @@ export namespace tokens {
         if (priceBD.gt(total.higherPrice)) {
           total.higherPrice = priceBD
         }
-        // TODO: check next line cast.
-        let totalTradeBD = BigDecimal.fromString(total.totalTrades.toString())
-        total.averagePrice = total.totalVolumeUsd.div(totalTradeBD)
+        let totalTradesBD = total.totalTrades.toBigDecimal()
+        total.averagePrice = total.totalVolumeUsd.div(totalTradesBD)
       }
     }
     if (tokenPrice) {

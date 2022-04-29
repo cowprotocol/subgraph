@@ -1,20 +1,16 @@
 # CoW-subgraph
 
-Implements a subgraph for the [CoW Protocol](https://github.com/gnosis/gp-v2-contracts)
+Implements a subgraph for the [CoW Protocol](https://github.com/cowprotocol/contracts)
 
-*So far this is a work in progress.*
+*This is a work in progress*
 
-- [Subgraph on mainnet](https://thegraph.com/hosted-service/subgraph/gnosis/cow)
-- [Subgraph on rinkeby](https://thegraph.com/hosted-service/subgraph/gnosis/cow-rinkeby)
-- [Subgraph on gnosis chain network](https://thegraph.com/hosted-service/subgraph/gnosis/cow-gc)
+- [Subgraph on mainnet](https://thegraph.com/hosted-service/subgraph/cowprotocol/cow)
+- [Subgraph on rinkeby](https://thegraph.com/hosted-service/subgraph/cowprotocol/cow-rinkeby)
+- [Subgraph on gnosis chain network](https://thegraph.com/hosted-service/subgraph/cowprotocol/cow-gc)
 
 For more information about:
 
 The Cow Protocol: https://docs.cow.fi/
-The Graph: https://thegraph.com/docs/en/
-
-There is also a GP v1 subgraph here: https://github.com/gnosis/dex-subgraph
-
 ## Available entities
 
 ![CoW Protocol subgraph entities diagrams](./dia/CowProtocolSubgraphEntities.png)

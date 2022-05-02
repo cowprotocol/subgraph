@@ -11,8 +11,8 @@ import {
     ZERO_ADDRESS,
     ZERO_BI,
     UNISWAP_FACTORY,
-    STABLECOIN_ADDRESS,
-    WETH_ADDRESS,
+    STABLECOIN_ADDRESS_GC,
+    WETH_ADDRESS_GC,
     EMPTY_RESERVES_RESULT,
     MINUS_ONE_BD
 } from "./constants"
@@ -63,35 +63,50 @@ function getUniswapPricesForPair(token0: Address, token1: Address, isEthPriceCal
 }
 
 export function getPrices(token: Address): Map<string, BigDecimal> {
-    let network = dataSource.network()
-
-    let stablecoin = STABLECOIN_ADDRESS.get(network)
-    let weth = WETH_ADDRESS.get(network)
+    let stablecoin = STABLECOIN_ADDRESS_GC
+    let weth = WETH_ADDRESS_GC
     let prices = new Map<string, BigDecimal>()
+
+    // logic if token is stablecoin
     if (token.toHex() == stablecoin.toHex()) {
+        // price in dolars will be one
         prices.set("usd", ONE_BD)
+        // get eth price to calculate it's price in eth
         let priceWethEth = getPrices(weth).get("eth")
+        // if eth price can't be fetched it stores minus one in the prop
         if (priceWethEth == MINUS_ONE_BD) {
             prices.set("eth", MINUS_ONE_BD)
         } else {
+            // if eth price it stores the division
             prices.set("eth", ONE_BD.div(priceWethEth))
         }
+        // returns prices containing both eth and usd
         return prices
     }
 
+    // logic if token is eth
     if (token == weth) {
+        // saves eth price in usd
         prices.set("usd", getUniswapPricesForPair(token, stablecoin, false))
+        // saves one in eth
         prices.set("eth", ONE_BD)
+        // returns prices containing both eth and usd
         return prices
     }
 
+    // logic for the tokens that are not eth or stablecoin
+    // gets the price for the token in eth
     let priceEth = getUniswapPricesForPair(token, weth, true)
     prices.set("eth", priceEth)
+    // get eth price
     let priceWethUsd = getPrices(weth).get("usd")
+    // if eth price can't be calculated it'll be minus one
     if (priceWethUsd == MINUS_ONE_BD) {
         prices.set("usd", MINUS_ONE_BD)
     } else {
+        // if can fetch eth price calculate the token price based on that data
         prices.set("usd", priceEth.times(getPrices(weth).get("usd")))
     }
+    // returns prices containing both eth and usd
     return prices
 }

@@ -5,34 +5,40 @@ import { getDayTotalTimestamp, getHourTotalTimestamp } from "../utils/timeframeT
 
 export namespace pairs {
     export function createOrUpdatePair(timestamp: BigInt, buyTokenId: string, sellTokenId: string, buyAmount: BigInt, sellAmount: BigInt, sellAmountEth: BigDecimal, sellAmountUsd: BigDecimal): void {
+        let canonicalMarket = getCanonicalMarket(buyTokenId, sellTokenId, buyAmount, sellAmount)
         
-        let buyTokenAddress = Address.fromString(buyTokenId)
-        let sellTokenAddress = Address.fromString(sellTokenId)
-        let buyTokenNumber = BigInt.fromUnsignedBytes(buyTokenAddress)
-        let sellTokenNumber = BigInt.fromUnsignedBytes(sellTokenAddress)
-        let token0 = ""
-        let token1 = ""
-        let volumeToken0 = ZERO_BI
-        let volumeToken1 = ZERO_BI
-        
-        // This will sort tokens always in the same order
-        if (buyTokenNumber.lt(sellTokenNumber)) {
-            token0 = buyTokenId
-            volumeToken0 = buyAmount
-            token1 = sellTokenId
-            volumeToken1 = sellAmount
-        } else {
-            token0 = sellTokenId
-            volumeToken0 = sellAmount
-            token1 = buyTokenId
-            volumeToken1 = buyAmount
-        }
+        let token0 = canonicalMarket.get("token0")
+        let volumeToken0 = BigInt.fromString(canonicalMarket.get("volumeToken0"))
+        let token1 = canonicalMarket.get("token1")
+        let volumeToken1 = BigInt.fromString(canonicalMarket.get("volumeToken1"))
 
         let pairTotal = getOrCreatePair(token0, token1)
         let pairDailyTotal = getOrCreatePairDaily(token0, token1, timestamp)
         let pairHourlyTotal = getOrCreatePairHourly(token0, token1, timestamp)
 
         totalsUpdate(pairTotal, pairDailyTotal, pairHourlyTotal, volumeToken0, volumeToken1, sellAmountEth, sellAmountUsd)
+    }
+
+    function getCanonicalMarket(buyTokenId: string, sellTokenId: string, buyAmount: BigInt, sellAmount: BigInt): Map<string, string> {
+        let buyTokenAddress = Address.fromString(buyTokenId)
+        let sellTokenAddress = Address.fromString(sellTokenId)
+        let buyTokenNumber = BigInt.fromUnsignedBytes(buyTokenAddress)
+        let sellTokenNumber = BigInt.fromUnsignedBytes(sellTokenAddress)
+        let value = new Map<string, string>()
+
+        if (buyTokenNumber.lt(sellTokenNumber)) {
+            value.set("token0", buyTokenId)
+            value.set("volumeToken0", buyAmount.toString())
+            value.set("token1", sellTokenId)
+            value.set("volumeToken1", sellAmount.toString())
+        } else {
+            value.set("token0", sellTokenId)
+            value.set("volumeToken0", sellAmount.toString())
+            value.set("token1", buyTokenId)
+            value.set("volumeToken1", buyAmount.toString())
+        }
+
+        return value
     }
 
     function totalsUpdate(pair: Pair, pairDaily: PairDaily, pairHourly: PairHourly, volumeToken0: BigInt, volumeToken1: BigInt, sellAmountEth: BigDecimal, sellAmountUsd: BigDecimal): void {
@@ -52,18 +58,22 @@ export namespace pairs {
         let prevPairHourlyEth = pairHourly.volumeTradedEth
         let prevPairHourlyUsd = pairHourly.volumeTradedUsd
 
+
+        // Updates volumes for a pair 
         pair.volumeToken0 = prevPairTotalVolume0.plus(volumeToken0)
         pair.volumeToken1 = prevPairTotalVolume1.plus(volumeToken1)
         pair.volumeTradedEth = prevPairTotalEth.plus(sellAmountEth)
         pair.volumeTradedUsd = prevPairTotalUsd.plus(sellAmountUsd)
         pair.save()
 
+        // update volumes for a pair daily totals
         pairDaily.volumeToken0 = prevPairDailyVolume0.plus(volumeToken0)
         pairDaily.volumeToken1 = prevPairDailyVolume1.plus(volumeToken1)
         pairDaily.volumeTradedEth = prevPairDailyEth.plus(sellAmountEth)
         pairDaily.volumeTradedUsd = prevPairDailyUsd.plus(sellAmountUsd)
         pairDaily.save()
 
+        // update volumes for a pair hourly totals
         pairHourly.volumeToken0 = prevPairHourlyVolume0.plus(volumeToken0)
         pairHourly.volumeToken1 = prevPairHourlyVolume1.plus(volumeToken1)
         pairHourly.volumeTradedEth = prevPairHourlyEth.plus(sellAmountEth)

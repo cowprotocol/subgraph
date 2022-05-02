@@ -15,11 +15,14 @@ export namespace tokens {
     let token = Token.load(tokenId)
     let network = dataSource.network()
 
+    // check if token exists
     if (!token) {
+      // creates a new token and fill properites
       token = new Token(tokenId)
       token.address = tokenAddress
       token.firstTradeTimestamp = timestamp
 
+      // try contract calls for filling decimals, name and symbol
       let erc20Token = ERC20.bind(tokenAddress)
       let tokenDecimals = erc20Token.try_decimals()
       let tokenName = erc20Token.try_name()
@@ -30,7 +33,9 @@ export namespace tokens {
       token.name = !tokenName.reverted ? tokenName.value : ""
       token.symbol = !tokenSymbol.reverted ? tokenSymbol.value : ""
       token.totalVolume = ZERO_BI
+
       if (network == 'xdai') {
+        // prices will be fetched on gnosis chain
         let tokenPrices = getPrices(tokenAddress)
         if (tokenPrices.get("usd") != MINUS_ONE_BD &&
           tokenPrices.get("eth") != MINUS_ONE_BD) {
@@ -38,6 +43,8 @@ export namespace tokens {
           token.priceEth = tokenPrices.get("eth")
         }
       } else {
+        // for eth network will be calculated in a different way
+        // it'll be filled with zero
         token.priceEth = ZERO_BD
         token.priceUsd = ZERO_BD
       }
@@ -45,6 +52,8 @@ export namespace tokens {
       token.numberOfTrades = 0
       token.totalVolumeEth = ZERO_BD
       token.totalVolumeUsd = ZERO_BD
+
+      // add token created to the totals
       totals.addTokenCount(timestamp, tokenId)
     }
 

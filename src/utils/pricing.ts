@@ -9,6 +9,8 @@ const USDC_WETH_03_POOL = '0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8'
 
 // token where amounts should contribute to tracked volume and liquidity
 // usually tokens that many tokens are paired with s
+// next list and functions were taken from here: 
+// https://github.com/Uniswap/v3-subgraph/blob/bf03f940f17c3d32ee58bd37386f26713cff21e2/src/utils/pricing.ts#L12
 export let ALLOWED_TOKENS: string[] = [
   WETH_ADDRESS, // WETH
   '0x6b175474e89094c44da98b954eedeac495271d0f', // DAI
@@ -41,6 +43,9 @@ let STABLE_COINS: string[] = [
   '0x4dd28568d05f09b02220b09c2cb307bfd837cb95'
 ]
 
+
+// this is expresed in eth, but it seems to be for considering
+// pools of $100K or more .-
 let MINIMUM_ETH_LOCKED = BigDecimal.fromString('52')
 
 let Q192 = 2 ** 192

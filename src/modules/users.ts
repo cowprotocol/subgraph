@@ -21,7 +21,7 @@ export namespace users {
         return user as User
     }
 
-   export function getOrCreateTrader(orderOwner: string, timestamp: BigInt, owner: Address, tradedAmountEth: BigDecimal, tradedAmountUsd: BigDecimal) :void {
+   export function getOrCreateTrader(orderOwner: string, timestamp: i32, owner: Address, tradedAmountEth: BigDecimal, tradedAmountUsd: BigDecimal) :void {
 
         let user = getOrCreateUserEntity(orderOwner, owner)
         let prevTradedAmountUsd = user.tradedAmountUsd
@@ -38,7 +38,7 @@ export namespace users {
         user.save()
     }
 
-    export function getOrCreateSigner(orderOwner: string, timestamp: BigInt, owner: Address) :void {
+    export function getOrCreateSigner(orderOwner: string, owner: Address) :void {
         let user = getOrCreateUserEntity(orderOwner, owner)
         user.save()
     }

@@ -12,7 +12,7 @@ export namespace trades {
         let txHash = event.transaction.hash
         let txHashString = txHash.toHexString()
         let tradeId = orderId + "|" + txHashString + "|" + eventIndex
-        let timestamp = event.block.timestamp
+        let timestamp = event.block.timestamp.toI32()
         let sellAmount = event.params.sellAmount
         let buyAmount = event.params.buyAmount
         let txGasPrice = event.transaction.gasPrice

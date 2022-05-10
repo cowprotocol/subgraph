@@ -15,7 +15,9 @@ The Graph: https://thegraph.com/docs/en/
 
 There is also a GP v1 subgraph here: https://github.com/gnosis/dex-subgraph
 
-## There's further information about the model [here](./model.md)
+## Model 
+
+Further information about the model [here](./model.md)
 
 ## Setup of your own test subgraph
 

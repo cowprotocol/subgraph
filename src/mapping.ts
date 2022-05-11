@@ -10,6 +10,7 @@ import { getPrices } from "./utils/getPrices"
 import { MINUS_ONE_BD } from "./utils/constants"
 import { BigDecimal, BigInt, dataSource } from "@graphprotocol/graph-ts"
 import { convertTokenToDecimal } from "./utils"
+import { UniswapToken } from "../generated/schema"
 
 export function handleInteraction(event: Interaction): void { }
 
@@ -74,6 +75,17 @@ export function handleTrade(event: Trade): void {
       buyTokenPrices.get("eth") != MINUS_ONE_BD) {
       buyToken.priceUsd = buyTokenPrices.get("usd")
       buyToken.priceEth = buyTokenPrices.get("eth")
+    }
+  } else {
+    let sellUniToken = UniswapToken.load(sellTokenAddress.toHexString())
+    let buyUniToken = UniswapToken.load(buyTokenAddress.toHexString())
+    if (sellUniToken) {
+      sellToken.priceUsd = sellUniToken.priceUsd ? sellUniToken.priceUsd : null
+      sellToken.priceEth = sellUniToken.priceEth ? sellUniToken.priceEth : null
+    }
+    if (buyUniToken) {
+      buyToken.priceUsd = buyUniToken.priceUsd ? buyUniToken.priceUsd : null
+      buyToken.priceEth = buyUniToken.priceEth ? buyUniToken.priceEth : null
     }
   }
 

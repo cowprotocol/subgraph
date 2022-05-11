@@ -134,9 +134,9 @@ type UniswapPool @entity {
   "Pool address"
   id: ID!
   "Token0"
-  token0: Token!
+  token0: UniswapToken!
   "Token1"
-  token1: Token!
+  token1: UniswapToken!
   "In range liquidity"
   liquidity: BigInt!
   "Token0 per token1"
@@ -149,6 +149,25 @@ type UniswapPool @entity {
   totalValueLockedToken0: BigDecimal!
   "Total token 1 across all ticks"
   totalValueLockedToken1: BigDecimal!
+}
+
+type UniswapToken @entity {
+  "Token address to hexString"
+  id: ID!
+  "Token address"
+  address: Bytes!
+  "Token name fetched by ERC20 contract call"
+  name: String!
+  "Token symbol fetched by contract call"
+  symbol: String!
+  "Token decimals fetched by contract call"
+  decimals: Int!
+  "Derived price in ETH"
+  priceEth: BigDecimal
+  "Derived price in USD" 
+  priceUsd: BigDecimal
+  "Pools token is in that are allow listed for USD pricing"
+  allowedPools: [{{allowedPoolsType}}!]!
 }
 {{/uniV3Factory}}
 

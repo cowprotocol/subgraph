@@ -1,5 +1,5 @@
 /* eslint-disable prefer-const */
-import { Bundle, UniswapPool, Token } from '../../generated/schema'
+import { Bundle, UniswapPool, UniswapToken } from '../../generated/schema'
 import { BigDecimal, BigInt } from '@graphprotocol/graph-ts'
 import {
   Burn as BurnEvent,
@@ -15,8 +15,8 @@ export function handleInitialize(event: Initialize): void {
   let pool = UniswapPool.load(event.address.toHexString())
   pool.tick = BigInt.fromI32(event.params.tick)
   // update token prices
-  let token0 = Token.load(pool.token0)
-  let token1 = Token.load(pool.token1)
+  let token0 = UniswapToken.load(pool.token0)
+  let token1 = UniswapToken.load(pool.token1)
 
   // update ETH price now that prices could have changed
   let bundle = Bundle.load('1')
@@ -24,9 +24,9 @@ export function handleInitialize(event: Initialize): void {
   bundle.save()
 
   // update token prices
-  token0.priceEth = findEthPerToken(token0 as Token)
+  token0.priceEth = findEthPerToken(token0 as UniswapToken)
   token0.priceUsd = token0.priceEth.times(bundle.ethPriceUSD)
-  token1.priceEth = findEthPerToken(token1 as Token)
+  token1.priceEth = findEthPerToken(token1 as UniswapToken)
   token1.priceUsd = token1.priceEth.times(bundle.ethPriceUSD)
   token0.save()
   token1.save()
@@ -36,8 +36,8 @@ export function handleMint(event: MintEvent): void {
   let poolAddress = event.address.toHexString()
   let pool = UniswapPool.load(poolAddress)
 
-  let token0 = Token.load(pool.token0)
-  let token1 = Token.load(pool.token1)
+  let token0 = UniswapToken.load(pool.token0)
+  let token1 = UniswapToken.load(pool.token1)
   let amount0 = convertTokenToDecimal(event.params.amount0, BigInt.fromI32(token0.decimals))
   let amount1 = convertTokenToDecimal(event.params.amount1, BigInt.fromI32(token1.decimals))
 
@@ -67,8 +67,8 @@ export function handleBurn(event: BurnEvent): void {
   let poolAddress = event.address.toHexString()
   let pool = UniswapPool.load(poolAddress)
 
-  let token0 = Token.load(pool.token0)
-  let token1 = Token.load(pool.token1)
+  let token0 = UniswapToken.load(pool.token0)
+  let token1 = UniswapToken.load(pool.token1)
   let amount0 = convertTokenToDecimal(event.params.amount0, BigInt.fromI32(token0.decimals))
   let amount1 = convertTokenToDecimal(event.params.amount1, BigInt.fromI32(token1.decimals))
 
@@ -99,8 +99,8 @@ export function handleSwap(event: SwapEvent): void {
     return
   }
 
-  let token0 = Token.load(pool.token0)
-  let token1 = Token.load(pool.token1)
+  let token0 = UniswapToken.load(pool.token0)
+  let token1 = UniswapToken.load(pool.token1)
 
   let oldTick = pool.tick!
 
@@ -125,7 +125,7 @@ export function handleSwap(event: SwapEvent): void {
   pool.totalValueLockedToken1 = pool.totalValueLockedToken1.plus(amount1)
 
   // updated pool ratess
-  let prices = sqrtPriceX96ToTokenPrices(event.params.sqrtPriceX96, token0 as Token, token1 as Token)
+  let prices = sqrtPriceX96ToTokenPrices(event.params.sqrtPriceX96, token0 as UniswapToken, token1 as UniswapToken)
   pool.token0Price = prices[0]
   pool.token1Price = prices[1]
   pool.save()
@@ -133,9 +133,9 @@ export function handleSwap(event: SwapEvent): void {
   // update USD pricing
   bundle.ethPriceUSD = getEthPriceInUSD()
   bundle.save()
-  token0.priceEth = findEthPerToken(token0 as Token)
+  token0.priceEth = findEthPerToken(token0 as UniswapToken)
   token0.priceUsd = token0.priceEth.times(bundle.ethPriceUSD)
-  token1.priceEth = findEthPerToken(token1 as Token)
+  token1.priceEth = findEthPerToken(token1 as UniswapToken)
   token1.priceUsd = token1.priceEth.times(bundle.ethPriceUSD)
 
   pool.save()

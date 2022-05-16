@@ -51,7 +51,7 @@ export function handleTrade(event: Trade): void {
   let buyAmount = event.params.buyAmount
   let network = dataSource.network()
 
-  let timestamp =  event.block.timestamp.toI32()
+  let timestamp = event.block.timestamp.toI32()
 
   let sellToken = tokens.getOrCreateToken(sellTokenAddress, timestamp)
   let buyToken = tokens.getOrCreateToken(buyTokenAddress, timestamp)

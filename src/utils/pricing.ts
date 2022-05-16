@@ -44,7 +44,7 @@ let STABLE_COINS: string[] = [
 ]
 
 
-// this is expresed in eth, but it seems to be for considering
+// this is expressed in eth, but it seems to be for considering
 // pools of $100K or more .-
 let MINIMUM_ETH_LOCKED = BigDecimal.fromString('52')
 

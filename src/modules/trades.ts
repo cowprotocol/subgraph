@@ -43,11 +43,11 @@ export namespace trades {
         let buyTokenId = buyToken.id
         let sellTokenId = sellToken.id
 
-        let buyTokenPrice = buyToken.priceUsd as BigDecimal
-        let sellTokenPrice = sellToken.priceUsd as BigDecimal
+        let buyTokenPriceUsd = buyToken.priceUsd as BigDecimal
+        let sellTokenPriceUsd = sellToken.priceUsd as BigDecimal
 
-        tokens.createTokenTradingEvent(timestamp, buyTokenId, tradeId, buyAmount, buyAmountEth, buyAmountUsd, buyTokenPrice)
-        tokens.createTokenTradingEvent(timestamp, sellTokenId, tradeId, sellAmount, sellAmountEth, sellAmountUsd, sellTokenPrice)
+        tokens.createTokenTradingEvent(timestamp, buyTokenId, tradeId, buyAmount, buyAmountEth, buyAmountUsd, buyTokenPriceUsd)
+        tokens.createTokenTradingEvent(timestamp, sellTokenId, tradeId, sellAmount, sellAmountEth, sellAmountUsd, sellTokenPriceUsd)
 
         trade.timestamp = timestamp
         trade.txHash = txHash
@@ -71,7 +71,7 @@ export namespace trades {
 
         totals.addVolumesAndFees(sellAmountEth, sellAmountUsd, feeAmountEth, feeAmountUsd, timestamp)
 
-        pairs.createOrUpdatePair(timestamp, buyTokenId, sellTokenId, buyAmount, sellAmount, sellAmountEth, sellAmountUsd, buyTokenPrice, sellTokenPrice)
+        pairs.createOrUpdatePair(timestamp, buyTokenId, sellTokenId, buyAmount, sellAmount, sellAmountEth, sellAmountUsd, buyTokenPriceUsd, sellTokenPriceUsd)
     }
 
 }

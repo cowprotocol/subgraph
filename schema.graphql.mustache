@@ -161,6 +161,8 @@ type Total @entity {
   orders: BigInt!
   "Total number of traders"
   traders: BigInt!
+  "Number of trades"
+  numberOfTrades: BigInt!
   "Total number of batches settled"
   settlements: BigInt!
   "Total traded volume in USD"
@@ -180,6 +182,8 @@ type DailyTotal @entity {
   timestamp: Int!
   "Total number of tokens traded"
   totalTokens: BigInt!
+  "Number of trades"
+  numberOfTrades: BigInt!
   "Total number of orders placed"
   orders: BigInt!
   "Total number of batches settled"
@@ -203,6 +207,8 @@ type HourlyTotal @entity {
   timestamp: Int!
   "Total number of tokens traded"
   totalTokens: BigInt!
+  "Number of trades"
+  numberOfTrades: BigInt!
   "Total number of orders placed"
   orders: BigInt!
   "Total number of batches settled"

@@ -17,6 +17,7 @@ export namespace totals {
             total.volumeUsd = ZERO_BD
             total.feesEth = ZERO_BD
             total.feesUsd = ZERO_BD
+            total.numberOfTrades = ZERO_BI
         }
         
         return total as Total
@@ -36,6 +37,7 @@ export namespace totals {
             total.volumeEth = ZERO_BD
             total.feesUsd = ZERO_BD
             total.feesEth = ZERO_BD
+            total.numberOfTrades = ZERO_BI
             total.tokens = []
         }
 
@@ -56,12 +58,12 @@ export namespace totals {
             total.volumeEth = ZERO_BD
             total.feesUsd = ZERO_BD
             total.feesEth = ZERO_BD
+            total.numberOfTrades = ZERO_BI
             total.tokens = []
         }
 
         return total as HourlyTotal
     }
-
 
     function updateTokenTotalsCount(): void {
         let total = getOrCreateTotals()
@@ -174,10 +176,12 @@ export namespace totals {
         let prevVolumeUsd = total.volumeUsd
         let prevFeesEth = total.feesEth
         let prevFeesUsd = total.feesUsd
+        let prevTrades = total.numberOfTrades
         total.volumeEth = prevVolumeEth.plus(volumeEth)
         total.volumeUsd = prevVolumeUsd.plus(volumeUsd)
         total.feesEth = prevFeesEth.plus(feesEth)
         total.feesUsd = prevFeesUsd.plus(feesUsd)
+        total.numberOfTrades = prevTrades.plus(ONE_BI)
         total.save()
     }
 
@@ -187,10 +191,12 @@ export namespace totals {
         let prevVolumeUsd = total.volumeUsd
         let prevFeesEth = total.feesEth
         let prevFeesUsd = total.feesUsd
+        let prevTrades = total.numberOfTrades
         total.volumeEth = prevVolumeEth.plus(volumeEth)
         total.volumeUsd = prevVolumeUsd.plus(volumeUsd)
         total.feesEth = prevFeesEth.plus(feesEth)
         total.feesUsd = prevFeesUsd.plus(feesUsd)
+        total.numberOfTrades = prevTrades.plus(ONE_BI)
         total.save()
     }
 
@@ -200,10 +206,12 @@ export namespace totals {
         let prevVolumeUsd = total.volumeUsd
         let prevFeesEth = total.feesEth
         let prevFeesUsd = total.feesUsd
+        let prevTrades = total.numberOfTrades
         total.volumeEth = prevVolumeEth.plus(volumeEth)
         total.volumeUsd = prevVolumeUsd.plus(volumeUsd)
         total.feesEth = prevFeesEth.plus(feesEth)
         total.feesUsd = prevFeesUsd.plus(feesUsd)
+        total.numberOfTrades = prevTrades.plus(ONE_BI)
         total.save()
     }
 

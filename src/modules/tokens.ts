@@ -178,8 +178,8 @@ export namespace tokens {
         if (priceBD.gt(total.higherPrice)) {
           total.higherPrice = priceBD
         }
-        let totalTradesBD = total.totalTrades.toBigDecimal()
-        total.averagePrice = total.totalVolumeUsd.div(totalTradesBD)
+
+        total.averagePrice = calculateWeightedAveragePrice(total.totalVolume, total.averagePrice, amount, priceBD)
       }
     }
     if (tokenPrice) {
@@ -190,6 +190,16 @@ export namespace tokens {
 
   }
 
+  function calculateWeightedAveragePrice(prevVol: BigInt, prevAvgPrice: BigDecimal, currentVol: BigInt, currentPrice: BigDecimal): BigDecimal {
+    let prevVolumeBD = prevVol.toBigDecimal()
+    let prevValWeighted = prevVolumeBD.times(prevAvgPrice)
+    let currentVolumeBD = currentVol.toBigDecimal()
+    let currentAvgWeighted = currentVolumeBD.times(currentPrice)
+
+    let numerator = prevValWeighted.plus(currentAvgWeighted)
+    let denominator = prevVolumeBD.plus(currentVolumeBD)
+    return numerator.div(denominator) as BigDecimal
+  }
   function updateTokenHourlyTotal(timestamp: i32, tokenId: string, amount: BigInt, amountEth: BigDecimal, amountUsd: BigDecimal, tokenPrice: BigDecimal | null): void {
 
     let total = getOrCreateTokenHourlyTotal(tokenId, timestamp)
@@ -224,8 +234,8 @@ export namespace tokens {
         if (priceBD.gt(total.higherPrice)) {
           total.higherPrice = priceBD
         }
-        let totalTradesBD = total.totalTrades.toBigDecimal()
-        total.averagePrice = total.totalVolumeUsd.div(totalTradesBD)
+
+        total.averagePrice = calculateWeightedAveragePrice(total.totalVolume, total.averagePrice, amount, priceBD)
       }
     }
     if (tokenPrice) {

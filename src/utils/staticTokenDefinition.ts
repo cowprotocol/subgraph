@@ -3,6 +3,9 @@ import {
   BigInt,
 } from "@graphprotocol/graph-ts"
   
+// Static token definition was taken from this commit on Uniswap V3
+// https://github.com/Uniswap/v3-subgraph/commit/16947766080d88f93fb7f0d9dfcb957212d6ab8f
+
 // Initialize a Token Definition with the attributes
 export class StaticTokenDefinition {
   address : Address

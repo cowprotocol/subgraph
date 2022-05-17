@@ -15,6 +15,8 @@ export namespace settlements {
         let settlement = Settlement.load(settlementId)
 
         // both xdai and weth have the same amount of decimals
+        // commented code is a WIP will be addressed with:
+        // https://github.com/cowprotocol/subgraph/issues/18
         let DEFAULT_DECIMALS =  BigInt.fromI32(18)
         let gasPriceUsd = ZERO_BD
         if (network == 'xdai') {

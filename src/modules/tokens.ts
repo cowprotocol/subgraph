@@ -6,11 +6,11 @@ import { getPrices } from "../utils/getPrices"
 import { totals } from "./totals"
 import { getDayTotalTimestamp, getHourTotalTimestamp } from "../utils/timeframeTimestamp";
 
-const DEFAULT_DECIMALS = 18
+let DEFAULT_DECIMALS = 18
 
 export namespace tokens {
 
-  export function getOrCreateToken(tokenAddress: Address, timestamp: BigInt): Token {
+  export function getOrCreateToken(tokenAddress: Address, timestamp: i32): Token {
     let tokenId = tokenAddress.toHexString()
     let token = Token.load(tokenId)
     let network = dataSource.network()
@@ -83,7 +83,7 @@ export namespace tokens {
     return tokenDecimals.reverted ? DEFAULT_DECIMALS : tokenDecimals.value
   }
 
-  export function createTokenTradingEvent(timestamp: BigInt, tokenId: string, tradeId: string, amount: BigInt, amountEth: BigDecimal, amountUsd: BigDecimal, tokenPrice: BigDecimal | null): void {
+  export function createTokenTradingEvent(timestamp: i32, tokenId: string, tradeId: string, amount: BigInt, amountEth: BigDecimal, amountUsd: BigDecimal, tokenPrice: BigDecimal | null): void {
     let id = tokenId + timestamp.toString()
     let tradingEvent = new TokenTradingEvent(id)
     tradingEvent.token = tokenId
@@ -96,7 +96,7 @@ export namespace tokens {
     updateTokenHourlyTotal(timestamp, tokenId, amount, amountEth, amountUsd, tokenPrice)
   }
 
-  function getOrCreateTokenDailyTotal(tokenId: string, timestamp: BigInt): TokenDailyTotal {
+  function getOrCreateTokenDailyTotal(tokenId: string, timestamp: i32): TokenDailyTotal {
 
     let dailyTimestamp = getDayTotalTimestamp(timestamp)
     let dailyTimestampId = tokenId + "-" + dailyTimestamp.toString()
@@ -120,7 +120,7 @@ export namespace tokens {
     return total as TokenDailyTotal
   }
 
-  function getOrCreateTokenHourlyTotal(tokenId: string, timestamp: BigInt): TokenHourlyTotal {
+  function getOrCreateTokenHourlyTotal(tokenId: string, timestamp: i32): TokenHourlyTotal {
 
     let hourlyTimestamp = getHourTotalTimestamp(timestamp)
     let hourlyTimestampId = tokenId + "-" + hourlyTimestamp.toString()
@@ -144,7 +144,7 @@ export namespace tokens {
     return total as TokenHourlyTotal
   }
 
-  function updateTokenDailyTotal(timestamp: BigInt, tokenId: string, amount: BigInt, amountEth: BigDecimal, amountUsd: BigDecimal, tokenPrice: BigDecimal | null): void {
+  function updateTokenDailyTotal(timestamp: i32, tokenId: string, amount: BigInt, amountEth: BigDecimal, amountUsd: BigDecimal, tokenPrice: BigDecimal | null): void {
 
     let total = getOrCreateTokenDailyTotal(tokenId, timestamp)
 
@@ -200,8 +200,7 @@ export namespace tokens {
     let denominator = prevVolumeBD.plus(currentVolumeBD)
     return numerator.div(denominator) as BigDecimal
   }
-
-  function updateTokenHourlyTotal(timestamp: BigInt, tokenId: string, amount: BigInt, amountEth: BigDecimal, amountUsd: BigDecimal, tokenPrice: BigDecimal | null): void {
+  function updateTokenHourlyTotal(timestamp: i32, tokenId: string, amount: BigInt, amountEth: BigDecimal, amountUsd: BigDecimal, tokenPrice: BigDecimal | null): void {
 
     let total = getOrCreateTokenHourlyTotal(tokenId, timestamp)
 

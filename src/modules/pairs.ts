@@ -4,7 +4,7 @@ import { ZERO_BD, ZERO_BI } from "../utils/constants";
 import { getDayTotalTimestamp, getHourTotalTimestamp } from "../utils/timeframeTimestamp";
 
 export namespace pairs {
-    export function createOrUpdatePair(timestamp: BigInt, buyTokenId: string, sellTokenId: string, buyAmount: BigInt, sellAmount: BigInt, sellAmountEth: BigDecimal, sellAmountUsd: BigDecimal): void {
+    export function createOrUpdatePair(timestamp: i32, buyTokenId: string, sellTokenId: string, buyAmount: BigInt, sellAmount: BigInt, sellAmountEth: BigDecimal, sellAmountUsd: BigDecimal): void {
         let canonicalMarket = getCanonicalMarket(buyTokenId, sellTokenId, buyAmount, sellAmount)
         
         let token0 = canonicalMarket.get("token0")
@@ -100,7 +100,7 @@ export namespace pairs {
         return pairTotal as Pair
     }
 
-    function getOrCreatePairDaily(token0: string, token1: string, timestamp: BigInt): PairDaily {
+    function getOrCreatePairDaily(token0: string, token1: string, timestamp: i32): PairDaily {
         let dailyTimestamp = getDayTotalTimestamp(timestamp)
         let id = token0 + "-" + token1 + "-" + dailyTimestamp.toString()
         let pairDailyTotal = PairDaily.load(id)
@@ -120,7 +120,7 @@ export namespace pairs {
  
     }
 
-    function getOrCreatePairHourly(token0: string, token1: string, timestamp: BigInt): PairHourly {
+    function getOrCreatePairHourly(token0: string, token1: string, timestamp: i32): PairHourly {
         let hourlyTimestamp = getHourTotalTimestamp(timestamp)
         let id = token0 + "-" + token1 + "-" + hourlyTimestamp.toString()
         let pairHourlyTotal = PairHourly.load(id)

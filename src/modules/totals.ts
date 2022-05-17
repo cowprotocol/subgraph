@@ -23,7 +23,7 @@ export namespace totals {
         return total as Total
     }
 
-    function getOrCreateDailyTotals(timestamp: BigInt): DailyTotal {
+    function getOrCreateDailyTotals(timestamp: i32): DailyTotal {
         let totalId = timestamp.toString()
         let total = DailyTotal.load(totalId)
 
@@ -44,7 +44,7 @@ export namespace totals {
         return total as DailyTotal
     }
 
-    function getOrCreateHourlyTotals(timestamp: BigInt): HourlyTotal {
+    function getOrCreateHourlyTotals(timestamp: i32): HourlyTotal {
         let totalId = timestamp.toString()
         let total = HourlyTotal.load(totalId)
 
@@ -72,7 +72,7 @@ export namespace totals {
         total.save()
     }
 
-    function updateDailyTokensCount(timestamp: BigInt, tokenId: string): void {
+    function updateDailyTokensCount(timestamp: i32, tokenId: string): void {
         let total = getOrCreateDailyTotals(timestamp)
         let prevtotalTokens = total.totalTokens
         let prevTokens = total.tokens
@@ -82,7 +82,7 @@ export namespace totals {
         total.save()
     }
 
-    function updateHourlyTokensCount(timestamp: BigInt, tokenId: string): void {
+    function updateHourlyTokensCount(timestamp: i32, tokenId: string): void {
         let total = getOrCreateHourlyTotals(timestamp)
         let prevtotalTokens = total.totalTokens
         let prevTokens = total.tokens
@@ -92,7 +92,7 @@ export namespace totals {
         total.save()
     }
 
-    export function addTokenCount(timestamp: BigInt, tokenId: string): void{
+    export function addTokenCount(timestamp: i32, tokenId: string): void{
         let dayTimestamp = getDayTotalTimestamp(timestamp)
         let hourTimestamp = getHourTotalTimestamp(timestamp)
         updateDailyTokensCount(dayTimestamp, tokenId)
@@ -107,7 +107,7 @@ export namespace totals {
         total.save()
     }
 
-    function updateHourlyOrdersCount(timestamp: BigInt): void {
+    function updateHourlyOrdersCount(timestamp: i32): void {
         let total = getOrCreateHourlyTotals(timestamp)
         let prevtotalOrders = total.orders
 
@@ -115,7 +115,7 @@ export namespace totals {
         total.save()
     }
 
-    function updateDailyOrdersCount(timestamp: BigInt): void {
+    function updateDailyOrdersCount(timestamp: i32): void {
         let total = getOrCreateDailyTotals(timestamp)
         let prevtotalOrders = total.orders
 
@@ -123,7 +123,7 @@ export namespace totals {
         total.save()
     }
 
-    export function addOrderCount(timestamp: BigInt): void {
+    export function addOrderCount(timestamp: i32): void {
         let dayTimestamp = getDayTotalTimestamp(timestamp)
         let hourTimestamp = getHourTotalTimestamp(timestamp)
         updateDailyOrdersCount(dayTimestamp)
@@ -145,7 +145,7 @@ export namespace totals {
         total.save()
     }
 
-    function updateDailySettlementsCount(timestamp: BigInt): void {
+    function updateDailySettlementsCount(timestamp: i32): void {
         let total = getOrCreateDailyTotals(timestamp)
         let prevtotalSettlements = total.settlements
 
@@ -153,7 +153,7 @@ export namespace totals {
         total.save()
     }
 
-    function updateHourlySettlementsCount(timestamp: BigInt): void {
+    function updateHourlySettlementsCount(timestamp: i32): void {
         let total = getOrCreateHourlyTotals(timestamp)
         let prevtotalSettlements = total.settlements
 
@@ -161,7 +161,7 @@ export namespace totals {
         total.save()
     }
 
-    export function addSettlementCount(timestamp: BigInt): void {
+    export function addSettlementCount(timestamp: i32): void {
         let dayTimestamp = getDayTotalTimestamp(timestamp)
         let hourTimestamp = getHourTotalTimestamp(timestamp)
         updateDailySettlementsCount(dayTimestamp)
@@ -185,7 +185,7 @@ export namespace totals {
         total.save()
     }
 
-    function updateHourlyVolumesAndFees(volumeEth: BigDecimal, volumeUsd: BigDecimal, feesEth: BigDecimal, feesUsd: BigDecimal, timestamp: BigInt): void {
+    function updateHourlyVolumesAndFees(volumeEth: BigDecimal, volumeUsd: BigDecimal, feesEth: BigDecimal, feesUsd: BigDecimal, timestamp: i32): void {
         let total = getOrCreateHourlyTotals(timestamp)
         let prevVolumeEth = total.volumeEth
         let prevVolumeUsd = total.volumeUsd
@@ -200,7 +200,7 @@ export namespace totals {
         total.save()
     }
 
-    function updateDailyVolumesAndFees(volumeEth: BigDecimal, volumeUsd: BigDecimal, feesEth: BigDecimal, feesUsd: BigDecimal, timestamp: BigInt): void {
+    function updateDailyVolumesAndFees(volumeEth: BigDecimal, volumeUsd: BigDecimal, feesEth: BigDecimal, feesUsd: BigDecimal, timestamp: i32): void {
         let total = getOrCreateDailyTotals(timestamp)
         let prevVolumeEth = total.volumeEth
         let prevVolumeUsd = total.volumeUsd
@@ -215,7 +215,7 @@ export namespace totals {
         total.save()
     }
 
-    export function addVolumesAndFees(volumeEth: BigDecimal, volumeUsd: BigDecimal, feesEth: BigDecimal, feesUsd: BigDecimal, timestamp: BigInt): void {
+    export function addVolumesAndFees(volumeEth: BigDecimal, volumeUsd: BigDecimal, feesEth: BigDecimal, feesUsd: BigDecimal, timestamp: i32): void {
         let dayTimestamp = getDayTotalTimestamp(timestamp)
         let hourTimestamp = getHourTotalTimestamp(timestamp)
         updateDailyVolumesAndFees(volumeEth, volumeUsd, feesEth, feesUsd, dayTimestamp)

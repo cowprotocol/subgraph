@@ -4,7 +4,7 @@ type User @entity {
   "Owner's address"
   address: Bytes!
   "First trade block timestamp"
-  firstTradeTimestamp: BigInt
+  firstTradeTimestamp: Int
   "List of orders placed by this user"
   ordersPlaced: [Order!]! @derivedFrom(field: "owner")
   "Determine if user has solved a settlement"
@@ -27,7 +27,7 @@ type Token @entity {
   "Token address"
   address: Bytes!
   "First token trade block timestamp"
-  firstTradeTimestamp: BigInt
+  firstTradeTimestamp: Int
   "Token name fetched by ERC20 contract call"
   name: String!
   "Token symbol fetched by contract call"
@@ -58,24 +58,24 @@ type Order @entity {
   "Trade's owner or presign User"
   owner: User
   "block's timestamp on trade event"
-  tradesTimestamp: BigInt
+  tradesTimestamp: Int
   "block's timestamp on invalidate event"
-  invalidateTimestamp: BigInt
+  invalidateTimestamp: Int
   "block's timestamp on presign event"
-  presignTimestamp: BigInt
+  presignTimestamp: Int
   "Array of trades on the order"
   trades: [Trade!] @derivedFrom(field: "order")
   "Boolean value to show if the order is signed"
   isSigned: Boolean!
   "Boolean value true by default unless is invalidated by the event"
-  isValid: Boolean!
+  isValid: Boolean
 }
 
 type Trade @entity {
   "This Id is composed using orderId|txHashString|eventIndex"
   id: ID!
   "Block's timestamp"
-  timestamp: BigInt!
+  timestamp: Int!
   "Transaction's gas price"
   gasPrice: BigInt!
   "Trade's fee amount"
@@ -110,7 +110,7 @@ type Settlement @entity {
   "Transaction hash"
   txHash: Bytes!
   "First trade timestamp"
-  firstTradeTimestamp: BigInt!
+  firstTradeTimestamp: Int!
   "Collection of trades"
   trades: [Trade!] @derivedFrom(field: "settlement")
   "User who solved the settlement"
@@ -179,7 +179,7 @@ type DailyTotal @entity {
   "Day timestamp"
   id: ID!
   "Start day timestamp"
-  timestamp: BigInt!
+  timestamp: Int!
   "Total number of tokens traded"
   totalTokens: BigInt!
   "Number of trades"
@@ -204,7 +204,7 @@ type HourlyTotal @entity {
   "Hour timestamp"
   id: ID!
   "Start hour timestamp"
-  timestamp: BigInt!
+  timestamp: Int!
   "Total number of tokens traded"
   totalTokens: BigInt!
   "Number of trades"
@@ -231,7 +231,7 @@ type TokenDailyTotal @entity {
   "Token address"
   token: Token!
   "Start day timestamp"
-  timestamp: BigInt!
+  timestamp: Int!
   "Total volume traded that day in token"
   totalVolume: BigInt!
   "Total amount traded that day in USD"
@@ -258,7 +258,7 @@ type TokenHourlyTotal @entity {
   "Token address"
   token: Token!
   "Start hour timestamp"
-  timestamp: BigInt!
+  timestamp: Int!
   "Total volume traded that day in token"
   totalVolume: BigInt!
   "Total amount traded that hour in USD"
@@ -287,7 +287,7 @@ type TokenTradingEvent @entity {
   "Trade"
   trade: Trade!
   "Timestamp"
-  timestamp: BigInt!
+  timestamp: Int!
   "Amount in Eth"
   amountEth: BigDecimal!
   "Amount in Usd"
@@ -319,7 +319,7 @@ type PairDaily @entity {
   "The token 1 address greater than token0"
   token1: Token!
   "Start day timestamp"
-  timestamp: BigInt
+  timestamp: Int!
   "Total volume of token 0 traded"
   volumeToken0: BigInt
   "Total volume of token 1 traded"
@@ -338,7 +338,7 @@ type PairHourly @entity {
   "The token 1 address greater than token0"
   token1: Token!
   "Start hour timestamp"
-  timestamp: BigInt
+  timestamp: Int!
   "Total volume of token 0 traded"
   volumeToken0: BigInt
   "Total volume of token 1 traded"

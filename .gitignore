@@ -5,4 +5,3 @@ generated/
 node_modules/
 .env
 subgraph.yaml
-schema.graphql

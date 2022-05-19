@@ -40,8 +40,6 @@ type Token @entity {
   priceEth: BigDecimal
   "Derived price in USD" 
   priceUsd: BigDecimal
-  "Pools token is in that are allow listed for USD pricing"
-  allowedPools: [{{allowedPoolsType}}!]!
   "History of trading for this token"
   history: [TokenTradingEvent!]! @derivedFrom(field: "token")
   "Total trades"
@@ -121,7 +119,6 @@ type Settlement @entity {
 #  txCostUsd: BigDecimal!
 }
 
-{{#uniV3Factory}}
 # stores for USD calculations
 type Bundle @entity {
   "Singleton #1"
@@ -167,9 +164,8 @@ type UniswapToken @entity {
   "Derived price in USD" 
   priceUsd: BigDecimal
   "Pools token is in that are allow listed for USD pricing"
-  allowedPools: [{{allowedPoolsType}}!]!
+  allowedPools: [UniswapToken!]!
 }
-{{/uniV3Factory}}
 
 type Total @entity {
   "This is a singleton entity to contain accumulators for all values. Id will be always 1"

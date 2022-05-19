@@ -3,6 +3,7 @@ import { BigInt } from "@graphprotocol/graph-ts"
 import { Token, Trade as TradeEntity } from "../../generated/schema"
 import { convertTokenToDecimal } from "../utils"
 import { settlements, tokens, totals, users, pairs } from "./"
+import { ZERO_BD } from "../utils/constants"
 
 export namespace trades {
 
@@ -12,7 +13,7 @@ export namespace trades {
         let txHash = event.transaction.hash
         let txHashString = txHash.toHexString()
         let tradeId = orderId + "|" + txHashString + "|" + eventIndex
-        let timestamp = event.block.timestamp
+        let timestamp = event.block.timestamp.toI32()
         let sellAmount = event.params.sellAmount
         let buyAmount = event.params.buyAmount
         let txGasPrice = event.transaction.gasPrice
@@ -62,13 +63,22 @@ export namespace trades {
         trade.sellAmountUsd = sellAmountUsd
         trade.save()
 
-        // for now using sell amount
-        users.getOrCreateTrader(owner, timestamp, ownerAddress, sellAmountEth, sellAmountUsd)
-        users.getOrCreateSolver(solver, sellAmountEth, sellAmountUsd)
+        // determine the amount to calculate volumes. 
+        // try first with sellAmountUsd
+        // if it can't be calculated will use buyAmounts
+        let usdAmountForVolumes = sellAmountUsd
+        let ethAmountForVolumes = sellAmountEth
+        if (sellAmountUsd.le(ZERO_BD)) {
+            usdAmountForVolumes = buyAmountUsd
+            ethAmountForVolumes = buyAmountEth
+        }
 
-        totals.addVolumesAndFees(sellAmountEth, sellAmountUsd, feeAmountEth, feeAmountUsd, timestamp)
+        users.getOrCreateTrader(owner, timestamp, ownerAddress, ethAmountForVolumes, usdAmountForVolumes)
+        users.getOrCreateSolver(solver, ethAmountForVolumes, usdAmountForVolumes)
 
-        pairs.createOrUpdatePair(timestamp, buyTokenId, sellTokenId, buyAmount, sellAmount, sellAmountEth, sellAmountUsd)
+        totals.addVolumesAndFees(ethAmountForVolumes, usdAmountForVolumes, feeAmountEth, feeAmountUsd, timestamp)
+
+        pairs.createOrUpdatePair(timestamp, buyTokenId, sellTokenId, buyAmount, sellAmount, ethAmountForVolumes, usdAmountForVolumes)
     }
 
 }

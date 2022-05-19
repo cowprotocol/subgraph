@@ -7,7 +7,7 @@ import { totals } from "./totals"
 
 export namespace settlements {
 
-    export function getOrCreateSettlement(txHash: Bytes, tradeTimestamp: BigInt, solver: Address, txGasPrice: BigInt): void { 
+    export function getOrCreateSettlement(txHash: Bytes, tradeTimestamp: i32, solver: Address, txGasPrice: BigInt): void { 
 
         let settlementId = txHash.toHexString()
         let network = dataSource.network()
@@ -15,6 +15,8 @@ export namespace settlements {
         let settlement = Settlement.load(settlementId)
 
         // both xdai and weth have the same amount of decimals
+        // commented code is a WIP will be addressed with:
+        // https://github.com/cowprotocol/subgraph/issues/18
         let DEFAULT_DECIMALS =  BigInt.fromI32(18)
         let gasPriceUsd = ZERO_BD
         if (network == 'xdai') {

@@ -1,14 +1,10 @@
-import { BigInt } from "@graphprotocol/graph-ts";
 
-
-export function getDayTotalTimestamp(timestamp: BigInt): BigInt {
-    let dayId = timestamp.toI32() / 86400 
-    let dayStartTimestamp = dayId * 86400
-    return BigInt.fromI32(dayStartTimestamp)
+export function getDayTotalTimestamp(timestamp: i32): i32 {
+    let dayId = timestamp / 86400 
+    return dayId * 86400
 }
 
-export function getHourTotalTimestamp(timestamp: BigInt): BigInt {
-    let hourId = timestamp.toI32() / 3600
-    let hourStartTimestamp = hourId * 3600
-    return BigInt.fromI32(hourStartTimestamp)
+export function getHourTotalTimestamp(timestamp: i32): i32 {
+    let hourId = timestamp / 3600
+    return hourId * 3600
 }

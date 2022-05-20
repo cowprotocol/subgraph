@@ -9,14 +9,17 @@ export namespace pairs {
     token: string
     volume: BigInt
     price: BigDecimal
+    relativePrice: BigDecimal
 		constructor(
       _token: string,
       _volume: BigInt,
       _price: BigDecimal,
+      _relativePrice: BigDecimal
     ) {
       this.token = _token
       this.volume = _volume
       this.price = _price
+      this.relativePrice = _relativePrice
     }
   }
 
@@ -28,17 +31,22 @@ export namespace pairs {
     let token0 = token0Props.token
     let volumeToken0 = token0Props.volume
     let priceToken0 = token0Props.price
+    let token0RelativePrice = token0Props.relativePrice
 
     let token1Props = canonicalMarket.get("token1")
     let token1 = token1Props.token
     let volumeToken1 = token1Props.volume
     let priceToken1 = token1Props.price
+    let token1RelativePrice = token1Props.relativePrice
 
     let pairTotal = getOrCreatePair(token0, token1)
     let pairDailyTotal = getOrCreatePairDaily(token0, token1, timestamp)
     let pairHourlyTotal = getOrCreatePairHourly(token0, token1, timestamp)
 
-    totalsUpdate(pairTotal, pairDailyTotal, pairHourlyTotal, volumeToken0, volumeToken1, priceToken0, priceToken1, sellAmountEth, sellAmountUsd)
+    totalsUpdate(pairTotal, pairDailyTotal, pairHourlyTotal, 
+      volumeToken0, volumeToken1, priceToken0, priceToken1, 
+      token0RelativePrice, token1RelativePrice, 
+      sellAmountEth, sellAmountUsd)
   }
 
   function getCanonicalMarket(buyTokenId: string, sellTokenId: string, buyAmount: BigInt, sellAmount: BigInt,
@@ -49,8 +57,11 @@ export namespace pairs {
     let sellTokenNumber = BigInt.fromUnsignedBytes(sellTokenAddress)
     let value = new Map<string, TokenProps>()
 
-    let buyTokenProps = new TokenProps(buyTokenId, buyAmount, buyTokenPrice)
-    let sellTokenProps = new TokenProps(sellTokenId, sellAmount, sellTokenPrice)
+    let buyTokenExpressedOnSellToken = buyTokenPrice.div(sellTokenPrice)
+    let sellTokenExpressedOnBuyToken = sellTokenPrice.div(buyTokenPrice)
+
+    let buyTokenProps = new TokenProps(buyTokenId, buyAmount, buyTokenPrice, buyTokenExpressedOnSellToken)
+    let sellTokenProps = new TokenProps(sellTokenId, sellAmount, sellTokenPrice, sellTokenExpressedOnBuyToken)
 
     if (buyTokenNumber.lt(sellTokenNumber)) {
       value.set("token0", buyTokenProps)
@@ -64,7 +75,8 @@ export namespace pairs {
   }
 
   function totalsUpdate(pair: Pair, pairDaily: PairDaily, pairHourly: PairHourly, volumeToken0: BigInt, volumeToken1: BigInt, 
-    priceToken0: BigDecimal, priceToken1: BigDecimal, sellAmountEth: BigDecimal, sellAmountUsd: BigDecimal): void {
+    priceToken0: BigDecimal, priceToken1: BigDecimal, token0RelativePrice: BigDecimal, token1RelativePrice: BigDecimal, 
+    sellAmountEth: BigDecimal, sellAmountUsd: BigDecimal): void {
 
     let prevPairTotalVolume0 = pair.volumeToken0
     let prevPairTotalVolume1 = pair.volumeToken1
@@ -89,6 +101,8 @@ export namespace pairs {
     pair.volumeTradedUsd = prevPairTotalUsd.plus(sellAmountUsd)
     pair.token0Price = priceToken0
     pair.token1Price = priceToken1
+    pair.token0relativePrice = token0RelativePrice
+    pair.token1relativePrice = token1RelativePrice
     pair.save()
 
     // update volumes for a pair daily totals
@@ -98,6 +112,8 @@ export namespace pairs {
     pairDaily.volumeTradedUsd = prevPairDailyUsd.plus(sellAmountUsd)
     pairDaily.token0Price = priceToken0
     pairDaily.token1Price = priceToken1
+    pairDaily.token0relativePrice = token0RelativePrice
+    pairDaily.token1relativePrice = token1RelativePrice
     pairDaily.save()
 
     // update volumes for a pair hourly totals
@@ -107,6 +123,8 @@ export namespace pairs {
     pairHourly.volumeTradedUsd = prevPairHourlyUsd.plus(sellAmountUsd)
     pairHourly.token0Price = priceToken0
     pairHourly.token1Price = priceToken1
+    pairHourly.token0relativePrice = token0RelativePrice
+    pairHourly.token1relativePrice = token1RelativePrice
     pairHourly.save()
   }
 

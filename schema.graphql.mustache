@@ -299,6 +299,10 @@ type Pair @entity {
   token0Price: BigDecimal
   "Token1 last trade price"
   token1Price: BigDecimal
+  "Token 0 price expressed in token1 in the last trade"
+  token0relativePrice: BigDecimal
+  "Token 1 price expressed in token1 in the last trade"
+  token1relativePrice: BigDecimal
   "Total volume of token 0 traded"
   volumeToken0: BigInt
   "Total volume of token 1 traded"
@@ -320,6 +324,10 @@ type PairDaily @entity {
   token0Price: BigDecimal
   "Token1 last trade price"
   token1Price: BigDecimal
+  "Token 0 price expressed in token1 in the last trade"
+  token0relativePrice: BigDecimal
+  "Token 1 price expressed in token1 in the last trade"
+  token1relativePrice: BigDecimal
   "Start day timestamp"
   timestamp: BigInt
   "Total volume of token 0 traded"
@@ -343,6 +351,10 @@ type PairHourly @entity {
   token0Price: BigDecimal
   "Token1 last trade price"
   token1Price: BigDecimal
+  "Token 0 price expressed in token1 in the last trade"
+  token0relativePrice: BigDecimal
+  "Token 1 price expressed in token1 in the last trade"
+  token1relativePrice: BigDecimal
   "Start hour timestamp"
   timestamp: BigInt
   "Total volume of token 0 traded"

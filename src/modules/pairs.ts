@@ -57,8 +57,15 @@ export namespace pairs {
     let sellTokenNumber = BigInt.fromUnsignedBytes(sellTokenAddress)
     let value = new Map<string, TokenProps>()
 
-    let buyTokenExpressedOnSellToken = buyTokenPrice.div(sellTokenPrice)
-    let sellTokenExpressedOnBuyToken = sellTokenPrice.div(buyTokenPrice)
+    let buyTokenExpressedOnSellToken = ZERO_BD
+    let sellTokenExpressedOnBuyToken = ZERO_BD
+
+    if(sellTokenPrice.notEqual(ZERO_BD)) {
+      buyTokenExpressedOnSellToken = buyTokenPrice.div(sellTokenPrice)
+    }
+    if(buyTokenPrice.notEqual(ZERO_BD)) {
+      sellTokenExpressedOnBuyToken = sellTokenPrice.div(buyTokenPrice)
+    }
 
     let buyTokenProps = new TokenProps(buyTokenId, buyAmount, buyTokenPrice, buyTokenExpressedOnSellToken)
     let sellTokenProps = new TokenProps(sellTokenId, sellAmount, sellTokenPrice, sellTokenExpressedOnBuyToken)

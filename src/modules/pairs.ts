@@ -24,8 +24,9 @@ export namespace pairs {
   }
 
   export function createOrUpdatePair(timestamp: BigInt, buyTokenId: string, sellTokenId: string, buyAmount: BigInt, sellAmount: BigInt,
-    sellAmountEth: BigDecimal, sellAmountUsd: BigDecimal, buyTokenPrice: BigDecimal, sellTokenPrice: BigDecimal): void {
-    let canonicalMarket = getCanonicalMarket(buyTokenId, sellTokenId, buyAmount, sellAmount, buyTokenPrice, sellTokenPrice)
+    sellAmountEth: BigDecimal, sellAmountUsd: BigDecimal, buyTokenPriceUsd: BigDecimal, sellTokenPriceUsd: BigDecimal, 
+    buyAmountDecimals: BigDecimal, sellAmountDecimals: BigDecimal): void {
+    let canonicalMarket = getCanonicalMarket(buyTokenId, sellTokenId, buyAmount, sellAmount, buyTokenPriceUsd, sellTokenPriceUsd, buyAmountDecimals, sellAmountDecimals)
 
     let token0Props = canonicalMarket.get("token0")
     let token0 = token0Props.token
@@ -49,8 +50,9 @@ export namespace pairs {
       sellAmountEth, sellAmountUsd)
   }
 
-  function getCanonicalMarket(buyTokenId: string, sellTokenId: string, buyAmount: BigInt, sellAmount: BigInt,
-    buyTokenPrice: BigDecimal, sellTokenPrice: BigDecimal): Map<string, TokenProps> {
+  function getCanonicalMarket(buyTokenId: string, sellTokenId: string, buyAmount: BigInt, sellAmount: BigInt, 
+    buyTokenPriceUsd : BigDecimal, sellTokenPriceUsd: BigDecimal, 
+    buyAmountDecimals: BigDecimal, sellAmountDecimals: BigDecimal): Map<string, TokenProps> {
     let buyTokenAddress = Address.fromString(buyTokenId)
     let sellTokenAddress = Address.fromString(sellTokenId)
     let buyTokenNumber = BigInt.fromUnsignedBytes(buyTokenAddress)
@@ -60,15 +62,16 @@ export namespace pairs {
     let buyTokenExpressedOnSellToken = ZERO_BD
     let sellTokenExpressedOnBuyToken = ZERO_BD
 
-    if(sellTokenPrice.notEqual(ZERO_BD)) {
-      buyTokenExpressedOnSellToken = buyTokenPrice.div(sellTokenPrice)
+    // to prevent div 0 exception
+    if(sellAmountDecimals.notEqual(ZERO_BD)) {
+      buyTokenExpressedOnSellToken = buyAmountDecimals.div(sellAmountDecimals)
     }
-    if(buyTokenPrice.notEqual(ZERO_BD)) {
-      sellTokenExpressedOnBuyToken = sellTokenPrice.div(buyTokenPrice)
+    if(buyAmountDecimals.notEqual(ZERO_BD)) {
+      sellTokenExpressedOnBuyToken = sellAmountDecimals.div(buyAmountDecimals)
     }
 
-    let buyTokenProps = new TokenProps(buyTokenId, buyAmount, buyTokenPrice, buyTokenExpressedOnSellToken)
-    let sellTokenProps = new TokenProps(sellTokenId, sellAmount, sellTokenPrice, sellTokenExpressedOnBuyToken)
+    let buyTokenProps = new TokenProps(buyTokenId, buyAmount, buyTokenPriceUsd, buyTokenExpressedOnSellToken)
+    let sellTokenProps = new TokenProps(sellTokenId, sellAmount, sellTokenPriceUsd, sellTokenExpressedOnBuyToken)
 
     if (buyTokenNumber.lt(sellTokenNumber)) {
       value.set("token0", buyTokenProps)

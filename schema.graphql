@@ -40,16 +40,14 @@ type Token @entity {
   priceEth: BigDecimal
   "Derived price in USD" 
   priceUsd: BigDecimal
-  "Pools token is in that are allow listed for USD pricing"
-  allowedPools: [{{allowedPoolsType}}!]!
   "History of trading for this token"
   history: [TokenTradingEvent!]! @derivedFrom(field: "token")
   "Total trades"
   numberOfTrades: Int! 
   "Total volume in Usd"
-  totalVolumeUsd: BigDecimal
+  totalVolumeUsd: BigDecimal!
   "Total volume in Eth"
-  totalVolumeEth: BigDecimal 
+  totalVolumeEth: BigDecimal! 
 }
 
 type Order @entity {
@@ -66,7 +64,7 @@ type Order @entity {
   "Array of trades on the order"
   trades: [Trade!] @derivedFrom(field: "order")
   "Boolean value to show if the order is signed"
-  isSigned: Boolean!
+  isSigned: Boolean
   "Boolean value true by default unless is invalidated by the event"
   isValid: Boolean
 }
@@ -121,7 +119,6 @@ type Settlement @entity {
 #  txCostUsd: BigDecimal!
 }
 
-{{#uniV3Factory}}
 # stores for USD calculations
 type Bundle @entity {
   "Singleton #1"
@@ -134,9 +131,9 @@ type UniswapPool @entity {
   "Pool address"
   id: ID!
   "Token0"
-  token0: Token!
+  token0: UniswapToken!
   "Token1"
-  token1: Token!
+  token1: UniswapToken!
   "In range liquidity"
   liquidity: BigInt!
   "Token0 per token1"
@@ -150,7 +147,25 @@ type UniswapPool @entity {
   "Total token 1 across all ticks"
   totalValueLockedToken1: BigDecimal!
 }
-{{/uniV3Factory}}
+
+type UniswapToken @entity {
+  "Token address to hexString"
+  id: ID!
+  "Token address"
+  address: Bytes!
+  "Token name fetched by ERC20 contract call"
+  name: String!
+  "Token symbol fetched by contract call"
+  symbol: String!
+  "Token decimals fetched by contract call"
+  decimals: Int!
+  "Derived price in ETH"
+  priceEth: BigDecimal
+  "Derived price in USD" 
+  priceUsd: BigDecimal
+  "Pools token is in that are allow listed for USD pricing"
+  allowedPools: [UniswapToken!]!
+}
 
 type Total @entity {
   "This is a singleton entity to contain accumulators for all values. Id will be always 1"

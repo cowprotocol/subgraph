@@ -18,8 +18,6 @@ console.log(`  Generate subgraph.yaml`)
 series([
   (callback) => exec(`mustache config/${NETWORK}.json subgraph.yaml.mustache > subgraph.yaml`, null, callback),
 
-  (callback) => exec(`mustache config/${NETWORK}.json schema.graphql.mustache > schema.graphql`, null, callback),
-
   (callback) => {
     console.log('\n📝 Generate code from your GraphQL schema')
     return exec('yarn codegen', undefined, callback)

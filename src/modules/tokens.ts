@@ -48,7 +48,6 @@ export namespace tokens {
         token.priceEth = ZERO_BD
         token.priceUsd = ZERO_BD
       }
-      token.allowedPools = []
       token.numberOfTrades = 0
       token.totalVolumeEth = ZERO_BD
       token.totalVolumeUsd = ZERO_BD

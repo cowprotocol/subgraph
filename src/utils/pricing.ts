@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
 import { ONE_BD, ZERO_BD, ZERO_BI } from './constants'
-import { Bundle, UniswapPool, Token } from './../../generated/schema'
+import { Bundle, UniswapPool, UniswapToken } from './../../generated/schema'
 import { BigDecimal, BigInt } from '@graphprotocol/graph-ts'
 import { exponentToBigDecimal, safeDiv } from '../utils/index'
 
@@ -9,6 +9,8 @@ const USDC_WETH_03_POOL = '0x8ad599c3a0ff1de082011efddc58f1908eb6e6d8'
 
 // token where amounts should contribute to tracked volume and liquidity
 // usually tokens that many tokens are paired with s
+// next list and functions were taken from here: 
+// https://github.com/Uniswap/v3-subgraph/blob/bf03f940f17c3d32ee58bd37386f26713cff21e2/src/utils/pricing.ts#L12
 export let ALLOWED_TOKENS: string[] = [
   WETH_ADDRESS, // WETH
   '0x6b175474e89094c44da98b954eedeac495271d0f', // DAI
@@ -41,10 +43,13 @@ let STABLE_COINS: string[] = [
   '0x4dd28568d05f09b02220b09c2cb307bfd837cb95'
 ]
 
+
+// this is expressed in eth, but it seems to be for considering
+// pools of $100K or more .-
 let MINIMUM_ETH_LOCKED = BigDecimal.fromString('52')
 
 let Q192 = 2 ** 192
-export function sqrtPriceX96ToTokenPrices(sqrtPriceX96: BigInt, token0: Token, token1: Token): BigDecimal[] {
+export function sqrtPriceX96ToTokenPrices(sqrtPriceX96: BigInt, token0: UniswapToken, token1: UniswapToken): BigDecimal[] {
   let num = sqrtPriceX96.times(sqrtPriceX96).toBigDecimal()
   let denom = BigDecimal.fromString(Q192.toString())
   let price1 = num
@@ -69,7 +74,7 @@ export function getEthPriceInUSD(): BigDecimal {
  * Search through graph to find derived Eth per token.
  * @todo update to be derived ETH (add stablecoin estimates)
  **/
-export function findEthPerToken(token: Token): BigDecimal {
+export function findEthPerToken(token: UniswapToken): BigDecimal {
   if (token.id == WETH_ADDRESS) {
     return ONE_BD
   }
@@ -92,7 +97,7 @@ export function findEthPerToken(token: Token): BigDecimal {
       if (pool.liquidity.gt(ZERO_BI)) {
         if (pool.token0 == token.id) {
           // allowed token is token1
-          let token1 = Token.load(pool.token1)
+          let token1 = UniswapToken.load(pool.token1)
           // get the derived ETH in pool
           let token1PriceEth = token1.priceEth ? token1.priceEth as BigDecimal : ONE_BD
           let ethLocked = pool.totalValueLockedToken1.times(token1PriceEth)
@@ -103,7 +108,7 @@ export function findEthPerToken(token: Token): BigDecimal {
           }
         }
         if (pool.token1 == token.id) {
-          let token0 = Token.load(pool.token0)
+          let token0 = UniswapToken.load(pool.token0)
           // get the derived ETH in pool
           let token0PriceEth = token0.priceEth ? token0.priceEth as BigDecimal : ONE_BD
           let ethLocked = pool.totalValueLockedToken0.times(token0PriceEth)

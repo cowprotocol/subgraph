@@ -10,7 +10,7 @@ export namespace pairs {
     volume: BigInt
     price: BigDecimal
     relativePrice: BigDecimal
-		constructor(
+    constructor(
       _token: string,
       _volume: BigInt,
       _price: BigDecimal,
@@ -23,8 +23,8 @@ export namespace pairs {
     }
   }
 
-  export function createOrUpdatePair(timestamp: BigInt, buyTokenId: string, sellTokenId: string, buyAmount: BigInt, sellAmount: BigInt,
-    sellAmountEth: BigDecimal, sellAmountUsd: BigDecimal, buyTokenPriceUsd: BigDecimal, sellTokenPriceUsd: BigDecimal, 
+  export function createOrUpdatePair(timestamp: i32, buyTokenId: string, sellTokenId: string, buyAmount: BigInt, sellAmount: BigInt,
+    sellAmountEth: BigDecimal, sellAmountUsd: BigDecimal, buyTokenPriceUsd: BigDecimal, sellTokenPriceUsd: BigDecimal,
     buyAmountDecimals: BigDecimal, sellAmountDecimals: BigDecimal): void {
     let canonicalMarket = getCanonicalMarket(buyTokenId, sellTokenId, buyAmount, sellAmount, buyTokenPriceUsd, sellTokenPriceUsd, buyAmountDecimals, sellAmountDecimals)
 
@@ -44,14 +44,14 @@ export namespace pairs {
     let pairDailyTotal = getOrCreatePairDaily(token0, token1, timestamp)
     let pairHourlyTotal = getOrCreatePairHourly(token0, token1, timestamp)
 
-    totalsUpdate(pairTotal, pairDailyTotal, pairHourlyTotal, 
-      volumeToken0, volumeToken1, priceToken0, priceToken1, 
-      token0RelativePrice, token1RelativePrice, 
+    totalsUpdate(pairTotal, pairDailyTotal, pairHourlyTotal,
+      volumeToken0, volumeToken1, priceToken0, priceToken1,
+      token0RelativePrice, token1RelativePrice,
       sellAmountEth, sellAmountUsd)
   }
 
-  function getCanonicalMarket(buyTokenId: string, sellTokenId: string, buyAmount: BigInt, sellAmount: BigInt, 
-    buyTokenPriceUsd : BigDecimal, sellTokenPriceUsd: BigDecimal, 
+  function getCanonicalMarket(buyTokenId: string, sellTokenId: string, buyAmount: BigInt, sellAmount: BigInt,
+    buyTokenPriceUsd: BigDecimal, sellTokenPriceUsd: BigDecimal,
     buyAmountDecimals: BigDecimal, sellAmountDecimals: BigDecimal): Map<string, TokenProps> {
     let buyTokenAddress = Address.fromString(buyTokenId)
     let sellTokenAddress = Address.fromString(sellTokenId)
@@ -63,10 +63,10 @@ export namespace pairs {
     let sellTokenExpressedOnBuyToken = ZERO_BD
 
     // to prevent div 0 exception
-    if(sellAmountDecimals.notEqual(ZERO_BD)) {
+    if (sellAmountDecimals.notEqual(ZERO_BD)) {
       buyTokenExpressedOnSellToken = buyAmountDecimals.div(sellAmountDecimals)
     }
-    if(buyAmountDecimals.notEqual(ZERO_BD)) {
+    if (buyAmountDecimals.notEqual(ZERO_BD)) {
       sellTokenExpressedOnBuyToken = sellAmountDecimals.div(buyAmountDecimals)
     }
 
@@ -84,8 +84,8 @@ export namespace pairs {
     return value
   }
 
-  function totalsUpdate(pair: Pair, pairDaily: PairDaily, pairHourly: PairHourly, volumeToken0: BigInt, volumeToken1: BigInt, 
-    priceToken0: BigDecimal, priceToken1: BigDecimal, token0RelativePrice: BigDecimal, token1RelativePrice: BigDecimal, 
+  function totalsUpdate(pair: Pair, pairDaily: PairDaily, pairHourly: PairHourly, volumeToken0: BigInt, volumeToken1: BigInt,
+    priceToken0: BigDecimal, priceToken1: BigDecimal, token0RelativePrice: BigDecimal, token1RelativePrice: BigDecimal,
     sellAmountEth: BigDecimal, sellAmountUsd: BigDecimal): void {
 
     let prevPairTotalVolume0 = pair.volumeToken0
@@ -156,7 +156,7 @@ export namespace pairs {
     return pairTotal as Pair
   }
 
-  function getOrCreatePairDaily(token0: string, token1: string, timestamp: BigInt): PairDaily {
+  function getOrCreatePairDaily(token0: string, token1: string, timestamp: i32): PairDaily {
     let dailyTimestamp = getDayTotalTimestamp(timestamp)
     let id = token0 + "-" + token1 + "-" + dailyTimestamp.toString()
     let pairDailyTotal = PairDaily.load(id)
@@ -176,7 +176,7 @@ export namespace pairs {
 
   }
 
-  function getOrCreatePairHourly(token0: string, token1: string, timestamp: BigInt): PairHourly {
+  function getOrCreatePairHourly(token0: string, token1: string, timestamp: i32): PairHourly {
     let hourlyTimestamp = getHourTotalTimestamp(timestamp)
     let id = token0 + "-" + token1 + "-" + hourlyTimestamp.toString()
     let pairHourlyTotal = PairHourly.load(id)

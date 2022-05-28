@@ -6,7 +6,7 @@ import { totals } from "./totals"
 
 export namespace orders {
 
-    export function invalidateOrder(orderId: string, timestamp: BigInt): Order {
+    export function invalidateOrder(orderId: string, timestamp: i32): Order {
 
         let order = Order.load(orderId)
 
@@ -21,7 +21,7 @@ export namespace orders {
         return order as Order
     }
 
-    export function setPresignature(orderId: string, owner: string, timestamp: BigInt, signed: boolean): Order {
+    export function setPresignature(orderId: string, owner: string, timestamp: i32, signed: boolean): Order {
 
         // check if makes sense to count orders (in totals) that are coming from here
         let order = getOrCreateOrder(orderId, owner, timestamp)
@@ -32,7 +32,7 @@ export namespace orders {
         return order as Order
     }
 
-    export function getOrCreateOrderForTrade(orderId: string, timestamp: BigInt, owner: string): Order {
+    export function getOrCreateOrderForTrade(orderId: string, timestamp: i32, owner: string): Order {
 
         let order = getOrCreateOrder(orderId, owner, timestamp)
         order.tradesTimestamp = timestamp
@@ -40,7 +40,7 @@ export namespace orders {
         return order as Order
     }
 
-    function getOrCreateOrder(orderId: string, owner: string, timestamp: BigInt): Order {
+    function getOrCreateOrder(orderId: string, owner: string, timestamp: i32): Order {
 
         let order = Order.load(orderId)
 

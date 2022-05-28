@@ -2,7 +2,7 @@ import { ALLOWED_TOKENS } from '../utils/pricing'
 /* eslint-disable prefer-const */
 import { ZERO_BI, ZERO_BD } from '../utils/constants'
 import { PoolCreated } from '../../generated/Factory/Factory'
-import { UniswapPool, Token, Bundle } from '../../generated/schema'
+import { UniswapPool, UniswapToken, Bundle } from '../../generated/schema'
 import { Pool as PoolTemplate } from '../../generated/templates'
 import { fetchTokenSymbol, fetchTokenName, fetchTokenDecimals } from '../utils/token'
 import { log, Address } from '@graphprotocol/graph-ts'
@@ -22,12 +22,12 @@ export function handlePoolCreated(event: PoolCreated): void {
   }
 
   let pool = new UniswapPool(event.params.pool.toHexString()) as UniswapPool
-  let token0 = Token.load(event.params.token0.toHexString())
-  let token1 = Token.load(event.params.token1.toHexString())
+  let token0 = UniswapToken.load(event.params.token0.toHexString())
+  let token1 = UniswapToken.load(event.params.token1.toHexString())
 
   // fetch info if null
   if (token0 === null) {
-    token0 = new Token(event.params.token0.toHexString())
+    token0 = new UniswapToken(event.params.token0.toHexString())
     token0.address = event.params.token0
     token0.symbol = fetchTokenSymbol(event.params.token0)
     token0.name = fetchTokenName(event.params.token0)
@@ -43,11 +43,10 @@ export function handlePoolCreated(event: PoolCreated): void {
     token0.priceEth = ZERO_BD
     token0.priceUsd = ZERO_BD
     token0.allowedPools = []
-    token0.numberOfTrades = 0
   }
 
   if (token1 === null) {
-    token1 = new Token(event.params.token1.toHexString())
+    token1 = new UniswapToken(event.params.token1.toHexString())
     token1.address = event.params.token1
     token1.symbol = fetchTokenSymbol(event.params.token1)
     token1.name = fetchTokenName(event.params.token1)
@@ -61,7 +60,6 @@ export function handlePoolCreated(event: PoolCreated): void {
     token1.priceEth = ZERO_BD
     token1.priceUsd = ZERO_BD
     token1.allowedPools = []
-    token1.numberOfTrades = 0
   }
 
   // update white listed pools

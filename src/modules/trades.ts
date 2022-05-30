@@ -1,5 +1,5 @@
 import { Trade } from "../../generated/GPV2Settlement/GPV2Settlement"
-import { BigInt } from "@graphprotocol/graph-ts"
+import { BigInt, BigDecimal } from "@graphprotocol/graph-ts"
 import { Token, Trade as TradeEntity } from "../../generated/schema"
 import { convertTokenToDecimal } from "../utils"
 import { settlements, tokens, totals, users, pairs } from "./"
@@ -44,8 +44,11 @@ export namespace trades {
         let buyTokenId = buyToken.id
         let sellTokenId = sellToken.id
 
-        tokens.createTokenTradingEvent(timestamp, buyTokenId, tradeId, buyAmount, buyAmountEth, buyAmountUsd, buyToken.priceUsd)
-        tokens.createTokenTradingEvent(timestamp, sellTokenId, tradeId, sellAmount, sellAmountEth, sellAmountUsd, sellToken.priceUsd)
+        let buyTokenPriceUsd = buyToken.priceUsd as BigDecimal
+        let sellTokenPriceUsd = sellToken.priceUsd as BigDecimal
+
+        tokens.createTokenTradingEvent(timestamp, buyTokenId, tradeId, buyAmount, buyAmountEth, buyAmountUsd, buyTokenPriceUsd)
+        tokens.createTokenTradingEvent(timestamp, sellTokenId, tradeId, sellAmount, sellAmountEth, sellAmountUsd, sellTokenPriceUsd)
 
         trade.timestamp = timestamp
         trade.txHash = txHash
@@ -78,7 +81,8 @@ export namespace trades {
 
         totals.addVolumesAndFees(ethAmountForVolumes, usdAmountForVolumes, feeAmountEth, feeAmountUsd, timestamp)
 
-        pairs.createOrUpdatePair(timestamp, buyTokenId, sellTokenId, buyAmount, sellAmount, ethAmountForVolumes, usdAmountForVolumes)
+        pairs.createOrUpdatePair(timestamp, buyTokenId, sellTokenId, buyAmount, sellAmount, 
+            sellAmountEth, sellAmountUsd, buyTokenPriceUsd, sellTokenPriceUsd, buyAmountDecimals, sellAmountDecimals)
     }
 
 }

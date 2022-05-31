@@ -3,7 +3,7 @@ import { Settlement } from "../../generated/schema"
 import { convertTokenToDecimal } from "../utils"
 import { ZERO_BD } from "../utils/constants"
 import { totals } from "./totals"
-// import { getEthPriceInUSD } from "../utils/pricing"
+import { getEthPriceInUSD } from "../utils/pricing"
 
 export namespace settlements {
 
@@ -14,20 +14,15 @@ export namespace settlements {
 
         let settlement = Settlement.load(settlementId)
 
-        // both xdai and weth have the same amount of decimals
-        // commented code is a WIP will be addressed with:
-        // https://github.com/cowprotocol/subgraph/issues/18
         let DEFAULT_DECIMALS =  BigInt.fromI32(18)
         let gasPriceUsd = ZERO_BD
         if (network == 'xdai') {
-            // txGasPrice is in xdai
             gasPriceUsd = convertTokenToDecimal(txGasPrice, DEFAULT_DECIMALS)
         } else {
-            //txGasPrice is in eth
-            //let ethPrice = ZERO_BD
-            //ethPrice = getEthPriceInUSD()
-            //let txGasPriceEth = convertTokenToDecimal(txGasPrice, DEFAULT_DECIMALS)
-            //gasPriceUsd = txGasPriceEth.times(ethPrice)
+            // txgasPrice in Eth networks is expressed in eth so we need to do a conversion
+            let ethPrice = getEthPriceInUSD()
+            let txGasPriceEth = convertTokenToDecimal(txGasPrice, DEFAULT_DECIMALS)
+            gasPriceUsd = txGasPriceEth.times(ethPrice)
         }
 
         if (!settlement) {
@@ -35,7 +30,7 @@ export namespace settlements {
             settlement.txHash = txHash
             settlement.firstTradeTimestamp = tradeTimestamp
             settlement.solver = solver.toHexString()
-            //settlement.txCostUsd = gasPriceUsd
+            settlement.txCostUsd = gasPriceUsd
             settlement.save()
             totals.addSettlementCount(tradeTimestamp)
         } 

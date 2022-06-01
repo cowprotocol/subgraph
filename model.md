@@ -61,6 +61,7 @@ class Trade {
   timestamp: BigInt!
   gasPrice: BigInt!
   feeAmount: BigInt! 
+  feeAmountUsd: BigDecimal
   txHash: Bytes!
   settlement: Settlement!
   buyAmount: BigInt!

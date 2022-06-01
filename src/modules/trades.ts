@@ -60,6 +60,7 @@ export namespace trades {
         trade.order = orderId
         trade.gasPrice = txGasPrice
         trade.feeAmount = feeAmount
+        trade.feeAmountUsd = feeAmountUsd
         trade.buyAmountEth = buyAmountEth
         trade.sellAmountEth = sellAmountEth
         trade.buyAmountUsd = buyAmountUsd

@@ -15,14 +15,17 @@ export namespace settlements {
         let settlement = Settlement.load(settlementId)
 
         let DEFAULT_DECIMALS =  BigInt.fromI32(18)
-        let gasPriceUsd = ZERO_BD
+        let txCostUsd = ZERO_BD
+        let txCostNative = ZERO_BD
         if (network == 'xdai') {
-            gasPriceUsd = convertTokenToDecimal(txGasPrice, DEFAULT_DECIMALS)
+            txCostUsd = convertTokenToDecimal(txGasPrice, DEFAULT_DECIMALS)
+            txCostNative = txCostUsd
         } else {
             // txgasPrice in Eth networks is expressed in eth so we need to do a conversion
             let ethPrice = getEthPriceInUSD()
             let txGasPriceEth = convertTokenToDecimal(txGasPrice, DEFAULT_DECIMALS)
-            gasPriceUsd = txGasPriceEth.times(ethPrice)
+            txCostUsd = txGasPriceEth.times(ethPrice)
+            txCostNative = txGasPriceEth
         }
 
         if (!settlement) {
@@ -30,7 +33,8 @@ export namespace settlements {
             settlement.txHash = txHash
             settlement.firstTradeTimestamp = tradeTimestamp
             settlement.solver = solver.toHexString()
-            settlement.txCostUsd = gasPriceUsd
+            settlement.txCostUsd = txCostUsd
+            settlement.txCostNative = txCostNative
             settlement.save()
             totals.addSettlementCount(tradeTimestamp)
         } 

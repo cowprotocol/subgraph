@@ -119,6 +119,8 @@ type Settlement @entity {
   solver: User
   "Transaction cost in USD"
   txCostUsd: BigDecimal!
+  "Transaction cost in Native currency"
+  txCostNative: BigDecimal!
 }
 
 # stores for USD calculations

@@ -84,6 +84,8 @@ type Trade @entity {
   feeAmount: BigInt! 
   "Trade's fee amount in Usd"
   feeAmountUsd: BigDecimal 
+  "Trade's fee amount in Eth"
+  feeAmountEth: BigDecimal 
   "Trade event transaction hash"
   txHash: Bytes!
   "Settlement"

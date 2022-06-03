@@ -36,10 +36,12 @@ export namespace settlements {
             settlement.txCostUsd = txCostUsd
             settlement.txCostNative = txCostNative
             settlement.aggregatedFeeAmountUsd = ZERO_BD
+            settlement.profitability = ZERO_BD
             totals.addSettlementCount(tradeTimestamp)
         } 
         let prevFeeAmountUsd = settlement.aggregatedFeeAmountUsd
         settlement.aggregatedFeeAmountUsd = prevFeeAmountUsd.plus(feeAmountUsd)
+        settlement.profitability = settlement.aggregatedFeeAmountUsd.minus(settlement.txCostUsd)
         settlement.save()
     }
 }

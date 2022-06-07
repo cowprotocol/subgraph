@@ -43,7 +43,7 @@ type Token @entity {
   "History of trading for this token"
   history: [TokenTradingEvent!]! @derivedFrom(field: "token")
   "Hourly totals"
-  hourlyTotals: [TokenDailyTotal!]! @derivedFrom(field: "token")
+  hourlyTotals: [TokenHourlyTotal!]! @derivedFrom(field: "token")
   "Daily totals"
   dailyTotals: [TokenDailyTotal!]! @derivedFrom(field: "token")
   "Total trades"

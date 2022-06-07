@@ -32,7 +32,7 @@ class Token {
   priceUsd: BigDecimal
   allowedPools: [BigInt!]!
   history: [TokenTradingEvent!]! @derivedFrom(field: "token")
-  hourlyTotals: [TokenDailyTotal!]! @derivedFrom(field: "token")
+  hourlyTotals: [TokenHourlyTotal!]! @derivedFrom(field: "token")
   dailyTotals: [TokenDailyTotal!]! @derivedFrom(field: "token")
   numberOfTrades: Int! 
   totalVolumeUsd: BigDecimal

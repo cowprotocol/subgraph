@@ -16,16 +16,13 @@ export namespace settlements {
 
         let DEFAULT_DECIMALS =  BigInt.fromI32(18)
         let txCostUsd = ZERO_BD
-        let txCostNative = ZERO_BD
+        let txCostNative = convertTokenToDecimal(txGasPrice, DEFAULT_DECIMALS)
         if (network == 'xdai') {
-            txCostUsd = convertTokenToDecimal(txGasPrice, DEFAULT_DECIMALS)
-            txCostNative = txCostUsd
+            txCostUsd = txCostNative
         } else {
             // txgasPrice in Eth networks is expressed in eth so we need to do a conversion
             let ethPrice = getEthPriceInUSD()
-            let txGasPriceEth = convertTokenToDecimal(txGasPrice, DEFAULT_DECIMALS)
-            txCostUsd = txGasPriceEth.times(ethPrice)
-            txCostNative = txGasPriceEth
+            txCostUsd = txCostNative.times(ethPrice)
         }
 
         if (!settlement) {

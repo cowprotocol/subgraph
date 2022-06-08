@@ -42,6 +42,10 @@ type Token @entity {
   priceUsd: BigDecimal
   "History of trading for this token"
   history: [TokenTradingEvent!]! @derivedFrom(field: "token")
+  "Hourly totals"
+  hourlyTotals: [TokenHourlyTotal!]! @derivedFrom(field: "token")
+  "Daily totals"
+  dailyTotals: [TokenDailyTotal!]! @derivedFrom(field: "token")
   "Total trades"
   numberOfTrades: Int! 
   "Total volume in Usd"

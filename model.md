@@ -32,12 +32,16 @@ class Token {
   priceUsd: BigDecimal
   allowedPools: [BigInt!]!
   history: [TokenTradingEvent!]! @derivedFrom(field: "token")
+  hourlyTotals: [TokenHourlyTotal!]! @derivedFrom(field: "token")
+  dailyTotals: [TokenDailyTotal!]! @derivedFrom(field: "token")
   numberOfTrades: Int! 
   totalVolumeUsd: BigDecimal
   totalVolumeEth: BigDecimal 
 }
 
 Token --o TokenTradingEvent : History
+Token --o TokenDailyTotal : dailyTotals
+Token --o TokenHourlyTotal : hourlyTotals
 
 class Order {
   id: ID!
@@ -46,7 +50,8 @@ class Order {
   invalidateTimestamp: BigInt
   presignTimestamp: BigInt
   trades: [Trade!] @derivedFrom(field: "order")
-  isSigned: Boolean!
+  isSigned: Boolean
+  isValid: Boolean
 }
 
 Order --o Trade : trades
@@ -90,6 +95,7 @@ class Total {
   tokens: BigInt!
   orders: BigInt!
   traders: BigInt!
+  numberOfTrades: BigInt!
   settlements: BigInt!
   volumeUsd: BigDecimal
   volumeEth: BigDecimal
@@ -101,6 +107,7 @@ class DailyTotal {
   id: ID!
   timestamp: BigInt!
   totalTokens: BigInt!
+  numberOfTrades: BigInt!
   orders: BigInt!
   settlements: BigInt!
   volumeUsd: BigDecimal
@@ -116,6 +123,7 @@ class HourlyTotal {
   id: ID!
   timestamp: BigInt!
   totalTokens: BigInt!
+  numberOfTrades: BigInt!
   orders: BigInt!
   settlements: BigInt!
   volumeUsd: BigDecimal
@@ -172,6 +180,10 @@ class Pair {
   id: ID!
   token0: Token!
   token1: Token!
+  token0Price: BigDecimal
+  token1Price: BigDecimal
+  token0relativePrice: BigDecimal
+  token1relativePrice: BigDecimal
   volumeToken0: BigInt
   volumeToken1: BigInt
   volumeTradedEth: BigDecimal
@@ -185,6 +197,10 @@ class PairDaily {
   id: ID!
   token0: Token!
   token1: Token!
+  token0Price: BigDecimal
+  token1Price: BigDecimal
+  token0relativePrice: BigDecimal
+  token1relativePrice: BigDecimal
   timestamp: BigInt
   volumeToken0: BigInt
   volumeToken1: BigInt
@@ -199,6 +215,10 @@ class PairHourly {
   id: ID!
   token0: Token!
   token1: Token!
+  token0Price: BigDecimal
+  token1Price: BigDecimal
+  token0relativePrice: BigDecimal
+  token1relativePrice: BigDecimal
   timestamp: BigInt
   volumeToken0: BigInt
   volumeToken1: BigInt

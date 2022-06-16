@@ -52,11 +52,8 @@ let Q192 = 2 ** 192
 export function sqrtPriceX96ToTokenPrices(sqrtPriceX96: BigInt, token0: UniswapToken, token1: UniswapToken): BigDecimal[] {
   let num = sqrtPriceX96.times(sqrtPriceX96).toBigDecimal()
   let denom = BigDecimal.fromString(Q192.toString())
-  let price1 = num
-    .div(denom)
-    .times(exponentToBigDecimal(BigInt.fromI32(token0.decimals)))
-    .div(exponentToBigDecimal(BigInt.fromI32(token1.decimals)))
-
+  let price1 = safeDiv(safeDiv(num, denom)
+    .times(exponentToBigDecimal(BigInt.fromI32(token0.decimals))), exponentToBigDecimal(BigInt.fromI32(token1.decimals)))
   let price0 = safeDiv(BigDecimal.fromString('1'), price1)
   return [price0, price1]
 }

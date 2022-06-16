@@ -320,6 +320,8 @@ type Pair @entity {
   token0: Token!
   "The token 1 address greater than token0"
   token1: Token!
+  "Last trade timestamp"
+  lastTradeTimestamp: Int!
   "Token0 last trade price in USD"
   token0Usd: BigDecimal
   "Token1 last trade price in USD"
@@ -345,14 +347,14 @@ type PairDaily @entity {
   token0: Token!
   "The token 1 address greater than token0"
   token1: Token!
-  "Token0 last trade price"
-  token0Price: BigDecimal
-  "Token1 last trade price"
-  token1Price: BigDecimal
+  "Token0 last trade price in USD"
+  token0Usd: BigDecimal
+  "Token1 last trade price in USD"
+  token1Usd: BigDecimal
   "Token 0 price expressed in token1 in the last trade"
-  token0relativePrice: BigDecimal
+  token0PriceInToken1: BigDecimal
   "Token 1 price expressed in token1 in the last trade"
-  token1relativePrice: BigDecimal
+  token1PriceInToken0: BigDecimal
   "Start day timestamp"
   timestamp: Int!
   "Total volume of token 0 traded"
@@ -372,14 +374,14 @@ type PairHourly @entity {
   token0: Token!
   "The token 1 address greater than token0"
   token1: Token!
-  "Token0 last trade price"
-  token0Price: BigDecimal
-  "Token1 last trade price"
-  token1Price: BigDecimal
+  "Token0 last trade price in USD"
+  token0Usd: BigDecimal
+  "Token1 last trade price in USD"
+  token1Usd: BigDecimal
   "Token 0 price expressed in token1 in the last trade"
-  token0relativePrice: BigDecimal
+  token0PriceInToken1: BigDecimal
   "Token 1 price expressed in token1 in the last trade"
-  token1relativePrice: BigDecimal
+  token1PriceInToken0: BigDecimal
   "Start hour timestamp"
   timestamp: Int!
   "Total volume of token 0 traded"

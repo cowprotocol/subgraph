@@ -103,22 +103,22 @@ export function handleTrade(event: Trade): void {
   let buyCurrentAmountDecimals = convertTokenToDecimal(buyAmount, BigInt.fromI32(buyToken.decimals))
   let sellCurrentAmountDecimals = convertTokenToDecimal(sellAmount, BigInt.fromI32(sellToken.decimals))
 
-  if (buyToken.priceUsd != null) {
+  if (buyToken.priceUsd) {
     let buyTokenPriceUsd = buyToken.priceUsd as BigDecimal
     let buyCurrentTradeUsd = buyCurrentAmountDecimals.times(buyTokenPriceUsd)
     buyToken.totalVolumeUsd = buyTokenPrevTotalVolumeUsd.plus(buyCurrentTradeUsd)
   }
-  if (sellToken.priceUsd != null) {
+  if (sellToken.priceUsd) {
     let sellTokenPriceUsd = sellToken.priceUsd as BigDecimal
     let sellCurrentTradeUsd = sellCurrentAmountDecimals.times(sellTokenPriceUsd)
     sellToken.totalVolumeUsd = sellTokenPrevTotalVolumeUsd.plus(sellCurrentTradeUsd)
   }
-  if (buyToken.priceEth != null) {
+  if (buyToken.priceEth) {
     let buyTokenPriceEth = buyToken.priceEth as BigDecimal
     let buyCurrentTradeEth = buyCurrentAmountDecimals.times(buyTokenPriceEth)
     buyToken.totalVolumeEth = buyTokenPrevTotalVolumeEth.plus(buyCurrentTradeEth)
   }
-  if (sellToken.priceEth != null) {
+  if (sellToken.priceEth) {
     let sellTokenPriceEth = sellToken.priceEth as BigDecimal
     let sellCurrentTradeEth = sellCurrentAmountDecimals.times(sellTokenPriceEth)
     sellToken.totalVolumeEth = sellTokenPrevTotalVolumeEth.plus(sellCurrentTradeEth)

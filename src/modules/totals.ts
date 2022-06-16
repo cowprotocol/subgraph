@@ -170,52 +170,79 @@ export namespace totals {
     }
 
 
-    function updateVolumesAndFeesTotals(volumeEth: BigDecimal, volumeUsd: BigDecimal, feesEth: BigDecimal, feesUsd: BigDecimal): void {
+    function updateVolumesAndFeesTotals(volumeEth: BigDecimal | null, volumeUsd: BigDecimal | null, feesEth: BigDecimal | null, feesUsd: BigDecimal | null): void {
         let total = getOrCreateTotals()
         let prevVolumeEth = total.volumeEth
         let prevVolumeUsd = total.volumeUsd
         let prevFeesEth = total.feesEth
         let prevFeesUsd = total.feesUsd
         let prevTrades = total.numberOfTrades
-        total.volumeEth = prevVolumeEth.plus(volumeEth)
-        total.volumeUsd = prevVolumeUsd.plus(volumeUsd)
-        total.feesEth = prevFeesEth.plus(feesEth)
-        total.feesUsd = prevFeesUsd.plus(feesUsd)
+
+        if (volumeEth && prevVolumeEth) {
+            total.volumeEth = prevVolumeEth.plus(volumeEth)
+        }
+        if (volumeUsd && prevVolumeUsd) {
+            total.volumeUsd = prevVolumeUsd.plus(volumeUsd)
+        }
+        if (feesEth && prevFeesEth) {
+            total.feesEth = prevFeesEth.plus(feesEth)
+        }
+        if (feesUsd && prevFeesUsd) {
+            total.feesUsd = prevFeesUsd.plus(feesUsd)
+        }
         total.numberOfTrades = prevTrades.plus(ONE_BI)
         total.save()
     }
 
-    function updateHourlyVolumesAndFees(volumeEth: BigDecimal, volumeUsd: BigDecimal, feesEth: BigDecimal, feesUsd: BigDecimal, timestamp: i32): void {
+    function updateHourlyVolumesAndFees(volumeEth: BigDecimal | null, volumeUsd: BigDecimal | null, feesEth: BigDecimal | null, feesUsd: BigDecimal | null, timestamp: i32): void {
         let total = getOrCreateHourlyTotals(timestamp)
         let prevVolumeEth = total.volumeEth
         let prevVolumeUsd = total.volumeUsd
         let prevFeesEth = total.feesEth
         let prevFeesUsd = total.feesUsd
         let prevTrades = total.numberOfTrades
-        total.volumeEth = prevVolumeEth.plus(volumeEth)
-        total.volumeUsd = prevVolumeUsd.plus(volumeUsd)
-        total.feesEth = prevFeesEth.plus(feesEth)
-        total.feesUsd = prevFeesUsd.plus(feesUsd)
+
+        if (volumeEth && prevVolumeEth) {
+            total.volumeEth = prevVolumeEth.plus(volumeEth)
+        }
+        if (volumeUsd && prevVolumeUsd) {
+            total.volumeUsd = prevVolumeUsd.plus(volumeUsd)
+        }
+        if (feesEth && prevFeesEth) {
+            total.feesEth = prevFeesEth.plus(feesEth)
+        }
+        if (feesUsd && prevFeesUsd) {
+            total.feesUsd = prevFeesUsd.plus(feesUsd)
+        }
         total.numberOfTrades = prevTrades.plus(ONE_BI)
         total.save()
     }
 
-    function updateDailyVolumesAndFees(volumeEth: BigDecimal, volumeUsd: BigDecimal, feesEth: BigDecimal, feesUsd: BigDecimal, timestamp: i32): void {
+    function updateDailyVolumesAndFees(volumeEth: BigDecimal | null, volumeUsd: BigDecimal | null, feesEth: BigDecimal | null, feesUsd: BigDecimal | null, timestamp: i32): void {
         let total = getOrCreateDailyTotals(timestamp)
         let prevVolumeEth = total.volumeEth
         let prevVolumeUsd = total.volumeUsd
         let prevFeesEth = total.feesEth
         let prevFeesUsd = total.feesUsd
         let prevTrades = total.numberOfTrades
-        total.volumeEth = prevVolumeEth.plus(volumeEth)
-        total.volumeUsd = prevVolumeUsd.plus(volumeUsd)
-        total.feesEth = prevFeesEth.plus(feesEth)
-        total.feesUsd = prevFeesUsd.plus(feesUsd)
+
+        if (volumeEth && prevVolumeEth) {
+            total.volumeEth = prevVolumeEth.plus(volumeEth)
+        }
+        if (volumeUsd && prevVolumeUsd) {
+            total.volumeUsd = prevVolumeUsd.plus(volumeUsd)
+        }
+        if (feesEth && prevFeesEth) {
+            total.feesEth = prevFeesEth.plus(feesEth)
+        }
+        if (feesUsd && prevFeesUsd) {
+            total.feesUsd = prevFeesUsd.plus(feesUsd)
+        }
         total.numberOfTrades = prevTrades.plus(ONE_BI)
         total.save()
     }
 
-    export function addVolumesAndFees(volumeEth: BigDecimal, volumeUsd: BigDecimal, feesEth: BigDecimal, feesUsd: BigDecimal, timestamp: i32): void {
+    export function addVolumesAndFees(volumeEth: BigDecimal | null, volumeUsd: BigDecimal | null, feesEth: BigDecimal | null, feesUsd: BigDecimal | null, timestamp: i32): void {
         let dayTimestamp = getDayTotalTimestamp(timestamp)
         let hourTimestamp = getHourTotalTimestamp(timestamp)
         updateDailyVolumesAndFees(volumeEth, volumeUsd, feesEth, feesUsd, dayTimestamp)

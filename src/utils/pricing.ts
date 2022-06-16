@@ -87,35 +87,37 @@ export function findEthPerToken(token: UniswapToken): BigDecimal {
 
   // hardcoded fix for incorrect rates
   // if allowed includes token - get the safe price
-  if (STABLE_COINS.includes(token.id)) {
+  if (STABLE_COINS.includes(token.id) && bundle) {
     priceSoFar = safeDiv(ONE_BD, bundle.ethPriceUSD)
   } else {
     for (let i = 0; i < whiteList.length; ++i) {
       let poolAddress = whiteList[i]
       let pool = UniswapPool.load(poolAddress)
 
-      if (pool.liquidity.gt(ZERO_BI)) {
-        if (pool.token0 == token.id) {
+      let poolLiquidity = pool ? pool.liquidity : null
+
+      if (poolLiquidity && poolLiquidity.gt(ZERO_BI)) {
+        if (pool && pool.token0 == token.id) {
           // allowed token is token1
           let token1 = UniswapToken.load(pool.token1)
           // get the derived ETH in pool
-          let token1PriceEth = token1.priceEth ? token1.priceEth as BigDecimal : ONE_BD
+          let token1PriceEth = token1 && token1.priceEth ? token1.priceEth as BigDecimal : ONE_BD
           let ethLocked = pool.totalValueLockedToken1.times(token1PriceEth)
           if (ethLocked.gt(largestLiquidityETH) && ethLocked.gt(MINIMUM_ETH_LOCKED)) {
             largestLiquidityETH = ethLocked
             // token1 per our token * Eth per token1
-            priceSoFar = pool.token1Price.times(token1.priceEth as BigDecimal)
+            priceSoFar = pool.token1Price.times(token1PriceEth)
           }
         }
-        if (pool.token1 == token.id) {
+        if (pool && pool.token1 == token.id) {
           let token0 = UniswapToken.load(pool.token0)
           // get the derived ETH in pool
-          let token0PriceEth = token0.priceEth ? token0.priceEth as BigDecimal : ONE_BD
+          let token0PriceEth = token0 && token0.priceEth ? token0.priceEth as BigDecimal : ONE_BD
           let ethLocked = pool.totalValueLockedToken0.times(token0PriceEth)
           if (ethLocked.gt(largestLiquidityETH) && ethLocked.gt(MINIMUM_ETH_LOCKED)) {
             largestLiquidityETH = ethLocked
             // token0 per our token * ETH per token0
-            priceSoFar = pool.token0Price.times(token0.priceEth as BigDecimal)
+            priceSoFar = pool.token0Price.times(token0PriceEth)
           }
         }
       }

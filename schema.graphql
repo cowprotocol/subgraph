@@ -35,7 +35,7 @@ type Token @entity {
   "Token decimals fetched by contract call"
   decimals: Int!
   "Total volume managed in CowSwap"
-  totalVolume: BigInt
+  totalVolume: BigInt!
   "Derived price in ETH"
   priceEth: BigDecimal
   "Derived price in USD" 
@@ -308,9 +308,9 @@ type TokenTradingEvent @entity {
   "Timestamp"
   timestamp: Int!
   "Amount in Eth"
-  amountEth: BigDecimal!
+  amountEth: BigDecimal
   "Amount in Usd"
-  amountUsd: BigDecimal!
+  amountUsd: BigDecimal
 }
 
 type Pair @entity {
@@ -325,13 +325,13 @@ type Pair @entity {
   "Token1 last trade price"
   token1Price: BigDecimal
   "Token 0 price expressed in token1 in the last trade"
-  token0relativePrice: BigDecimal
+  token0relativePrice: BigDecimal!
   "Token 1 price expressed in token1 in the last trade"
-  token1relativePrice: BigDecimal
+  token1relativePrice: BigDecimal!
   "Total volume of token 0 traded"
-  volumeToken0: BigInt
+  volumeToken0: BigInt!
   "Total volume of token 1 traded"
-  volumeToken1: BigInt
+  volumeToken1: BigInt!
   "Total volume in Eth"
   volumeTradedEth: BigDecimal
   "Total volume in Usd"
@@ -356,9 +356,9 @@ type PairDaily @entity {
   "Start day timestamp"
   timestamp: Int!
   "Total volume of token 0 traded"
-  volumeToken0: BigInt
+  volumeToken0: BigInt!
   "Total volume of token 1 traded"
-  volumeToken1: BigInt
+  volumeToken1: BigInt!
   "Total volume in Eth"
   volumeTradedEth: BigDecimal
   "Total volume in Usd"
@@ -383,9 +383,9 @@ type PairHourly @entity {
   "Start hour timestamp"
   timestamp: Int!
   "Total volume of token 0 traded"
-  volumeToken0: BigInt
+  volumeToken0: BigInt!
   "Total volume of token 1 traded"
-  volumeToken1: BigInt
+  volumeToken1: BigInt!
   "Total volume in Eth"
   volumeTradedEth: BigDecimal
   "Total volume in Usd"

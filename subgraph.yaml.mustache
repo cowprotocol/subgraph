@@ -15,7 +15,7 @@ dataSources:
       {{/startBlock}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - Trade
@@ -57,7 +57,7 @@ dataSources:
       {{/uniV3StartBlock}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       file: ./src/uniswapMappings/uniswapPoolFactory.ts
       entities:
@@ -85,7 +85,7 @@ templates:
       abi: Pool
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.4
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       file: ./src/uniswapMappings/uniswapPools.ts
       entities:

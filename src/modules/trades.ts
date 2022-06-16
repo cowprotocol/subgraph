@@ -23,15 +23,24 @@ export namespace trades {
         let owner = ownerAddress.toHexString()
 
         let buyAmountDecimals = convertTokenToDecimal(buyAmount, BigInt.fromI32(buyToken.decimals))
-        let buyAmountUsd = buyToken.priceUsd.times(buyAmountDecimals)
-        let buyAmountEth = buyToken.priceEth.times(buyAmountDecimals)
+        
+        let _buyTokenPriceUsd = buyToken.priceUsd
+        let buyAmountUsd = _buyTokenPriceUsd ? _buyTokenPriceUsd.times(buyAmountDecimals) : null
+
+        let _buyTokenPriceEth = buyToken.priceEth
+        let buyAmountEth = _buyTokenPriceEth ? _buyTokenPriceEth.times(buyAmountDecimals) : null
         let sellAmountDecimals = convertTokenToDecimal(sellAmount, BigInt.fromI32(sellToken.decimals))
-        let sellAmountUsd = sellToken.priceUsd.times(sellAmountDecimals)
-        let sellAmountEth = sellToken.priceEth.times(sellAmountDecimals)
 
         let feeAmountDecimals = convertTokenToDecimal(feeAmount, BigInt.fromI32(sellToken.decimals))
-        let feeAmountUsd = sellToken.priceUsd.times(feeAmountDecimals)
-        let feeAmountEth = sellToken.priceEth.times(feeAmountDecimals)
+        
+        let _sellTokenPriceUsd = sellToken.priceUsd
+        
+        let sellAmountUsd = _sellTokenPriceUsd ? _sellTokenPriceUsd.times(sellAmountDecimals) : null
+        let feeAmountUsd = _sellTokenPriceUsd ?_sellTokenPriceUsd.times(feeAmountDecimals) : null
+
+        let _sellTokenPriceEth = sellToken.priceEth
+        let sellAmountEth = _sellTokenPriceEth ? _sellTokenPriceEth.times(sellAmountDecimals) : null
+        let feeAmountEth = _sellTokenPriceEth ?_sellTokenPriceEth.times(feeAmountDecimals) : null
 
         // This statement need to be after tokens prices calculation.
         settlements.getOrCreateSettlement(txHash, timestamp, solver, txGasPrice)
@@ -71,7 +80,7 @@ export namespace trades {
         // if it can't be calculated will use buyAmounts
         let usdAmountForVolumes = sellAmountUsd
         let ethAmountForVolumes = sellAmountEth
-        if (sellAmountUsd.le(ZERO_BD)) {
+        if (sellAmountUsd && sellAmountUsd.le(ZERO_BD)) {
             usdAmountForVolumes = buyAmountUsd
             ethAmountForVolumes = buyAmountEth
         }

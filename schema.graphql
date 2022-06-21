@@ -117,10 +117,10 @@ type Settlement @entity {
   trades: [Trade!] @derivedFrom(field: "settlement")
   "User who solved the settlement"
   solver: User
-#  "Transaction cost in Eth"
-#  txCostEth: BigDecimal!
-#  "Transaction cost in USD"
-#  txCostUsd: BigDecimal!
+  "Transaction cost in USD"
+  txCostUsd: BigDecimal!
+  "Transaction cost in Native currency"
+  txCostNative: BigDecimal!
 }
 
 # stores for USD calculations

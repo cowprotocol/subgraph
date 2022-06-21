@@ -85,6 +85,7 @@ class Settlement {
   firstTradeTimestamp: BigInt!
   trades: [Trade!] @derivedFrom(field: "settlement")
   solver: User
+  txCostUsd: BigDecimal!
 }
 
 Settlement --o Trade : trades

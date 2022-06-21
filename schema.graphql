@@ -126,7 +126,9 @@ type Settlement @entity {
   "Transaction cost in Native currency"
   txCostNative: BigDecimal!
   "Trade's fee amount accumulated in Usd"
-  aggregatedFeeAmountUsd: BigDecimal 
+  aggregatedFeeAmountUsd: BigDecimal!
+  "Profitability is aggregatedFeeAmountUsd minus txCostUsd"
+  profitability: BigDecimal!
 }
 
 # stores for USD calculations

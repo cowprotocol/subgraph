@@ -88,6 +88,8 @@ class Settlement {
   trades: [Trade!] @derivedFrom(field: "settlement")
   solver: User
   txCostUsd: BigDecimal!
+  aggregatedFeeAmountUsd: BigDecimal 
+  profitability: BigDecimal!
 }
 
 Settlement --o Trade : trades

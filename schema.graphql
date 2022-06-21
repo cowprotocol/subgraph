@@ -125,6 +125,8 @@ type Settlement @entity {
   txCostUsd: BigDecimal!
   "Transaction cost in Native currency"
   txCostNative: BigDecimal!
+  "Trade's fee amount accumulated in Usd"
+  aggregatedFeeAmountUsd: BigDecimal 
 }
 
 # stores for USD calculations

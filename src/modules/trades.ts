@@ -34,7 +34,7 @@ export namespace trades {
         let feeAmountEth = sellToken.priceEth.times(feeAmountDecimals)
 
         // This statement need to be after tokens prices calculation.
-        settlements.getOrCreateSettlement(txHash, timestamp, solver, txGasPrice)
+        settlements.getOrCreateSettlement(txHash, timestamp, solver, txGasPrice, feeAmountUsd)
 
         let trade = TradeEntity.load(tradeId)
 

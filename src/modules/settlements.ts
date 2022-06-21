@@ -1,4 +1,4 @@
-import { BigInt, Bytes, Address, dataSource } from "@graphprotocol/graph-ts"
+import { BigInt, Bytes, Address, dataSource, BigDecimal } from "@graphprotocol/graph-ts"
 import { Settlement } from "../../generated/schema"
 import { convertTokenToDecimal } from "../utils"
 import { ZERO_BD } from "../utils/constants"
@@ -7,7 +7,7 @@ import { getEthPriceInUSD } from "../utils/pricing"
 
 export namespace settlements {
 
-    export function getOrCreateSettlement(txHash: Bytes, tradeTimestamp: i32, solver: Address, txGasPrice: BigInt): void { 
+    export function getOrCreateSettlement(txHash: Bytes, tradeTimestamp: i32, solver: Address, txGasPrice: BigInt, feeAmountUsd: BigDecimal): void { 
 
         let settlementId = txHash.toHexString()
         let network = dataSource.network()
@@ -32,8 +32,11 @@ export namespace settlements {
             settlement.solver = solver.toHexString()
             settlement.txCostUsd = txCostUsd
             settlement.txCostNative = txCostNative
-            settlement.save()
+            settlement.aggregatedFeeAmountUsd = ZERO_BD
             totals.addSettlementCount(tradeTimestamp)
         } 
+        let prevFeeAmountUsd = settlement.aggregatedFeeAmountUsd
+        settlement.aggregatedFeeAmountUsd = prevFeeAmountUsd.plus(feeAmountUsd)
+        settlement.save()
     }
 }

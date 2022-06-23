@@ -3,7 +3,7 @@ import { BigInt, BigDecimal } from "@graphprotocol/graph-ts"
 import { Token, Trade as TradeEntity } from "../../generated/schema"
 import { convertTokenToDecimal } from "../utils"
 import { settlements, tokens, totals, users, pairs } from "./"
-import { ZERO_BD } from "../utils/constants"
+import { ZERO_ADDRESS, ZERO_BD, ZERO_BI } from "../utils/constants"
 
 export namespace trades {
 
@@ -59,16 +59,16 @@ export namespace trades {
         tokens.createTokenTradingEvent(timestamp, buyTokenId, tradeId, buyAmount, buyAmountEth, buyAmountUsd, buyTokenPriceUsd)
         tokens.createTokenTradingEvent(timestamp, sellTokenId, tradeId, sellAmount, sellAmountEth, sellAmountUsd, sellTokenPriceUsd)
 
-        trade.timestamp = timestamp
-        trade.txHash = txHash
-        trade.settlement = txHashString
-        trade.buyToken = buyTokenId
-        trade.buyAmount = buyAmount
-        trade.sellToken = sellTokenId
-        trade.sellAmount = sellAmount
-        trade.order = orderId
-        trade.gasPrice = txGasPrice
-        trade.feeAmount = feeAmount
+        trade.timestamp = timestamp ? timestamp : 0
+        trade.txHash = txHash ? txHash : ZERO_ADDRESS
+        trade.settlement = txHashString ? txHashString : ""
+        trade.buyToken = buyTokenId ? buyTokenId : ""
+        trade.buyAmount = buyAmount ? buyAmount : ZERO_BI
+        trade.sellToken = sellTokenId ? sellTokenId : ""
+        trade.sellAmount = sellAmount ? sellAmount : ZERO_BI
+        trade.order = orderId ? orderId : ""
+        trade.gasPrice = txGasPrice ? txGasPrice : ZERO_BI
+        trade.feeAmount = feeAmount ? feeAmount : ZERO_BI
         trade.buyAmountEth = buyAmountEth
         trade.sellAmountEth = sellAmountEth
         trade.buyAmountUsd = buyAmountUsd

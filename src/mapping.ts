@@ -5,9 +5,10 @@ import {
   Settlement,
   Trade
 } from "../generated/GPV2Settlement/GPV2Settlement"
+import { WETH_ADDRESS } from "./utils/pricing"
 import { tokens, trades, orders, users } from "./modules"
 import { getPrices } from "./utils/getPrices"
-import { MINUS_ONE_BD, ZERO_BI } from "./utils/constants"
+import { MINUS_ONE_BD } from "./utils/constants"
 import { BigDecimal, BigInt, dataSource, log } from "@graphprotocol/graph-ts"
 import { convertTokenToDecimal } from "./utils"
 import { UniswapToken } from "../generated/schema"
@@ -77,8 +78,12 @@ export function handleTrade(event: Trade): void {
       buyToken.priceEth = buyTokenPrices.get("eth")
     }
   } else {
+    let buyTokenAddressHexString = buyTokenAddress.toHexString()
+    if (buyTokenAddressHexString === "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"){
+      buyTokenAddressHexString = WETH_ADDRESS
+    }
     let sellUniToken = UniswapToken.load(sellTokenAddress.toHexString())
-    let buyUniToken = UniswapToken.load(buyTokenAddress.toHexString())
+    let buyUniToken = UniswapToken.load(buyTokenAddressHexString)
     if (sellUniToken) {
       sellToken.priceUsd = sellUniToken.priceUsd ? sellUniToken.priceUsd : null
       sellToken.priceEth = sellUniToken.priceEth ? sellUniToken.priceEth : null
@@ -136,5 +141,4 @@ export function handleTrade(event: Trade): void {
   sellToken.save()
   buyToken.save()
   order.save()
-
 }

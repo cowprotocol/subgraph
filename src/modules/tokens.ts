@@ -20,7 +20,7 @@ export namespace tokens {
       // creates a new token and fill properites
       token = new Token(tokenId)
       token.address = tokenAddress
-      token.firstTradeTimestamp = timestamp
+      token.firstTradeTimestamp = timestamp ? timestamp : 0
 
       // try contract calls for filling decimals, name and symbol
       let erc20Token = ERC20.bind(tokenAddress)

@@ -16,6 +16,7 @@ export namespace users {
             user.solvedAmountUsd = ZERO_BD
             user.tradedAmountEth = ZERO_BD
             user.tradedAmountUsd = ZERO_BD
+            user.firstTradeTimestamp = 0
         } 
 
         return user as User

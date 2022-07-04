@@ -44,6 +44,9 @@ dataSources:
           handler: handleSettlement
         - event: Trade(indexed address,address,address,uint256,uint256,uint256,bytes)
           handler: handleTrade
+      callHandlers:
+        - function: settle(address[],uint256[],(uint256,uint256,address,uint256,uint256,uint32,bytes32,uint256,uint256,uint256,bytes)[],(address,uint256,bytes)[])
+          handler: handleSettle
       file: ./src/mapping.ts
 {{#uniV3Factory}}
   - kind: ethereum/contract

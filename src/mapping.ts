@@ -3,14 +3,15 @@ import {
   OrderInvalidated,
   PreSignature,
   Settlement,
-  Trade
+  Trade,
+  SettleCall
 } from "../generated/GPV2Settlement/GPV2Settlement"
-import { tokens, trades, orders, users } from "./modules"
+import { tokens, trades, orders, users, totals } from "./modules"
 import { getPrices } from "./utils/getPrices"
-import { MINUS_ONE_BD, ZERO_BI } from "./utils/constants"
-import { BigDecimal, BigInt, dataSource, log } from "@graphprotocol/graph-ts"
+import { MINUS_ONE_BD } from "./utils/constants"
+import { BigDecimal, BigInt, dataSource } from "@graphprotocol/graph-ts"
 import { convertTokenToDecimal } from "./utils"
-import { UniswapToken } from "../generated/schema"
+import { Receiver, UniswapToken } from "../generated/schema"
 
 export function handleInteraction(event: Interaction): void { }
 
@@ -137,4 +138,39 @@ export function handleTrade(event: Trade): void {
   buyToken.save()
   order.save()
 
+}
+
+export function handleSettle(call: SettleCall): void {
+
+  // function: settle(
+  //  address[],  <- Tokens
+  //  uint256[],  <- clearingPrices
+  //  (uint256,uint256,address,uint256,uint256,uint32,bytes32,uint256,uint256,uint256,bytes)[], <- Trades
+  //      uint256,  sellTokenIndex
+  //      uint256,  buyTokenIndex
+  //      address,  receiver
+  //      uint256,  sellAmount
+  //      uint256,  buyAmount
+  //      uint32,   validTo
+  //      bytes32,  appData
+  //      uint256,  feeAmount
+  //      uint256,  flags
+  //      uint256,  executedAmount
+  //      bytes)    signature
+  //  (address,uint256,bytes)[] <- interactions
+  // )
+
+  // Need to create trade id to bind settle with the trade
+  // tradeId => orderId + "|" + txHashString + "|" + eventIndex // think on a fix changing tradeId
+
+  totals.addSettleCall()
+
+  let trades = call.inputs.trades
+
+  for(let i = 0; trades.length > i; i++) {
+    let receiverAddress = trades[i].receiver
+    let receiver = new Receiver(receiverAddress.toHexString())
+    receiver.address = receiverAddress
+    receiver.save()
+  }
 }

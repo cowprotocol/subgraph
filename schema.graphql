@@ -192,6 +192,8 @@ type Total @entity {
   feesUsd: BigDecimal
   "Total fees in Eth"
   feesEth: BigDecimal
+  "times settle function was called"
+  settleCalls: BigInt!
 }
 
 type DailyTotal @entity {
@@ -390,4 +392,9 @@ type PairHourly @entity {
   volumeTradedEth: BigDecimal
   "Total volume in Usd"
   volumeTradedUsd: BigDecimal
+}
+
+type Receiver @entity {
+  id: ID!
+  address: Bytes!
 }

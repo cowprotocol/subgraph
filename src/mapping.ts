@@ -8,8 +8,8 @@ import {
 import { WETH_ADDRESS } from "./utils/pricing"
 import { tokens, trades, orders, users } from "./modules"
 import { getPrices } from "./utils/getPrices"
-import { MINUS_ONE_BD } from "./utils/constants"
-import { BigDecimal, BigInt, dataSource, log } from "@graphprotocol/graph-ts"
+import { MINUS_ONE_BD, ZERO_BD } from "./utils/constants"
+import { Address, BigDecimal, BigInt, dataSource, log } from "@graphprotocol/graph-ts"
 import { convertTokenToDecimal } from "./utils"
 import { UniswapToken } from "../generated/schema"
 
@@ -65,8 +65,15 @@ export function handleTrade(event: Trade): void {
   buyToken.totalVolume =  tokenCurrentBuyAmount.plus(buyAmount)
 
   if (network == 'xdai') {
+    let buyTokenAddressHexString = buyTokenAddress.toHexString()
     let sellTokenPrices = getPrices(sellTokenAddress)
-    let buyTokenPrices = getPrices(buyTokenAddress)
+    let buyTokenPrices
+    if (buyTokenAddressHexString !== "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee") {
+      buyTokenPrices = getPrices(buyTokenAddress)
+    } else {
+      let XDAI_ADDRESS = Address.fromString("0xe91d153e0b41518a2ce8dd3d7944fa863463a97d")
+      buyTokenPrices = getPrices(XDAI_ADDRESS)
+    }
     if (sellTokenPrices.get("usd") != MINUS_ONE_BD &&
       sellTokenPrices.get("eth") != MINUS_ONE_BD) {
       sellToken.priceUsd = sellTokenPrices.get("usd")

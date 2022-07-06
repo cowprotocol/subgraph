@@ -67,7 +67,7 @@ export function handleTrade(event: Trade): void {
   if (network == 'xdai') {
     let buyTokenAddressHexString = buyTokenAddress.toHexString()
     let sellTokenPrices = getPrices(sellTokenAddress)
-    let buyTokenPrices
+    let buyTokenPrices = new Map<string, BigDecimal>()
     if (buyTokenAddressHexString !== "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee") {
       buyTokenPrices = getPrices(buyTokenAddress)
     } else {

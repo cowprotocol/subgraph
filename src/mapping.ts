@@ -64,15 +64,17 @@ export function handleTrade(event: Trade): void {
   sellToken.totalVolume =  tokenCurrentSellAmount.plus(sellAmount)
   buyToken.totalVolume =  tokenCurrentBuyAmount.plus(buyAmount)
 
+  let buyTokenAddressHexString = buyTokenAddress.toHexString()
+  let isBuyTokenTheNativeOne = buyTokenAddressHexString === "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+
   if (network == 'xdai') {
-    let buyTokenAddressHexString = buyTokenAddress.toHexString()
     let sellTokenPrices = getPrices(sellTokenAddress)
     let buyTokenPrices = new Map<string, BigDecimal>()
-    if (buyTokenAddressHexString !== "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee") {
-      buyTokenPrices = getPrices(buyTokenAddress)
-    } else {
+    if (isBuyTokenTheNativeOne) {
       let XDAI_ADDRESS = Address.fromString("0xe91d153e0b41518a2ce8dd3d7944fa863463a97d")
       buyTokenPrices = getPrices(XDAI_ADDRESS)
+    } else {
+      buyTokenPrices = getPrices(buyTokenAddress)
     }
     if (sellTokenPrices.get("usd") != MINUS_ONE_BD &&
       sellTokenPrices.get("eth") != MINUS_ONE_BD) {
@@ -85,8 +87,7 @@ export function handleTrade(event: Trade): void {
       buyToken.priceEth = buyTokenPrices.get("eth")
     }
   } else {
-    let buyTokenAddressHexString = buyTokenAddress.toHexString()
-    if (buyTokenAddressHexString === "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"){
+    if (isBuyTokenTheNativeOne){
       buyTokenAddressHexString = WETH_ADDRESS
     }
     let sellUniToken = UniswapToken.load(sellTokenAddress.toHexString())

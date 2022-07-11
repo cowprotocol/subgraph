@@ -58,7 +58,9 @@ export namespace tokens {
 
     // adding timestamp for token created by uniswap logic
     // start counting that token
-    if (token.firstTradeTimestamp === null) {
+
+    let firstTradeTimestamp = token.firstTradeTimestamp
+    if (firstTradeTimestamp === null && timestamp != null) {
       token.firstTradeTimestamp = timestamp
       totals.addTokenCount(timestamp, tokenId)
     }

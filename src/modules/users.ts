@@ -27,7 +27,9 @@ export namespace users {
         let prevTradedAmountUsd = user.tradedAmountUsd
         let prevTradedAmountEth = user.tradedAmountEth
 
-        if (user.firstTradeTimestamp === null) {
+        let firstTradeTimestamp = user.firstTradeTimestamp
+
+        if (firstTradeTimestamp === null && timestamp != null) {
             user.firstTradeTimestamp = timestamp
             totals.addTraderCount()
         }

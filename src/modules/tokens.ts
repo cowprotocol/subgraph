@@ -58,7 +58,7 @@ export namespace tokens {
 
     // adding timestamp for token created by uniswap logic
     // start counting that token
-    if (!token.firstTradeTimestamp) {
+    if (token.firstTradeTimestamp === null) {
       token.firstTradeTimestamp = timestamp
       totals.addTokenCount(timestamp, tokenId)
     }

@@ -51,17 +51,15 @@ export namespace tokens {
       token.numberOfTrades = 0
       token.totalVolumeEth = ZERO_BD
       token.totalVolumeUsd = ZERO_BD
-
-      // add token created to the totals
-      totals.addTokenCount(timestamp, tokenId)
     }
 
     // adding timestamp for token created by uniswap logic
     // start counting that token
     if (!token.firstTradeTimestamp) {
       token.firstTradeTimestamp = timestamp
-      totals.addTokenCount(timestamp, tokenId)
     }
+
+    totals.addTokenCount(timestamp, tokenId)
 
     token.save()
 

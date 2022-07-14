@@ -50,7 +50,7 @@ let MINIMUM_ETH_LOCKED = BigDecimal.fromString('52')
 
 let twoBI = BigInt.fromI32(2)
 let Q192 = twoBI.pow(192)
-export function sqrtPriceX96ToTokenPrices(sqrtPriceX96: BigInt, token0: UniswapToken, token1: UniswapToken, txHash: string): BigDecimal[] {
+export function sqrtPriceX96ToTokenPrices(sqrtPriceX96: BigInt, token0: UniswapToken, token1: UniswapToken): BigDecimal[] {
   let num = sqrtPriceX96.times(sqrtPriceX96).toBigDecimal()
   let denom = BigDecimal.fromString(Q192.toString())
   let price1 = safeDiv(safeDiv(num, denom)

@@ -166,7 +166,7 @@ export namespace pairs {
       pairDailyTotal = new PairDaily(id)
       pairDailyTotal.token0 = token0
       pairDailyTotal.token1 = token1
-      pairDailyTotal.timestamp = timestamp
+      pairDailyTotal.timestamp = dailyTimestamp
       pairDailyTotal.volumeToken0 = ZERO_BI
       pairDailyTotal.volumeToken1 = ZERO_BI
       pairDailyTotal.volumeTradedEth = ZERO_BD
@@ -186,7 +186,7 @@ export namespace pairs {
       pairHourlyTotal = new PairHourly(id)
       pairHourlyTotal.token0 = token0
       pairHourlyTotal.token1 = token1
-      pairHourlyTotal.timestamp = timestamp
+      pairHourlyTotal.timestamp = hourlyTimestamp
       pairHourlyTotal.volumeToken0 = ZERO_BI
       pairHourlyTotal.volumeToken1 = ZERO_BI
       pairHourlyTotal.volumeTradedEth = ZERO_BD

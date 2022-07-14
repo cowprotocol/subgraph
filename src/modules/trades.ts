@@ -21,6 +21,7 @@ export namespace trades {
         let solver = event.transaction.from
         let ownerAddress = event.params.owner
         let owner = ownerAddress.toHexString()
+        let blockNumber = event.block.number
 
         let buyAmountDecimals = convertTokenToDecimal(buyAmount, BigInt.fromI32(buyToken.decimals))
         let buyAmountUsd = buyToken.priceUsd.times(buyAmountDecimals)
@@ -34,7 +35,7 @@ export namespace trades {
         let feeAmountEth = sellToken.priceEth.times(feeAmountDecimals)
 
         // This statement need to be after tokens prices calculation.
-        settlements.getOrCreateSettlement(txHash, timestamp, solver, txGasPrice, feeAmountUsd)
+        settlements.getOrCreateSettlement(blockNumber, txHash, timestamp, solver, txGasPrice, feeAmountUsd)
 
         let trade = TradeEntity.load(tradeId)
 

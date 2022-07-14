@@ -115,8 +115,8 @@ type Settlement @entity {
   id: ID!
   "Transaction hash"
   txHash: Bytes!
-  "First trade timestamp"
-  firstTradeTimestamp: Int!
+  "Block number"
+  blockNumber: BigInt!
   "Collection of trades"
   trades: [Trade!] @derivedFrom(field: "settlement")
   "User who solved the settlement"

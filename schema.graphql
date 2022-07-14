@@ -391,15 +391,3 @@ type PairHourly @entity {
   "Total volume in Usd"
   volumeTradedUsd: BigDecimal
 }
-
-type SqrtPriceEntity @entity {
-  id: ID!
-  paramSqrtPrice: BigInt
-  paramToken0Id: String
-  paramToken1Id: String
-  num: BigDecimal
-  denom: BigDecimal
-  price1: BigDecimal
-  price0: BigDecimal
-  q192: BigInt
-}

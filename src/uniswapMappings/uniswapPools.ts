@@ -184,7 +184,7 @@ export function handleSwap(event: SwapEvent): void {
       pool.totalValueLockedToken1 = pool.totalValueLockedToken1.plus(amount1)
     }
     // updated pool ratess
-    let prices = sqrtPriceX96ToTokenPrices(event.params.sqrtPriceX96, token0 as UniswapToken, token1 as UniswapToken, event.transaction.hash.toHexString())
+    let prices = sqrtPriceX96ToTokenPrices(event.params.sqrtPriceX96, token0 as UniswapToken, token1 as UniswapToken)
     pool.token0Price = prices[0]
     pool.token1Price = prices[1]
     pool.save()

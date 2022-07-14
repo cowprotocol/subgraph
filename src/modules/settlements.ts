@@ -29,7 +29,6 @@ export namespace settlements {
             settlement = new Settlement(settlementId)
             settlement.txHash = txHash
             settlement.blockNumber = blockNumber
-            settlement.firstTradeTimestamp = tradeTimestamp
             settlement.solver = solver.toHexString()
             settlement.txCostUsd = txCostUsd
             settlement.txCostNative = txCostNative

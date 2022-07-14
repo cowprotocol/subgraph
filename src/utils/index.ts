@@ -24,8 +24,9 @@ export function isNullEthValue(value: string): boolean {
 }
 
 export function convertTokenToDecimal(tokenAmount: BigInt, exchangeDecimals: BigInt): BigDecimal {
-  if (exchangeDecimals == ZERO_BI) {
+  let exchangeDecimalsExponent = exchangeDecimals ? exponentToBigDecimal(exchangeDecimals) : ZERO_BD
+  if (!exchangeDecimals || exchangeDecimals == ZERO_BI || exchangeDecimalsExponent == ZERO_BD) {
     return tokenAmount.toBigDecimal()
   }
-  return tokenAmount.toBigDecimal().div(exponentToBigDecimal(exchangeDecimals))
+  return tokenAmount.toBigDecimal().div(exchangeDecimalsExponent)
 }

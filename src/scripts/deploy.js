@@ -31,7 +31,7 @@ series([
     confirm({
       message: chalk.red('Are you sure you want to deploy?'),
       callbackYes() {
-        exec(`graph deploy ${SUBGRAPH} --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/`, (error) => {
+        exec(`graph deploy ${SUBGRAPH} --product hosted-service`, (error) => {
           if (error) {
             console.log(`${chalk.red('\n\n🚩 There was an error deploying the subgraph 🚩')} \n\n`)
             console.error(`${error}`)

@@ -16,12 +16,13 @@ export namespace users {
             user.solvedAmountUsd = ZERO_BD
             user.tradedAmountEth = ZERO_BD
             user.tradedAmountUsd = ZERO_BD
+            user.firstTradeTimestamp = 0
         } 
 
         return user as User
     }
 
-   export function getOrCreateTrader(orderOwner: string, timestamp: i32, owner: Address, tradedAmountEth: BigDecimal, tradedAmountUsd: BigDecimal) :void {
+   export function getOrCreateTrader(orderOwner: string, timestamp: i32, owner: Address, tradedAmountEth: BigDecimal | null, tradedAmountUsd: BigDecimal | null) :void {
 
         let user = getOrCreateUserEntity(orderOwner, owner)
         let prevTradedAmountUsd = user.tradedAmountUsd
@@ -32,8 +33,20 @@ export namespace users {
             totals.addTraderCount()
         }
 
-        user.tradedAmountEth = prevTradedAmountEth.plus(tradedAmountEth)
-        user.tradedAmountUsd = prevTradedAmountUsd.plus(tradedAmountUsd)
+        if (tradedAmountUsd) {
+            if (prevTradedAmountUsd) {
+                user.tradedAmountUsd = prevTradedAmountUsd.plus(tradedAmountUsd)
+            } else {
+                user.tradedAmountUsd = tradedAmountUsd
+            }
+        }
+        if (tradedAmountEth) {
+            if (prevTradedAmountEth) {
+                user.tradedAmountEth = prevTradedAmountEth.plus(tradedAmountEth)
+            } else {
+                user.tradedAmountEth = tradedAmountEth
+            }
+        }
 
         user.save()
     }
@@ -43,7 +56,7 @@ export namespace users {
         user.save()
     }
 
-    export function getOrCreateSolver(solver: Address, solvedAmountEth: BigDecimal, solvedAmountUsd: BigDecimal): void{
+    export function getOrCreateSolver(solver: Address, solvedAmountEth: BigDecimal | null, solvedAmountUsd: BigDecimal | null): void{
 
         let user = getOrCreateUserEntity(solver.toHexString(), solver)
         let prevNumOfTrades = user.numberOfTrades
@@ -52,8 +65,20 @@ export namespace users {
         
         user.isSolver = true
         user.numberOfTrades = prevNumOfTrades + 1
-        user.solvedAmountUsd = prevSolvedAmountUsd.plus(solvedAmountUsd)
-        user.solvedAmountEth = prevSolvedAmountEth.plus(solvedAmountEth)
+        if (solvedAmountUsd) {
+            if (prevSolvedAmountUsd) {
+                user.solvedAmountUsd = prevSolvedAmountUsd.plus(solvedAmountUsd)
+            } else {
+                user.solvedAmountUsd = solvedAmountUsd
+            }
+        }
+        if (solvedAmountEth) {
+            if (prevSolvedAmountEth) {
+                user.solvedAmountEth = prevSolvedAmountEth.plus(solvedAmountEth)
+            } else {
+                user.solvedAmountEth = solvedAmountEth
+            }
+        }
         
         user.save()
     }

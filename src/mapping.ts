@@ -65,7 +65,7 @@ export function handleTrade(event: Trade): void {
   buyToken.totalVolume =  tokenCurrentBuyAmount.plus(buyAmount)
 
   let buyTokenAddressHexString = buyTokenAddress.toHexString()
-  let isBuyTokenTheNativeOne = buyTokenAddressHexString === "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+  let isBuyTokenTheNativeOne = buyTokenAddressHexString == "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
 
   if (network == 'xdai') {
     let sellTokenPrices = getPrices(sellTokenAddress)

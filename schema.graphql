@@ -82,6 +82,10 @@ type Trade @entity {
   gasPrice: BigInt!
   "Trade's fee amount"
   feeAmount: BigInt! 
+  "Trade's fee amount in Usd"
+  feeAmountUsd: BigDecimal 
+  "Trade's fee amount in Eth"
+  feeAmountEth: BigDecimal 
   "Trade event transaction hash"
   txHash: Bytes!
   "Settlement"
@@ -117,10 +121,14 @@ type Settlement @entity {
   trades: [Trade!] @derivedFrom(field: "settlement")
   "User who solved the settlement"
   solver: User
-#  "Transaction cost in Eth"
-#  txCostEth: BigDecimal!
-#  "Transaction cost in USD"
-#  txCostUsd: BigDecimal!
+  "Transaction cost in USD"
+  txCostUsd: BigDecimal!
+  "Transaction cost in Native currency"
+  txCostNative: BigDecimal!
+  "Trade's fee amount accumulated in Usd"
+  aggregatedFeeAmountUsd: BigDecimal!
+  "Profitability is aggregatedFeeAmountUsd minus txCostUsd"
+  profitability: BigDecimal!
 }
 
 # stores for USD calculations
@@ -199,8 +207,6 @@ type DailyTotal @entity {
   id: ID!
   "Start day timestamp"
   timestamp: Int!
-  "Total number of tokens traded"
-  totalTokens: BigInt!
   "Number of trades"
   numberOfTrades: BigInt!
   "Total number of orders placed"
@@ -215,8 +221,12 @@ type DailyTotal @entity {
   feesUsd: BigDecimal
   "Total fees in Eth"
   feesEth: BigDecimal
-  "Traded tokens"
-  tokens: [Token!]!
+#  we will remove this props for now. deltails in the following link
+#  https://github.com/cowprotocol/subgraph/issues/47#issuecomment-1183515135
+#  "Traded tokens"
+#  tokens: [Token!]!
+#  "Total number of tokens traded"
+#  totalTokens: BigInt!
 }
 
 type HourlyTotal @entity {
@@ -224,8 +234,6 @@ type HourlyTotal @entity {
   id: ID!
   "Start hour timestamp"
   timestamp: Int!
-  "Total number of tokens traded"
-  totalTokens: BigInt!
   "Number of trades"
   numberOfTrades: BigInt!
   "Total number of orders placed"
@@ -240,8 +248,12 @@ type HourlyTotal @entity {
   feesUsd: BigDecimal
   "Total fees in Eth"
   feesEth: BigDecimal
-  "Traded tokens"
-  tokens: [Token!]!
+#  we will remove this props for now. deltails in the following link
+#  https://github.com/cowprotocol/subgraph/issues/47#issuecomment-1183515135
+#  "Total number of tokens traded"
+#  totalTokens: BigInt!
+#  "Traded tokens"
+#  tokens: [Token!]!
 }
 
 type TokenDailyTotal @entity {
@@ -320,14 +332,16 @@ type Pair @entity {
   token0: Token!
   "The token 1 address greater than token0"
   token1: Token!
-  "Token0 last trade price"
-  token0Price: BigDecimal
-  "Token1 last trade price"
-  token1Price: BigDecimal
+  "Last trade timestamp"
+  lastTradeTimestamp: Int!
+  "Token0 last trade price in USD"
+  token0Usd: BigDecimal
+  "Token1 last trade price in USD"
+  token1Usd: BigDecimal
   "Token 0 price expressed in token1 in the last trade"
-  token0relativePrice: BigDecimal!
+  token0PriceInToken1: BigDecimal
   "Token 1 price expressed in token1 in the last trade"
-  token1relativePrice: BigDecimal!
+  token1PriceInToken0: BigDecimal
   "Total volume of token 0 traded"
   volumeToken0: BigInt!
   "Total volume of token 1 traded"
@@ -345,14 +359,14 @@ type PairDaily @entity {
   token0: Token!
   "The token 1 address greater than token0"
   token1: Token!
-  "Token0 last trade price"
-  token0Price: BigDecimal
-  "Token1 last trade price"
-  token1Price: BigDecimal
+  "Token0 last trade price in USD"
+  token0Usd: BigDecimal
+  "Token1 last trade price in USD"
+  token1Usd: BigDecimal
   "Token 0 price expressed in token1 in the last trade"
-  token0relativePrice: BigDecimal
+  token0PriceInToken1: BigDecimal
   "Token 1 price expressed in token1 in the last trade"
-  token1relativePrice: BigDecimal
+  token1PriceInToken0: BigDecimal
   "Start day timestamp"
   timestamp: Int!
   "Total volume of token 0 traded"
@@ -372,14 +386,14 @@ type PairHourly @entity {
   token0: Token!
   "The token 1 address greater than token0"
   token1: Token!
-  "Token0 last trade price"
-  token0Price: BigDecimal
-  "Token1 last trade price"
-  token1Price: BigDecimal
+  "Token0 last trade price in USD"
+  token0Usd: BigDecimal
+  "Token1 last trade price in USD"
+  token1Usd: BigDecimal
   "Token 0 price expressed in token1 in the last trade"
-  token0relativePrice: BigDecimal
+  token0PriceInToken1: BigDecimal
   "Token 1 price expressed in token1 in the last trade"
-  token1relativePrice: BigDecimal
+  token1PriceInToken0: BigDecimal
   "Start hour timestamp"
   timestamp: Int!
   "Total volume of token 0 traded"

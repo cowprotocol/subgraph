@@ -61,6 +61,8 @@ class Trade {
   timestamp: BigInt!
   gasPrice: BigInt!
   feeAmount: BigInt! 
+  feeAmountUsd: BigDecimal
+  feeAmountEth: BigDecimal
   txHash: Bytes!
   settlement: Settlement!
   buyAmount: BigInt!
@@ -85,6 +87,9 @@ class Settlement {
   firstTradeTimestamp: BigInt!
   trades: [Trade!] @derivedFrom(field: "settlement")
   solver: User
+  txCostUsd: BigDecimal!
+  aggregatedFeeAmountUsd: BigDecimal 
+  profitability: BigDecimal!
 }
 
 Settlement --o Trade : trades

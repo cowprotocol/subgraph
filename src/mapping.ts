@@ -7,8 +7,8 @@ import {
 } from "../generated/GPV2Settlement/GPV2Settlement"
 import { tokens, trades, orders, users } from "./modules"
 import { getPrices } from "./utils/getPrices"
-import { MINUS_ONE_BD, ZERO_BI } from "./utils/constants"
-import { BigDecimal, BigInt, dataSource, log } from "@graphprotocol/graph-ts"
+import { MINUS_ONE_BD } from "./utils/constants"
+import { BigDecimal, BigInt, dataSource } from "@graphprotocol/graph-ts"
 import { convertTokenToDecimal } from "./utils"
 import { UniswapToken } from "../generated/schema"
 

@@ -7,7 +7,7 @@ import { getEthPriceInUSD } from "../utils/pricing"
 
 export namespace settlements {
 
-    export function getOrCreateSettlement(txHash: Bytes, tradeTimestamp: i32, solver: Address, txGasPrice: BigInt, feeAmountUsd: BigDecimal): void { 
+    export function getOrCreateSettlement(txHash: Bytes, tradeTimestamp: i32, solver: Address, txGasPrice: BigInt, feeAmountUsd: BigDecimal | null): void { 
 
         let settlementId = txHash.toHexString()
         let network = dataSource.network()
@@ -36,8 +36,10 @@ export namespace settlements {
             settlement.profitability = ZERO_BD
             totals.addSettlementCount(tradeTimestamp)
         } 
-        let prevFeeAmountUsd = settlement.aggregatedFeeAmountUsd
-        settlement.aggregatedFeeAmountUsd = prevFeeAmountUsd.plus(feeAmountUsd)
+        if(feeAmountUsd) {
+            let prevFeeAmountUsd = settlement.aggregatedFeeAmountUsd
+            settlement.aggregatedFeeAmountUsd = prevFeeAmountUsd.plus(feeAmountUsd)
+        }
         settlement.profitability = settlement.aggregatedFeeAmountUsd.minus(settlement.txCostUsd)
         settlement.save()
     }

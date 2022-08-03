@@ -3,7 +3,7 @@ import { BigInt, BigDecimal } from "@graphprotocol/graph-ts"
 import { Token, Trade as TradeEntity } from "../../generated/schema"
 import { convertTokenToDecimal } from "../utils"
 import { settlements, tokens, totals, users, pairs } from "./"
-import { ZERO_BD } from "../utils/constants"
+import { ZERO_ADDRESS, ZERO_BD, ZERO_BI } from "../utils/constants"
 
 export namespace trades {
 
@@ -23,15 +23,24 @@ export namespace trades {
         let owner = ownerAddress.toHexString()
 
         let buyAmountDecimals = convertTokenToDecimal(buyAmount, BigInt.fromI32(buyToken.decimals))
-        let buyAmountUsd = buyToken.priceUsd.times(buyAmountDecimals)
-        let buyAmountEth = buyToken.priceEth.times(buyAmountDecimals)
+        
+        let _buyTokenPriceUsd = buyToken.priceUsd
+        let buyAmountUsd = _buyTokenPriceUsd ? _buyTokenPriceUsd.times(buyAmountDecimals) : null
+
+        let _buyTokenPriceEth = buyToken.priceEth
+        let buyAmountEth = _buyTokenPriceEth ? _buyTokenPriceEth.times(buyAmountDecimals) : null
         let sellAmountDecimals = convertTokenToDecimal(sellAmount, BigInt.fromI32(sellToken.decimals))
-        let sellAmountUsd = sellToken.priceUsd.times(sellAmountDecimals)
-        let sellAmountEth = sellToken.priceEth.times(sellAmountDecimals)
 
         let feeAmountDecimals = convertTokenToDecimal(feeAmount, BigInt.fromI32(sellToken.decimals))
-        let feeAmountUsd = sellToken.priceUsd.times(feeAmountDecimals)
-        let feeAmountEth = sellToken.priceEth.times(feeAmountDecimals)
+        
+        let _sellTokenPriceUsd = sellToken.priceUsd
+        
+        let sellAmountUsd = _sellTokenPriceUsd ? _sellTokenPriceUsd.times(sellAmountDecimals) : null
+        let feeAmountUsd = _sellTokenPriceUsd ?_sellTokenPriceUsd.times(feeAmountDecimals) : null
+
+        let _sellTokenPriceEth = sellToken.priceEth
+        let sellAmountEth = _sellTokenPriceEth ? _sellTokenPriceEth.times(sellAmountDecimals) : null
+        let feeAmountEth = _sellTokenPriceEth ?_sellTokenPriceEth.times(feeAmountDecimals) : null
 
         // This statement need to be after tokens prices calculation.
         settlements.getOrCreateSettlement(txHash, timestamp, solver, txGasPrice, feeAmountUsd)
@@ -50,16 +59,16 @@ export namespace trades {
         tokens.createTokenTradingEvent(timestamp, buyTokenId, tradeId, buyAmount, buyAmountEth, buyAmountUsd, buyTokenPriceUsd)
         tokens.createTokenTradingEvent(timestamp, sellTokenId, tradeId, sellAmount, sellAmountEth, sellAmountUsd, sellTokenPriceUsd)
 
-        trade.timestamp = timestamp
-        trade.txHash = txHash
-        trade.settlement = txHashString
-        trade.buyToken = buyTokenId
-        trade.buyAmount = buyAmount
-        trade.sellToken = sellTokenId
-        trade.sellAmount = sellAmount
-        trade.order = orderId
-        trade.gasPrice = txGasPrice
-        trade.feeAmount = feeAmount
+        trade.timestamp = timestamp ? timestamp : 0
+        trade.txHash = txHash ? txHash : ZERO_ADDRESS
+        trade.settlement = txHashString ? txHashString : ""
+        trade.buyToken = buyTokenId ? buyTokenId : ""
+        trade.buyAmount = buyAmount ? buyAmount : ZERO_BI
+        trade.sellToken = sellTokenId ? sellTokenId : ""
+        trade.sellAmount = sellAmount ? sellAmount : ZERO_BI
+        trade.order = orderId ? orderId : ""
+        trade.gasPrice = txGasPrice ? txGasPrice : ZERO_BI
+        trade.feeAmount = feeAmount ? feeAmount : ZERO_BI
         trade.feeAmountUsd = feeAmountUsd
         trade.feeAmountEth = feeAmountEth
         trade.buyAmountEth = buyAmountEth
@@ -73,7 +82,7 @@ export namespace trades {
         // if it can't be calculated will use buyAmounts
         let usdAmountForVolumes = sellAmountUsd
         let ethAmountForVolumes = sellAmountEth
-        if (sellAmountUsd.le(ZERO_BD)) {
+        if (sellAmountUsd && sellAmountUsd.le(ZERO_BD)) {
             usdAmountForVolumes = buyAmountUsd
             ethAmountForVolumes = buyAmountEth
         }

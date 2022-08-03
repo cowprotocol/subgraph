@@ -4,7 +4,7 @@ type User @entity {
   "Owner's address"
   address: Bytes!
   "First trade block timestamp"
-  firstTradeTimestamp: Int
+  firstTradeTimestamp: Int!
   "List of orders placed by this user"
   ordersPlaced: [Order!]! @derivedFrom(field: "owner")
   "Determine if user has solved a settlement"
@@ -27,7 +27,7 @@ type Token @entity {
   "Token address"
   address: Bytes!
   "First token trade block timestamp"
-  firstTradeTimestamp: Int
+  firstTradeTimestamp: Int!
   "Token name fetched by ERC20 contract call"
   name: String!
   "Token symbol fetched by contract call"
@@ -35,7 +35,7 @@ type Token @entity {
   "Token decimals fetched by contract call"
   decimals: Int!
   "Total volume managed in CowSwap"
-  totalVolume: BigInt
+  totalVolume: BigInt!
   "Derived price in ETH"
   priceEth: BigDecimal
   "Derived price in USD" 
@@ -320,9 +320,9 @@ type TokenTradingEvent @entity {
   "Timestamp"
   timestamp: Int!
   "Amount in Eth"
-  amountEth: BigDecimal!
+  amountEth: BigDecimal
   "Amount in Usd"
-  amountUsd: BigDecimal!
+  amountUsd: BigDecimal
 }
 
 type Pair @entity {
@@ -343,9 +343,9 @@ type Pair @entity {
   "Token 1 price expressed in token1 in the last trade"
   token1PriceInToken0: BigDecimal
   "Total volume of token 0 traded"
-  volumeToken0: BigInt
+  volumeToken0: BigInt!
   "Total volume of token 1 traded"
-  volumeToken1: BigInt
+  volumeToken1: BigInt!
   "Total volume in Eth"
   volumeTradedEth: BigDecimal
   "Total volume in Usd"
@@ -370,9 +370,9 @@ type PairDaily @entity {
   "Start day timestamp"
   timestamp: Int!
   "Total volume of token 0 traded"
-  volumeToken0: BigInt
+  volumeToken0: BigInt!
   "Total volume of token 1 traded"
-  volumeToken1: BigInt
+  volumeToken1: BigInt!
   "Total volume in Eth"
   volumeTradedEth: BigDecimal
   "Total volume in Usd"
@@ -397,9 +397,9 @@ type PairHourly @entity {
   "Start hour timestamp"
   timestamp: Int!
   "Total volume of token 0 traded"
-  volumeToken0: BigInt
+  volumeToken0: BigInt!
   "Total volume of token 1 traded"
-  volumeToken1: BigInt
+  volumeToken1: BigInt!
   "Total volume in Eth"
   volumeTradedEth: BigDecimal
   "Total volume in Usd"

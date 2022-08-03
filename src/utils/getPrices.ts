@@ -44,9 +44,9 @@ function getUniswapPricesForPair(token0: Address, token1: Address, isEthPriceCal
     let reservesTry = pair.try_getReserves()
     let reserves = reservesTry.reverted ? EMPTY_RESERVES_RESULT : reservesTry.value
     let pairToken0Try = pair.try_token0()
-    let pairToken0 = pairToken0Try.reverted ? ZERO_ADDRESS as Address : pairToken0Try.value
+    let pairToken0 = pairToken0Try.reverted ? changetype<Address>(ZERO_ADDRESS) : pairToken0Try.value
     let pairToken1Try = pair.try_token1()
-    let pairToken1 = pairToken1Try.reverted ? ZERO_ADDRESS as Address : pairToken1Try.value
+    let pairToken1 = pairToken1Try.reverted ? changetype<Address>(ZERO_ADDRESS) : pairToken1Try.value
 
     if (reserves.value0 == ZERO_BI ||
         reserves.value1 == ZERO_BI ||

@@ -5,10 +5,11 @@ import {
   Settlement,
   Trade
 } from "../generated/GPV2Settlement/GPV2Settlement"
+import { WETH_ADDRESS } from "./utils/pricing"
 import { tokens, trades, orders, users } from "./modules"
 import { getPrices } from "./utils/getPrices"
-import { MINUS_ONE_BD, ZERO_BI } from "./utils/constants"
-import { BigDecimal, BigInt, dataSource, log } from "@graphprotocol/graph-ts"
+import { MINUS_ONE_BD, ZERO_BD } from "./utils/constants"
+import { Address, BigDecimal, BigInt, dataSource, log } from "@graphprotocol/graph-ts"
 import { convertTokenToDecimal } from "./utils"
 import { UniswapToken } from "../generated/schema"
 
@@ -63,9 +64,18 @@ export function handleTrade(event: Trade): void {
   sellToken.totalVolume =  tokenCurrentSellAmount.plus(sellAmount)
   buyToken.totalVolume =  tokenCurrentBuyAmount.plus(buyAmount)
 
+  let buyTokenAddressHexString = buyTokenAddress.toHexString()
+  let isBuyTokenTheNativeOne = buyTokenAddressHexString == "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+
   if (network == 'xdai') {
     let sellTokenPrices = getPrices(sellTokenAddress)
-    let buyTokenPrices = getPrices(buyTokenAddress)
+    let buyTokenPrices = new Map<string, BigDecimal>()
+    if (isBuyTokenTheNativeOne) {
+      let XDAI_ADDRESS = Address.fromString("0xe91d153e0b41518a2ce8dd3d7944fa863463a97d")
+      buyTokenPrices = getPrices(XDAI_ADDRESS)
+    } else {
+      buyTokenPrices = getPrices(buyTokenAddress)
+    }
     if (sellTokenPrices.get("usd") != MINUS_ONE_BD &&
       sellTokenPrices.get("eth") != MINUS_ONE_BD) {
       sellToken.priceUsd = sellTokenPrices.get("usd")
@@ -77,8 +87,11 @@ export function handleTrade(event: Trade): void {
       buyToken.priceEth = buyTokenPrices.get("eth")
     }
   } else {
+    if (isBuyTokenTheNativeOne){
+      buyTokenAddressHexString = WETH_ADDRESS
+    }
     let sellUniToken = UniswapToken.load(sellTokenAddress.toHexString())
-    let buyUniToken = UniswapToken.load(buyTokenAddress.toHexString())
+    let buyUniToken = UniswapToken.load(buyTokenAddressHexString)
     if (sellUniToken) {
       sellToken.priceUsd = sellUniToken.priceUsd ? sellUniToken.priceUsd : null
       sellToken.priceEth = sellUniToken.priceEth ? sellUniToken.priceEth : null
@@ -136,5 +149,4 @@ export function handleTrade(event: Trade): void {
   sellToken.save()
   buyToken.save()
   order.save()
-
 }

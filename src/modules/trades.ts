@@ -53,8 +53,8 @@ export namespace trades {
         let buyTokenId = buyToken.id
         let sellTokenId = sellToken.id
 
-        let buyTokenPriceUsd = buyToken.priceUsd as BigDecimal
-        let sellTokenPriceUsd = sellToken.priceUsd as BigDecimal
+        let buyTokenPriceUsd = _buyTokenPriceUsd ? _buyTokenPriceUsd as BigDecimal : null
+        let sellTokenPriceUsd = _sellTokenPriceUsd ? _sellTokenPriceUsd as BigDecimal : null
 
         tokens.createTokenTradingEvent(timestamp, buyTokenId, tradeId, buyAmount, buyAmountEth, buyAmountUsd, buyTokenPriceUsd)
         tokens.createTokenTradingEvent(timestamp, sellTokenId, tradeId, sellAmount, sellAmountEth, sellAmountUsd, sellTokenPriceUsd)

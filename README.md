@@ -5,7 +5,8 @@ Implements a subgraph for the [CoW Protocol](https://github.com/cowprotocol/cont
 *This is a work in progress*
 
 - [Subgraph on mainnet](https://thegraph.com/hosted-service/subgraph/cowprotocol/cow)
-- [Subgraph on rinkeby](https://thegraph.com/hosted-service/subgraph/cowprotocol/cow-rinkeby)
+- [Subgraph on rinkeby (will be deprecated)](https://thegraph.com/hosted-service/subgraph/cowprotocol/cow-rinkeby)
+- [Subgraph on goerli](https://thegraph.com/hosted-service/subgraph/cowprotocol/cow-goerli)
 - [Subgraph on gnosis chain network](https://thegraph.com/hosted-service/subgraph/cowprotocol/cow-gc)
 
 For more information about:

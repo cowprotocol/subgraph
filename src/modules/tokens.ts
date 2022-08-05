@@ -53,14 +53,15 @@ export namespace tokens {
       token.totalVolumeUsd = ZERO_BD
 
       // add token created to the totals
-      totals.addTokenCount(timestamp, tokenId)
+      // code commented https://github.com/cowprotocol/subgraph/issues/47#issuecomment-1183515135
+      //totals.addTokenCount(timestamp, tokenId)
+      totals.updateTokenTotalsCount()
     }
 
     // adding timestamp for token created by uniswap logic
     // start counting that token
     if (!token.firstTradeTimestamp) {
       token.firstTradeTimestamp = timestamp
-      totals.addTokenCount(timestamp, tokenId)
     }
 
     token.save()

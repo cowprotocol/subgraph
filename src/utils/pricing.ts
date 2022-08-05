@@ -48,13 +48,15 @@ let STABLE_COINS: string[] = [
 // pools of $100K or more .-
 let MINIMUM_ETH_LOCKED = BigDecimal.fromString('52')
 
-let Q192 = 2 ** 192
+let twoBI = BigInt.fromI32(2)
+let Q192 = twoBI.pow(192)
 export function sqrtPriceX96ToTokenPrices(sqrtPriceX96: BigInt, token0: UniswapToken, token1: UniswapToken): BigDecimal[] {
   let num = sqrtPriceX96.times(sqrtPriceX96).toBigDecimal()
   let denom = BigDecimal.fromString(Q192.toString())
   let price1 = safeDiv(safeDiv(num, denom)
     .times(exponentToBigDecimal(BigInt.fromI32(token0.decimals))), exponentToBigDecimal(BigInt.fromI32(token1.decimals)))
   let price0 = safeDiv(BigDecimal.fromString('1'), price1)
+
   return [price0, price1]
 }
 
@@ -98,7 +100,7 @@ export function findEthPerToken(token: UniswapToken): BigDecimal {
           // allowed token is token1
           let token1 = UniswapToken.load(pool.token1)
           // get the derived ETH in pool
-          let token1PriceEth = token1 && token1.priceEth ? token1.priceEth as BigDecimal : ONE_BD
+          let token1PriceEth = (token1 && token1.priceEth) ? token1.priceEth as BigDecimal : ONE_BD
           let ethLocked = pool.totalValueLockedToken1.times(token1PriceEth)
           if (ethLocked.gt(largestLiquidityETH) && ethLocked.gt(MINIMUM_ETH_LOCKED)) {
             largestLiquidityETH = ethLocked
@@ -109,7 +111,7 @@ export function findEthPerToken(token: UniswapToken): BigDecimal {
         if (pool && pool.token1 == token.id) {
           let token0 = UniswapToken.load(pool.token0)
           // get the derived ETH in pool
-          let token0PriceEth = token0 && token0.priceEth ? token0.priceEth as BigDecimal : ONE_BD
+          let token0PriceEth = (token0 && token0.priceEth) ? token0.priceEth as BigDecimal : ONE_BD
           let ethLocked = pool.totalValueLockedToken0.times(token0PriceEth)
           if (ethLocked.gt(largestLiquidityETH) && ethLocked.gt(MINIMUM_ETH_LOCKED)) {
             largestLiquidityETH = ethLocked

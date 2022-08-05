@@ -38,7 +38,7 @@ export namespace totals {
         if(!total) {
             total = new DailyTotal(totalId)
             total.timestamp = timestamp
-            total.totalTokens = ZERO_BI
+       //     total.totalTokens = ZERO_BI
             total.orders = ZERO_BI
             total.settlements = ZERO_BI
             total.volumeUsd = ZERO_BD
@@ -46,7 +46,7 @@ export namespace totals {
             total.feesUsd = ZERO_BD
             total.feesEth = ZERO_BD
             total.numberOfTrades = ZERO_BI
-            total.tokens = []
+        //    total.tokens = []
         }
 
         return total as DailyTotal
@@ -59,7 +59,7 @@ export namespace totals {
         if(!total) {
             total = new HourlyTotal(totalId)
             total.timestamp = timestamp
-            total.totalTokens = ZERO_BI
+        //   total.totalTokens = ZERO_BI
             total.orders = ZERO_BI
             total.settlements = ZERO_BI
             total.volumeUsd = ZERO_BD
@@ -67,46 +67,48 @@ export namespace totals {
             total.feesUsd = ZERO_BD
             total.feesEth = ZERO_BD
             total.numberOfTrades = ZERO_BI
-            total.tokens = []
+        //    total.tokens = []
         }
 
         return total as HourlyTotal
     }
 
-    function updateTokenTotalsCount(): void {
+    export function updateTokenTotalsCount(): void {
         let total = getOrCreateTotals()
         let prevTokensCount = total.tokens
         total.tokens = prevTokensCount.plus(ONE_BI)
         total.save()
     }
-
-    function updateDailyTokensCount(timestamp: i32, tokenId: string): void {
-        let total = getOrCreateDailyTotals(timestamp)
-        let prevtotalTokens = total.totalTokens
-        let prevTokens = total.tokens
-        prevTokens.push(tokenId)
-        total.tokens = prevTokens
-        total.totalTokens = prevtotalTokens.plus(ONE_BI)
-        total.save()
-    }
-
-    function updateHourlyTokensCount(timestamp: i32, tokenId: string): void {
-        let total = getOrCreateHourlyTotals(timestamp)
-        let prevtotalTokens = total.totalTokens
-        let prevTokens = total.tokens
-        prevTokens.push(tokenId)
-        total.tokens = prevTokens
-        total.totalTokens = prevtotalTokens.plus(ONE_BI)
-        total.save()
-    }
-
-    export function addTokenCount(timestamp: i32, tokenId: string): void{
-        let dayTimestamp = getDayTotalTimestamp(timestamp)
-        let hourTimestamp = getHourTotalTimestamp(timestamp)
-        updateDailyTokensCount(dayTimestamp, tokenId)
-        updateHourlyTokensCount(hourTimestamp, tokenId)
-        updateTokenTotalsCount()
-    }
+//    We made the decision to avoid this for now.
+//    https://github.com/cowprotocol/subgraph/issues/47#issuecomment-1183515135
+//
+//    function updateDailyTokensCount(timestamp: i32, tokenId: string): void {
+//        let total = getOrCreateDailyTotals(timestamp)
+//        let prevtotalTokens = total.totalTokens
+//        let prevTokens = total.tokens
+//        prevTokens.push(tokenId)
+//        total.tokens = prevTokens
+//        total.totalTokens = prevtotalTokens.plus(ONE_BI)
+//        total.save()
+//    }
+//
+//    function updateHourlyTokensCount(timestamp: i32, tokenId: string): void {
+//        let total = getOrCreateHourlyTotals(timestamp)
+//        let prevtotalTokens = total.totalTokens
+//        let prevTokens = total.tokens
+//        prevTokens.push(tokenId)
+//        total.tokens = prevTokens
+//        total.totalTokens = prevtotalTokens.plus(ONE_BI)
+//        total.save()
+//    }
+//
+//    export function addTokenCount(timestamp: i32, tokenId: string): void{
+//        let dayTimestamp = getDayTotalTimestamp(timestamp)
+//        let hourTimestamp = getHourTotalTimestamp(timestamp)
+//         updateDailyTokensCount(dayTimestamp, tokenId)
+//         updateHourlyTokensCount(hourTimestamp, tokenId)
+//        updateTokenTotalsCount()
+//    }
 
     function updateOrdersTotalsCount(): void {
         let total = getOrCreateTotals()

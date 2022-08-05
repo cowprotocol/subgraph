@@ -44,7 +44,7 @@ export namespace pairs {
     let pairDailyTotal = getOrCreatePairDaily(token0, token1, timestamp)
     let pairHourlyTotal = getOrCreatePairHourly(token0, token1, timestamp)
 
-    totalsUpdate(pairTotal, pairDailyTotal, pairHourlyTotal,
+    totalsUpdate(timestamp, pairTotal, pairDailyTotal, pairHourlyTotal,
       volumeToken0, volumeToken1, priceToken0, priceToken1,
       token0RelativePrice, token1RelativePrice,
       sellAmountEth, sellAmountUsd)
@@ -84,7 +84,7 @@ export namespace pairs {
     return value
   }
 
-  function totalsUpdate(pair: Pair, pairDaily: PairDaily, pairHourly: PairHourly, volumeToken0: BigInt, volumeToken1: BigInt,
+  function totalsUpdate(timestamp: i32, pair: Pair, pairDaily: PairDaily, pairHourly: PairHourly, volumeToken0: BigInt, volumeToken1: BigInt,
     priceToken0: BigDecimal | null, priceToken1: BigDecimal | null, token0RelativePrice: BigDecimal, token1RelativePrice: BigDecimal,
     sellAmountEth: BigDecimal | null, sellAmountUsd: BigDecimal | null): void {
 
@@ -113,10 +113,11 @@ export namespace pairs {
     if (prevPairTotalUsd !== null && sellAmountUsd) {
       pair.volumeTradedUsd = prevPairTotalUsd.plus(sellAmountUsd)
     }
-    pair.token0Price = priceToken0
-    pair.token1Price = priceToken1
-    pair.token0relativePrice = token0RelativePrice
-    pair.token1relativePrice = token1RelativePrice
+    pair.token0Usd = priceToken0
+    pair.token1Usd = priceToken1
+    pair.token0PriceInToken1 = token0RelativePrice
+    pair.token1PriceInToken0 = token1RelativePrice
+    pair.lastTradeTimestamp = timestamp
     pair.save()
 
     // update volumes for a pair daily totals
@@ -124,10 +125,10 @@ export namespace pairs {
     pairDaily.volumeToken1 = prevPairDailyVolume1.plus(volumeToken1)
     pairDaily.volumeTradedEth = sellAmountEth && prevPairDailyEth ? prevPairDailyEth.plus(sellAmountEth) : prevPairDailyEth
     pairDaily.volumeTradedUsd = sellAmountUsd && prevPairDailyUsd ? prevPairDailyUsd.plus(sellAmountUsd) : prevPairDailyUsd
-    pairDaily.token0Price = priceToken0
-    pairDaily.token1Price = priceToken1
-    pairDaily.token0relativePrice = token0RelativePrice
-    pairDaily.token1relativePrice = token1RelativePrice
+    pairDaily.token0Usd = priceToken0
+    pairDaily.token1Usd = priceToken1
+    pairDaily.token0PriceInToken1 = token0RelativePrice
+    pairDaily.token1PriceInToken0 = token1RelativePrice
     pairDaily.save()
 
     // update volumes for a pair hourly totals
@@ -135,10 +136,10 @@ export namespace pairs {
     pairHourly.volumeToken1 = prevPairHourlyVolume1.plus(volumeToken1)
     pairHourly.volumeTradedEth = sellAmountEth && prevPairHourlyEth ? prevPairHourlyEth.plus(sellAmountEth) : prevPairHourlyEth
     pairHourly.volumeTradedUsd = sellAmountUsd && prevPairHourlyUsd ? prevPairHourlyUsd.plus(sellAmountUsd) : prevPairHourlyUsd
-    pairHourly.token0Price = priceToken0
-    pairHourly.token1Price = priceToken1
-    pairHourly.token0relativePrice = token0RelativePrice
-    pairHourly.token1relativePrice = token1RelativePrice
+    pairHourly.token0Usd = priceToken0
+    pairHourly.token1Usd = priceToken1
+    pairHourly.token0PriceInToken1 = token0RelativePrice
+    pairHourly.token1PriceInToken0 = token1RelativePrice
     pairHourly.save()
   }
 

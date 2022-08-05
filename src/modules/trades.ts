@@ -43,7 +43,7 @@ export namespace trades {
         let feeAmountEth = _sellTokenPriceEth ?_sellTokenPriceEth.times(feeAmountDecimals) : null
 
         // This statement need to be after tokens prices calculation.
-        settlements.getOrCreateSettlement(txHash, timestamp, solver, txGasPrice)
+        settlements.getOrCreateSettlement(txHash, timestamp, solver, txGasPrice, feeAmountUsd)
 
         let trade = TradeEntity.load(tradeId)
 
@@ -53,8 +53,8 @@ export namespace trades {
         let buyTokenId = buyToken.id
         let sellTokenId = sellToken.id
 
-        let buyTokenPriceUsd = buyToken.priceUsd as BigDecimal
-        let sellTokenPriceUsd = sellToken.priceUsd as BigDecimal
+        let buyTokenPriceUsd = _buyTokenPriceUsd ? _buyTokenPriceUsd as BigDecimal : null
+        let sellTokenPriceUsd = _sellTokenPriceUsd ? _sellTokenPriceUsd as BigDecimal : null
 
         tokens.createTokenTradingEvent(timestamp, buyTokenId, tradeId, buyAmount, buyAmountEth, buyAmountUsd, buyTokenPriceUsd)
         tokens.createTokenTradingEvent(timestamp, sellTokenId, tradeId, sellAmount, sellAmountEth, sellAmountUsd, sellTokenPriceUsd)
@@ -69,6 +69,8 @@ export namespace trades {
         trade.order = orderId ? orderId : ""
         trade.gasPrice = txGasPrice ? txGasPrice : ZERO_BI
         trade.feeAmount = feeAmount ? feeAmount : ZERO_BI
+        trade.feeAmountUsd = feeAmountUsd
+        trade.feeAmountEth = feeAmountEth
         trade.buyAmountEth = buyAmountEth
         trade.sellAmountEth = sellAmountEth
         trade.buyAmountUsd = buyAmountUsd

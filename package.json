@@ -4,6 +4,7 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
+    "test": "graph test",
     "deploy": "node src/scripts/deploy.js",
     "deploy:mainnet": "cross-env NETWORK=mainnet SUBGRAPH=gnosis/cow yarn deploy",
     "deploy:rinkeby": "cross-env NETWORK=rinkeby SUBGRAPH=gnosis/cow-rinkeby yarn deploy",
@@ -17,6 +18,7 @@
   "devDependencies": {
     "chalk": "^2.4.1",
     "cross-env": "^7.0.3",
-    "dotenv": "^16.0.0"
+    "dotenv": "^16.0.0",
+    "matchstick-as": "^0.5.0"
   }
 }

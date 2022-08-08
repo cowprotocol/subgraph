@@ -15,6 +15,7 @@ export function handleInitialize(event: Initialize): void {
   let pool = UniswapPool.load(event.address.toHexString())
   if (pool) {
     pool.tick = BigInt.fromI32(event.params.tick)
+    pool.save()
   }
 
   let token0Id = pool ? pool.token0 : null

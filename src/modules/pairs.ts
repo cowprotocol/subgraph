@@ -9,16 +9,19 @@ export namespace pairs {
     token: string
     volume: BigInt
     price: BigDecimal | null
+    priceInDecimals: BigDecimal
     relativePrice: BigDecimal
     constructor(
       _token: string,
       _volume: BigInt,
       _price: BigDecimal | null,
+      _priceInDecimals: BigDecimal,
       _relativePrice: BigDecimal
     ) {
       this.token = _token
       this.volume = _volume
       this.price = _price
+      this.priceInDecimals = _priceInDecimals
       this.relativePrice = _relativePrice
     }
   }
@@ -32,12 +35,14 @@ export namespace pairs {
     let token0 = token0Props.token
     let volumeToken0 = token0Props.volume
     let priceToken0 = token0Props.price
+    let token0Decimals = token0Props.priceInDecimals
     let token0RelativePrice = token0Props.relativePrice
 
     let token1Props = canonicalMarket.get("token1")
     let token1 = token1Props.token
     let volumeToken1 = token1Props.volume
     let priceToken1 = token1Props.price
+    let token1Decimals = token1Props.priceInDecimals
     let token1RelativePrice = token1Props.relativePrice
 
     let pairTotal = getOrCreatePair(token0, token1)
@@ -46,7 +51,7 @@ export namespace pairs {
 
     totalsUpdate(timestamp, pairTotal, pairDailyTotal, pairHourlyTotal,
       volumeToken0, volumeToken1, priceToken0, priceToken1,
-      token0RelativePrice, token1RelativePrice,
+      token0RelativePrice, token1RelativePrice, token0Decimals, token1Decimals,
       sellAmountEth, sellAmountUsd)
   }
 
@@ -70,8 +75,8 @@ export namespace pairs {
       sellTokenExpressedOnBuyToken = sellAmountDecimals.div(buyAmountDecimals)
     }
 
-    let buyTokenProps = new TokenProps(buyTokenId, buyAmount, buyTokenPriceUsd, buyTokenExpressedOnSellToken)
-    let sellTokenProps = new TokenProps(sellTokenId, sellAmount, sellTokenPriceUsd, sellTokenExpressedOnBuyToken)
+    let buyTokenProps = new TokenProps(buyTokenId, buyAmount, buyTokenPriceUsd, buyAmountDecimals, buyTokenExpressedOnSellToken)
+    let sellTokenProps = new TokenProps(sellTokenId, sellAmount, sellTokenPriceUsd, sellAmountDecimals, sellTokenExpressedOnBuyToken)
 
     if (buyTokenNumber.lt(sellTokenNumber)) {
       value.set("token0", buyTokenProps)
@@ -86,20 +91,26 @@ export namespace pairs {
 
   function totalsUpdate(timestamp: i32, pair: Pair, pairDaily: PairDaily, pairHourly: PairHourly, volumeToken0: BigInt, volumeToken1: BigInt,
     priceToken0: BigDecimal | null, priceToken1: BigDecimal | null, token0RelativePrice: BigDecimal, token1RelativePrice: BigDecimal,
-    sellAmountEth: BigDecimal | null, sellAmountUsd: BigDecimal | null): void {
+    token0PriceDecimals: BigDecimal, token1PriceDecimals: BigDecimal, sellAmountEth: BigDecimal | null, sellAmountUsd: BigDecimal | null): void {
 
     let prevPairTotalVolume0 = pair.volumeToken0
     let prevPairTotalVolume1 = pair.volumeToken1
+    let prevPairTotalVolume0Decimals = pair.volumeToken0Decimals
+    let prevPairTotalVolume1Decimals = pair.volumeToken1Decimals
     let prevPairTotalEth = pair.volumeTradedEth
     let prevPairTotalUsd = pair.volumeTradedUsd
 
     let prevPairDailyVolume0 = pairDaily.volumeToken0
     let prevPairDailyVolume1 = pairDaily.volumeToken1
+    let prevPairDailyVolume0Decimals = pairDaily.volumeToken0Decimals
+    let prevPairDailyVolume1Decimals = pairDaily.volumeToken1Decimals
     let prevPairDailyEth = pairDaily.volumeTradedEth
     let prevPairDailyUsd = pairDaily.volumeTradedUsd
 
     let prevPairHourlyVolume0 = pairHourly.volumeToken0
     let prevPairHourlyVolume1 = pairHourly.volumeToken1
+    let prevPairHourlyVolume0Decimals = pairHourly.volumeToken0Decimals
+    let prevPairHourlyVolume1Decimals = pairHourly.volumeToken1Decimals
     let prevPairHourlyEth = pairHourly.volumeTradedEth
     let prevPairHourlyUsd = pairHourly.volumeTradedUsd
 
@@ -107,6 +118,8 @@ export namespace pairs {
     // Updates volumes for a pair 
     pair.volumeToken0 = prevPairTotalVolume0.plus(volumeToken0)
     pair.volumeToken1 = prevPairTotalVolume1.plus(volumeToken1)
+    pair.volumeToken0Decimals = prevPairTotalVolume0Decimals.plus(token0PriceDecimals)
+    pair.volumeToken1Decimals = prevPairTotalVolume1Decimals.plus(token1PriceDecimals)
     if (prevPairTotalEth !== null && sellAmountEth) {
         pair.volumeTradedEth = prevPairTotalEth.plus(sellAmountEth)
     }
@@ -123,6 +136,8 @@ export namespace pairs {
     // update volumes for a pair daily totals
     pairDaily.volumeToken0 = prevPairDailyVolume0.plus(volumeToken0)
     pairDaily.volumeToken1 = prevPairDailyVolume1.plus(volumeToken1)
+    pairDaily.volumeToken0Decimals = prevPairDailyVolume0Decimals.plus(token0PriceDecimals)
+    pairDaily.volumeToken1Decimals = prevPairDailyVolume1Decimals.plus(token1PriceDecimals)
     pairDaily.volumeTradedEth = sellAmountEth && prevPairDailyEth ? prevPairDailyEth.plus(sellAmountEth) : prevPairDailyEth
     pairDaily.volumeTradedUsd = sellAmountUsd && prevPairDailyUsd ? prevPairDailyUsd.plus(sellAmountUsd) : prevPairDailyUsd
     pairDaily.token0Usd = priceToken0
@@ -134,6 +149,8 @@ export namespace pairs {
     // update volumes for a pair hourly totals
     pairHourly.volumeToken0 = prevPairHourlyVolume0.plus(volumeToken0)
     pairHourly.volumeToken1 = prevPairHourlyVolume1.plus(volumeToken1)
+    pairHourly.volumeToken0Decimals = prevPairHourlyVolume0Decimals.plus(token0PriceDecimals)
+    pairHourly.volumeToken1Decimals = prevPairHourlyVolume1Decimals.plus(token1PriceDecimals)
     pairHourly.volumeTradedEth = sellAmountEth && prevPairHourlyEth ? prevPairHourlyEth.plus(sellAmountEth) : prevPairHourlyEth
     pairHourly.volumeTradedUsd = sellAmountUsd && prevPairHourlyUsd ? prevPairHourlyUsd.plus(sellAmountUsd) : prevPairHourlyUsd
     pairHourly.token0Usd = priceToken0
@@ -154,6 +171,8 @@ export namespace pairs {
       pairTotal.token1 = token1
       pairTotal.volumeToken0 = ZERO_BI
       pairTotal.volumeToken1 = ZERO_BI
+      pairTotal.volumeToken0Decimals = ZERO_BD
+      pairTotal.volumeToken1Decimals = ZERO_BD
       pairTotal.volumeTradedEth = ZERO_BD
       pairTotal.volumeTradedUsd = ZERO_BD
     }
@@ -173,6 +192,8 @@ export namespace pairs {
       pairDailyTotal.timestamp = timestamp
       pairDailyTotal.volumeToken0 = ZERO_BI
       pairDailyTotal.volumeToken1 = ZERO_BI
+      pairDailyTotal.volumeToken0Decimals = ZERO_BD
+      pairDailyTotal.volumeToken1Decimals = ZERO_BD
       pairDailyTotal.volumeTradedEth = ZERO_BD
       pairDailyTotal.volumeTradedUsd = ZERO_BD
     }
@@ -193,6 +214,8 @@ export namespace pairs {
       pairHourlyTotal.timestamp = timestamp
       pairHourlyTotal.volumeToken0 = ZERO_BI
       pairHourlyTotal.volumeToken1 = ZERO_BI
+      pairHourlyTotal.volumeToken0Decimals = ZERO_BD
+      pairHourlyTotal.volumeToken1Decimals = ZERO_BD
       pairHourlyTotal.volumeTradedEth = ZERO_BD
       pairHourlyTotal.volumeTradedUsd = ZERO_BD
     }

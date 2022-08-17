@@ -346,6 +346,10 @@ type Pair @entity {
   volumeToken0: BigInt!
   "Total volume of token 1 traded"
   volumeToken1: BigInt!
+  "Total volume of token 0 expressed on token 0 decimals"
+  volumeToken0Decimals: BigDecimal!
+  "Total volume of token 1 expressed on token 1 decimals"
+  volumeToken1Decimals: BigDecimal!
   "Total volume in Eth"
   volumeTradedEth: BigDecimal
   "Total volume in Usd"
@@ -373,6 +377,10 @@ type PairDaily @entity {
   volumeToken0: BigInt!
   "Total volume of token 1 traded"
   volumeToken1: BigInt!
+  "Total volume of token 0 expressed on token 0 decimals"
+  volumeToken0Decimals: BigDecimal!
+  "Total volume of token 1 expressed on token 1 decimals"
+  volumeToken1Decimals: BigDecimal!
   "Total volume in Eth"
   volumeTradedEth: BigDecimal
   "Total volume in Usd"
@@ -400,6 +408,10 @@ type PairHourly @entity {
   volumeToken0: BigInt!
   "Total volume of token 1 traded"
   volumeToken1: BigInt!
+  "Total volume of token 0 expressed on token 0 decimals"
+  volumeToken0Decimals: BigDecimal!
+  "Total volume of token 1 expressed on token 1 decimals"
+  volumeToken1Decimals: BigDecimal!
   "Total volume in Eth"
   volumeTradedEth: BigDecimal
   "Total volume in Usd"

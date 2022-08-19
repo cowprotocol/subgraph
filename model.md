@@ -203,7 +203,7 @@ class PairDaily {
   token1Usd: BigDecimal
   token0PriceInToken0: BigDecimal
   token1PriceInToken1: BigDecimal
-  timestamp: Int
+  timestamp: Int!
   volumeToken0: BigInt!
   volumeToken1: BigInt!
   volumeToken0Deciomals: BigDecimal!
@@ -223,7 +223,7 @@ class PairHourly {
   token1Usd: BigDecimal
   token0PriceInToken0: BigDecimal
   token1PriceInToken1: BigDecimal
-  timestamp: Int
+  timestamp: Int!
   volumeToken0: BigInt!
   volumeToken1: BigInt!
   volumeToken0Deciomals: BigDecimal!

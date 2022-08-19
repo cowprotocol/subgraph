@@ -8,7 +8,7 @@ classDiagram
 class User {
   id: ID!
   address: Bytes!
-  firstTradeTimestamp: BigInt
+  firstTradeTimestamp: Int!
   ordersPlaced: [Order!]! @derivedFrom(field: "owner")
   isSolver: Boolean!
   numberOfTrades: Int! 
@@ -23,11 +23,11 @@ User --o Order : ordersPlaced
 class Token {
   id: ID!
   address: Bytes!
-  firstTradeTimestamp: BigInt
+  firstTradeTimestamp: Int!
   name: String!
   symbol: String!
   decimals: Int!
-  totalVolume: BigInt
+  totalVolume: BigInt!
   priceEth: BigDecimal
   priceUsd: BigDecimal
   allowedPools: [BigInt!]!
@@ -35,8 +35,8 @@ class Token {
   hourlyTotals: [TokenHourlyTotal!]! @derivedFrom(field: "token")
   dailyTotals: [TokenDailyTotal!]! @derivedFrom(field: "token")
   numberOfTrades: Int! 
-  totalVolumeUsd: BigDecimal
-  totalVolumeEth: BigDecimal 
+  totalVolumeUsd: BigDecimal!
+  totalVolumeEth: BigDecimal!
 }
 
 Token --o TokenTradingEvent : History
@@ -46,9 +46,9 @@ Token --o TokenHourlyTotal : hourlyTotals
 class Order {
   id: ID!
   owner: User
-  tradesTimestamp: BigInt
-  invalidateTimestamp: BigInt
-  presignTimestamp: BigInt
+  tradesTimestamp: Int
+  invalidateTimestamp: Int
+  presignTimestamp: Int
   trades: [Trade!] @derivedFrom(field: "order")
   isSigned: Boolean
   isValid: Boolean
@@ -58,7 +58,7 @@ Order --o Trade : trades
 
 class Trade {
   id: ID!
-  timestamp: BigInt!
+  timestamp: Int!
   gasPrice: BigInt!
   feeAmount: BigInt! 
   feeAmountUsd: BigDecimal
@@ -84,11 +84,11 @@ Trade --o Settlement : settlement
 class Settlement {
   id: ID!
   txHash: Bytes!
-  firstTradeTimestamp: BigInt!
+  firstTradeTimestamp: Int!
   trades: [Trade!] @derivedFrom(field: "settlement")
   solver: User
   txCostUsd: BigDecimal!
-  aggregatedFeeAmountUsd: BigDecimal 
+  aggregatedFeeAmountUsd: BigDecimal!
   profitability: BigDecimal!
 }
 
@@ -110,8 +110,7 @@ class Total {
 
 class DailyTotal {
   id: ID!
-  timestamp: BigInt!
-  totalTokens: BigInt!
+  timestamp: Int!
   numberOfTrades: BigInt!
   orders: BigInt!
   settlements: BigInt!
@@ -119,15 +118,11 @@ class DailyTotal {
   volumeEth: BigDecimal
   feesUsd: BigDecimal
   feesEth: BigDecimal
-  tokens: [Token!]!
 }
-
-DailyTotal --o Token : tokens
 
 class HourlyTotal {
   id: ID!
-  timestamp: BigInt!
-  totalTokens: BigInt!
+  timestamp: Int!
   numberOfTrades: BigInt!
   orders: BigInt!
   settlements: BigInt!
@@ -135,15 +130,13 @@ class HourlyTotal {
   volumeEth: BigDecimal
   feesUsd: BigDecimal
   feesEth: BigDecimal
-  tokens: [Token!]!
 }
 
-HourlyTotal --o Token : tokens
 
 class TokenDailyTotal {
   id: ID!
   token: Token!
-  timestamp: BigInt!
+  timestamp: Int!
   totalVolume: BigInt!
   totalVolumeUsd: BigDecimal!
   totalVolumeEth: BigDecimal!
@@ -158,7 +151,7 @@ class TokenDailyTotal {
 class TokenHourlyTotal {
   id: ID!
   token: Token!
-  timestamp: BigInt!
+  timestamp: Int!
   totalVolume: BigInt!
   totalVolumeUsd: BigDecimal!
   totalVolumeEth: BigDecimal!
@@ -174,23 +167,27 @@ class TokenTradingEvent {
   id: ID!
   token: Token!
   trade: Trade!
-  timestamp: BigInt!
-  amountEth: BigDecimal!
-  amountUsd: BigDecimal!
+  timestamp: Int!
+  amountEth: BigDecimal
+  amountUsd: BigDecimal
 }
 
 TokenTradingEvent --o Token : token
+TokenTradingEvent --o Trade : trade
 
 class Pair {
   id: ID!
   token0: Token!
   token1: Token!
-  token0Price: BigDecimal
-  token1Price: BigDecimal
-  token0relativePrice: BigDecimal
-  token1relativePrice: BigDecimal
-  volumeToken0: BigInt
-  volumeToken1: BigInt
+  lastTradeTimestamp: Int!
+  token0Usd: BigDecimal
+  token1Usd: BigDecimal
+  token0PriceInToken1: BigDecimal
+  token1PriceInToken0: BigDecimal
+  volumeToken0: BigInt!
+  volumeToken1: BigInt!
+  volumeToken0Deciomals: BigDecimal!
+  volumeToken1Deciomals: BigDecimal!
   volumeTradedEth: BigDecimal
   volumeTradedUsd: BigDecimal
 }
@@ -202,13 +199,15 @@ class PairDaily {
   id: ID!
   token0: Token!
   token1: Token!
-  token0Price: BigDecimal
-  token1Price: BigDecimal
-  token0relativePrice: BigDecimal
-  token1relativePrice: BigDecimal
-  timestamp: BigInt
-  volumeToken0: BigInt
-  volumeToken1: BigInt
+  token0Usd: BigDecimal
+  token1Usd: BigDecimal
+  token0PriceInToken0: BigDecimal
+  token1PriceInToken1: BigDecimal
+  timestamp: Int
+  volumeToken0: BigInt!
+  volumeToken1: BigInt!
+  volumeToken0Deciomals: BigDecimal!
+  volumeToken1Deciomals: BigDecimal!
   volumeTradedEth: BigDecimal
   volumeTradedUsd: BigDecimal
 }
@@ -220,13 +219,15 @@ class PairHourly {
   id: ID!
   token0: Token!
   token1: Token!
-  token0Price: BigDecimal
-  token1Price: BigDecimal
-  token0relativePrice: BigDecimal
-  token1relativePrice: BigDecimal
-  timestamp: BigInt
-  volumeToken0: BigInt
-  volumeToken1: BigInt
+  token0Usd: BigDecimal
+  token1Usd: BigDecimal
+  token0PriceInToken0: BigDecimal
+  token1PriceInToken1: BigDecimal
+  timestamp: Int
+  volumeToken0: BigInt!
+  volumeToken1: BigInt!
+  volumeToken0Deciomals: BigDecimal!
+  volumeToken1Deciomals: BigDecimal!
   volumeTradedEth: BigDecimal
   volumeTradedUsd: BigDecimal
 }

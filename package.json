@@ -4,7 +4,7 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "test": "graph test",
+    "test": "node src/scripts/test.js",
     "deploy": "node src/scripts/deploy.js",
     "deploy:mainnet": "cross-env NETWORK=mainnet SUBGRAPH=gnosis/cow yarn deploy",
     "deploy:rinkeby": "cross-env NETWORK=rinkeby SUBGRAPH=gnosis/cow-rinkeby yarn deploy",

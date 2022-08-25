@@ -189,8 +189,8 @@ class Pair {
   token1Price: BigDecimal
   token0relativePrice: BigDecimal
   token1relativePrice: BigDecimal
-  volumeToken0: BigInt
-  volumeToken1: BigInt
+  volumeToken0: BigDecimal!
+  volumeToken1: BigDecimal!
   volumeTradedEth: BigDecimal
   volumeTradedUsd: BigDecimal
 }
@@ -207,8 +207,8 @@ class PairDaily {
   token0relativePrice: BigDecimal
   token1relativePrice: BigDecimal
   timestamp: BigInt
-  volumeToken0: BigInt
-  volumeToken1: BigInt
+  volumeToken0: BigDecimal!
+  volumeToken1: BigDecimal!
   volumeTradedEth: BigDecimal
   volumeTradedUsd: BigDecimal
 }
@@ -225,8 +225,8 @@ class PairHourly {
   token0relativePrice: BigDecimal
   token1relativePrice: BigDecimal
   timestamp: BigInt
-  volumeToken0: BigInt
-  volumeToken1: BigInt
+  volumeToken0: BigDecimal!
+  volumeToken1: BigDecimal!
   volumeTradedEth: BigDecimal
   volumeTradedUsd: BigDecimal
 }

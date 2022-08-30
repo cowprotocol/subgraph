@@ -5,6 +5,8 @@
     "codegen": "graph codegen",
     "build": "graph build",
     "test": "node src/scripts/test.js",
+    "test:gc": "graph test gc",
+    "test:mainnet": "graph test mainnet",
     "deploy": "node src/scripts/deploy.js",
     "deploy:mainnet": "cross-env NETWORK=mainnet SUBGRAPH=gnosis/cow yarn deploy",
     "deploy:rinkeby": "cross-env NETWORK=rinkeby SUBGRAPH=gnosis/cow-rinkeby yarn deploy",

@@ -1,10 +1,11 @@
-const assert = require('assert')
 const { exec } = require('child_process')
+const { series } = require('async')
 require('dotenv').config()
 
-const NETWORK = process.env.NETWORK
-assert(NETWORK, 'NETWORK env var is required')
+const network = process.env.NETWORK
 
-exec(`graph test ${NETWORK}`, (error, stdout, stderr) => {
-  console.log(stdout)
-})
+series([
+  (callback) => exec(`mustache config/${network}.json subgraph.yaml.mustache > subgraph.yaml`, null, callback),
+  (callback) => exec(`yarn codegen`, null, callback),
+  () => exec(`yarn test:${network}`, null, (_err, stdout, _stderr) => { console.log(stdout) }),  
+])

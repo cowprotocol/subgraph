@@ -63,7 +63,11 @@ export namespace users {
         let prevSolvedAmountUsd = user.solvedAmountUsd
         let prevSolvedAmountEth = user.solvedAmountEth
         
-        user.isSolver = true
+
+        if (!user.isSolver) {
+            user.redFlag = true
+        }
+
         user.numberOfTrades = prevNumOfTrades + 1
         if (solvedAmountUsd) {
             if (prevSolvedAmountUsd) {
@@ -82,4 +86,17 @@ export namespace users {
         
         user.save()
     }
+
+    export function setIsSolverTrue(solver: Address): void{
+        let user = getOrCreateUserEntity(solver.toHexString(), solver)
+        user.isSolver = true
+        user.save()
+    }
+
+    export function setIsSolverFalse(solver: Address): void{
+        let user = getOrCreateUserEntity(solver.toHexString(), solver)
+        user.isSolver = false
+        user.save()
+    }
+
 }

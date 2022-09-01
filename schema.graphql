@@ -9,6 +9,8 @@ type User @entity {
   ordersPlaced: [Order!]! @derivedFrom(field: "owner")
   "Determine if user has solved a settlement"
   isSolver: Boolean!
+  "if user solved a settlement without being a solver"
+  redFlag: Boolean
   "Solved trades" 
   numberOfTrades: Int! # write a how to do it in the query or add the prop. 
   "total amount solved by the user in Eth"

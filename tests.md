@@ -8,9 +8,11 @@ We are using **matchstick** for testing subgraphs. For being able to run the mat
  
 There are 3 different folders for organizing the tests:
 
-1.- **gpv2settlement:** this folder will contain tests related to settlement contract. It doesn't matter where it's deployed which code will be execueted in that case
-2.- **gc:** this folder will contain tests related to price calculation that's being done on Gnosis Chain only. At the moment we are using honeyswap (Uniswap v2 pools) to estimate prices.
-3.- **mainnet:** this folder will containt tests related to price calculation in mainnet. In mainnet Uniswap v3 is being indexed, it's pools and tokens.
+1. **gpv2settlement:** this folder will contain tests related to settlement contract. It doesn't matter where it's deployed which code will be execueted in that case
+
+2. **gc:** this folder will contain tests related to price calculation that's being done on Gnosis Chain only. At the moment we are using honeyswap (Uniswap v2 pools) to estimate prices.
+
+3. **mainnet:** this folder will containt tests related to price calculation in mainnet. In mainnet Uniswap v3 is being indexed, it's pools and tokens.
 
 Inside each folder we will put the tests replicating `src` folder structure of what the test aim to test. 
 It's important to notice all files should contain .test. string on it's name.

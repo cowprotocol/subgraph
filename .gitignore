@@ -7,3 +7,5 @@ node_modules/
 subgraph.yaml
 tests/.bin
 tests/.latest.json
+tests/*/.bin
+tests/*/.latest.json

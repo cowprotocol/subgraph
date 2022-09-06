@@ -55,3 +55,13 @@ yarn deploy
 If everything went well you'll have a copy of this subgraph running on your hosted service account indexing your desired network.
 
 Please notice a subgraph can only index a single network, if you want to index another network you should create a new subgraph and do same steps starting from step 3.
+
+## Tests
+
+For running all tests execute:
+
+```bash
+yarn test
+```
+
+Further information about creating tests, tests organization and running them [here](./tests.md)

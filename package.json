@@ -4,9 +4,11 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "test": "node src/scripts/test.js",
+    "test": "graph test",
+    "test:env": "node src/scripts/test.js",
     "test:gc": "graph test gc",
     "test:mainnet": "graph test mainnet",
+    "test:cow": "graph test gpv2settlement",
     "deploy": "node src/scripts/deploy.js",
     "deploy:mainnet": "cross-env NETWORK=mainnet SUBGRAPH=gnosis/cow yarn deploy",
     "deploy:rinkeby": "cross-env NETWORK=rinkeby SUBGRAPH=gnosis/cow-rinkeby yarn deploy",

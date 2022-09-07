@@ -5,11 +5,11 @@ import {
 import { users } from "./modules"
 
 export function handleSolverAdded(event: SolverAdded): void {
-    let solverAddress = event.address
+    let solverAddress = event.params.solver
     users.setIsSolverTrue(solverAddress)
 }
 
 export function handleSolverRemoved(event: SolverRemoved): void { 
-    let solverAddress = event.address
+    let solverAddress = event.params.solver
     users.setIsSolverFalse(solverAddress)
 }

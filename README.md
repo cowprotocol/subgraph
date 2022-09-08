@@ -19,7 +19,7 @@ There is also a GP v1 subgraph here: https://github.com/gnosis/dex-subgraph
 
 ## Model 
 
-Further information about the model [here](./model.md)
+Further information about the model [here](./docs/model.md)
 
 ## Setup of your own test subgraph
 
@@ -64,4 +64,4 @@ For running all tests execute:
 yarn test
 ```
 
-Further information about creating tests, tests organization and running them [here](./tests.md)
+Further information about creating tests, tests organization and running them [here](./docs/tests.md)

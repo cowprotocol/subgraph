@@ -1,4 +1,4 @@
-import { log } from "@graphprotocol/graph-ts"
+import { Bytes, log } from "@graphprotocol/graph-ts"
 import { BigInt } from "@graphprotocol/graph-ts"
 import { Order } from "../../generated/schema"
 import { totals } from "./totals"
@@ -6,13 +6,13 @@ import { totals } from "./totals"
 
 export namespace orders {
 
-    export function invalidateOrder(orderId: string, timestamp: i32): Order {
+    export function invalidateOrder(orderId: Bytes, timestamp: i32): Order {
 
         let order = Order.load(orderId)
 
         if (!order) {
             order = new Order(orderId)
-            log.info('Order {} was not found. It was created for being invalidated', [orderId])
+            log.info('Order {} was not found. It was created for being invalidated', [orderId.toHexString()])
         }
 
         order.isValid = false
@@ -21,7 +21,7 @@ export namespace orders {
         return order as Order
     }
 
-    export function setPresignature(orderId: string, owner: string, timestamp: i32, signed: boolean): Order {
+    export function setPresignature(orderId: Bytes, owner: Bytes, timestamp: i32, signed: boolean): Order {
 
         // check if makes sense to count orders (in totals) that are coming from here
         let order = getOrCreateOrder(orderId, owner, timestamp)
@@ -32,7 +32,7 @@ export namespace orders {
         return order as Order
     }
 
-    export function getOrCreateOrderForTrade(orderId: string, timestamp: i32, owner: string): Order {
+    export function getOrCreateOrderForTrade(orderId: Bytes, timestamp: i32, owner: Bytes): Order {
 
         let order = getOrCreateOrder(orderId, owner, timestamp)
         order.tradesTimestamp = timestamp
@@ -40,7 +40,7 @@ export namespace orders {
         return order as Order
     }
 
-    function getOrCreateOrder(orderId: string, owner: string, timestamp: i32): Order {
+    function getOrCreateOrder(orderId: Bytes, owner: Bytes, timestamp: i32): Order {
 
         let order = Order.load(orderId)
 

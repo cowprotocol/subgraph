@@ -8,11 +8,11 @@ import { ZERO_ADDRESS, ZERO_BD, ZERO_BI } from "../utils/constants"
 export namespace trades {
 
     export function getOrCreateTrade(event: Trade, buyToken: Token, sellToken: Token): void {
-        let orderId = event.params.orderUid.toHexString()
+        let orderId = event.params.orderUid
         let eventIndex = event.transaction.index.toString()
         let txHash = event.transaction.hash
         let txHashString = txHash.toHexString()
-        let tradeId = orderId + "|" + txHashString + "|" + eventIndex
+        let tradeId = orderId.toHexString() + "|" + txHashString + "|" + eventIndex
         let timestamp = event.block.timestamp.toI32()
         let sellAmount = event.params.sellAmount
         let buyAmount = event.params.buyAmount
@@ -62,11 +62,11 @@ export namespace trades {
         trade.timestamp = timestamp ? timestamp : 0
         trade.txHash = txHash ? txHash : ZERO_ADDRESS
         trade.settlement = txHashString ? txHashString : ""
-        trade.buyToken = buyTokenId ? buyTokenId : ""
+        trade.buyToken = buyTokenId ? buyTokenId : ZERO_ADDRESS
         trade.buyAmount = buyAmount ? buyAmount : ZERO_BI
-        trade.sellToken = sellTokenId ? sellTokenId : ""
+        trade.sellToken = sellTokenId ? sellTokenId : ZERO_ADDRESS
         trade.sellAmount = sellAmount ? sellAmount : ZERO_BI
-        trade.order = orderId ? orderId : ""
+        trade.order = orderId ? orderId : ZERO_ADDRESS
         trade.gasPrice = txGasPrice ? txGasPrice : ZERO_BI
         trade.feeAmount = feeAmount ? feeAmount : ZERO_BI
         trade.feeAmountUsd = feeAmountUsd
@@ -87,7 +87,7 @@ export namespace trades {
             ethAmountForVolumes = buyAmountEth
         }
 
-        users.getOrCreateTrader(owner, timestamp, ownerAddress, ethAmountForVolumes, usdAmountForVolumes)
+        users.getOrCreateTrader(timestamp, ownerAddress, ethAmountForVolumes, usdAmountForVolumes)
         users.getOrCreateSolver(solver, ethAmountForVolumes, usdAmountForVolumes)
 
         totals.addVolumesAndFees(ethAmountForVolumes, usdAmountForVolumes, feeAmountEth, feeAmountUsd, timestamp)

@@ -1,4 +1,4 @@
-import { BigInt, BigDecimal, Address } from "@graphprotocol/graph-ts";
+import { BigInt, BigDecimal, Address, Bytes } from "@graphprotocol/graph-ts";
 import { PairDaily, PairHourly, Pair } from "../../generated/schema";
 import { ZERO_BD, ZERO_BI } from "../utils/constants";
 import { getDayTotalTimestamp, getHourTotalTimestamp } from "../utils/timeframeTimestamp";
@@ -6,12 +6,12 @@ import { getDayTotalTimestamp, getHourTotalTimestamp } from "../utils/timeframeT
 export namespace pairs {
 
   export class TokenProps {
-    token: string
+    token: Bytes
     volume: BigInt
     price: BigDecimal | null
     relativePrice: BigDecimal
     constructor(
-      _token: string,
+      _token: Bytes,
       _volume: BigInt,
       _price: BigDecimal | null,
       _relativePrice: BigDecimal
@@ -23,7 +23,7 @@ export namespace pairs {
     }
   }
 
-  export function createOrUpdatePair(timestamp: i32, buyTokenId: string, sellTokenId: string, buyAmount: BigInt, sellAmount: BigInt,
+  export function createOrUpdatePair(timestamp: i32, buyTokenId: Bytes, sellTokenId: Bytes, buyAmount: BigInt, sellAmount: BigInt,
     sellAmountEth: BigDecimal | null, sellAmountUsd: BigDecimal | null, buyTokenPriceUsd: BigDecimal | null, sellTokenPriceUsd: BigDecimal | null,
     buyAmountDecimals: BigDecimal, sellAmountDecimals: BigDecimal): void {
     let canonicalMarket = getCanonicalMarket(buyTokenId, sellTokenId, buyAmount, sellAmount, buyTokenPriceUsd, sellTokenPriceUsd, buyAmountDecimals, sellAmountDecimals)
@@ -50,13 +50,11 @@ export namespace pairs {
       sellAmountEth, sellAmountUsd)
   }
 
-  function getCanonicalMarket(buyTokenId: string, sellTokenId: string, buyAmount: BigInt, sellAmount: BigInt,
+  function getCanonicalMarket(buyTokenId: Bytes, sellTokenId: Bytes, buyAmount: BigInt, sellAmount: BigInt,
     buyTokenPriceUsd: BigDecimal | null, sellTokenPriceUsd: BigDecimal | null,
     buyAmountDecimals: BigDecimal, sellAmountDecimals: BigDecimal): Map<string, TokenProps> {
-    let buyTokenAddress = Address.fromString(buyTokenId)
-    let sellTokenAddress = Address.fromString(sellTokenId)
-    let buyTokenNumber = BigInt.fromUnsignedBytes(buyTokenAddress)
-    let sellTokenNumber = BigInt.fromUnsignedBytes(sellTokenAddress)
+    let buyTokenNumber = BigInt.fromUnsignedBytes(buyTokenId)
+    let sellTokenNumber = BigInt.fromUnsignedBytes(sellTokenId)
     let value = new Map<string, TokenProps>()
 
     let buyTokenExpressedOnSellToken = ZERO_BD
@@ -144,8 +142,8 @@ export namespace pairs {
   }
 
 
-  function getOrCreatePair(token0: string, token1: string): Pair {
-    let id = token0 + "-" + token1
+  function getOrCreatePair(token0: Bytes, token1: Bytes): Pair {
+    let id = token0.toHexString() + "-" + token1.toHexString()
     let pairTotal = Pair.load(id)
 
     if (!pairTotal) {
@@ -161,9 +159,9 @@ export namespace pairs {
     return pairTotal as Pair
   }
 
-  function getOrCreatePairDaily(token0: string, token1: string, timestamp: i32): PairDaily {
+  function getOrCreatePairDaily(token0: Bytes, token1: Bytes, timestamp: i32): PairDaily {
     let dailyTimestamp = getDayTotalTimestamp(timestamp)
-    let id = token0 + "-" + token1 + "-" + dailyTimestamp.toString()
+    let id = token0.toHexString() + "-" + token1.toHexString() + "-" + dailyTimestamp.toString()
     let pairDailyTotal = PairDaily.load(id)
 
     if (!pairDailyTotal) {
@@ -181,9 +179,9 @@ export namespace pairs {
 
   }
 
-  function getOrCreatePairHourly(token0: string, token1: string, timestamp: i32): PairHourly {
+  function getOrCreatePairHourly(token0: Bytes, token1: Bytes, timestamp: i32): PairHourly {
     let hourlyTimestamp = getHourTotalTimestamp(timestamp)
-    let id = token0 + "-" + token1 + "-" + hourlyTimestamp.toString()
+    let id = token0.toHexString() + "-" + token1.toHexString() + "-" + hourlyTimestamp.toString()
     let pairHourlyTotal = PairHourly.load(id)
 
     if (!pairHourlyTotal) {

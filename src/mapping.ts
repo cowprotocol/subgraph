@@ -16,7 +16,7 @@ export function handleInteraction(event: Interaction): void { }
 
 export function handleOrderInvalidated(event: OrderInvalidated): void {
 
-  let orderId = event.params.orderUid.toHexString()
+  let orderId = event.params.orderUid
   let timestamp = event.block.timestamp.toI32()
 
   let order = orders.invalidateOrder(orderId, timestamp)
@@ -26,26 +26,24 @@ export function handleOrderInvalidated(event: OrderInvalidated): void {
 
 export function handlePreSignature(event: PreSignature): void {
 
-  let orderUid = event.params.orderUid.toHexString()
+  let orderUid = event.params.orderUid
   let ownerAddress = event.params.owner
-  let owner = ownerAddress.toHexString()
   let timestamp = event.block.timestamp.toI32()
   let signed = event.params.signed
 
-  let order = orders.setPresignature(orderUid, owner, timestamp, signed)
+  let order = orders.setPresignature(orderUid, ownerAddress, timestamp, signed)
 
   order.save()
 
-  users.getOrCreateSigner(owner, ownerAddress)
+  users.getOrCreateSigner(ownerAddress)
 }
 
 export function handleSettlement(event: Settlement): void { }
 
 
 export function handleTrade(event: Trade): void {
-  let orderId = event.params.orderUid.toHexString()
+  let orderId = event.params.orderUid
   let ownerAddress = event.params.owner
-  let owner = ownerAddress.toHexString()
   let sellTokenAddress = event.params.sellToken
   let buyTokenAddress = event.params.buyToken
   let sellAmount = event.params.sellAmount
@@ -77,8 +75,8 @@ export function handleTrade(event: Trade): void {
       buyToken.priceEth = buyTokenPrices.get("eth")
     }
   } else {
-    let sellUniToken = UniswapToken.load(sellTokenAddress.toHexString())
-    let buyUniToken = UniswapToken.load(buyTokenAddress.toHexString())
+    let sellUniToken = UniswapToken.load(sellTokenAddress)
+    let buyUniToken = UniswapToken.load(buyTokenAddress)
     if (sellUniToken) {
       sellToken.priceUsd = sellUniToken.priceUsd ? sellUniToken.priceUsd : null
       sellToken.priceEth = sellUniToken.priceEth ? sellUniToken.priceEth : null
@@ -131,7 +129,7 @@ export function handleTrade(event: Trade): void {
   sellToken.save()
   buyToken.save()
 
-  let order = orders.getOrCreateOrderForTrade(orderId, timestamp, owner)
+  let order = orders.getOrCreateOrderForTrade(orderId, timestamp, ownerAddress)
 
   sellToken.save()
   buyToken.save()

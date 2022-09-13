@@ -5,7 +5,7 @@ import { PoolCreated } from '../../generated/Factory/Factory'
 import { UniswapPool, UniswapToken, Bundle } from '../../generated/schema'
 import { Pool as PoolTemplate } from '../../generated/templates'
 import { fetchTokenSymbol, fetchTokenName, fetchTokenDecimals } from '../utils/token'
-import { log, Address } from '@graphprotocol/graph-ts'
+import { log, Address, Bytes } from '@graphprotocol/graph-ts'
 
 export function handlePoolCreated(event: PoolCreated): void {
   // temp fix
@@ -21,13 +21,13 @@ export function handlePoolCreated(event: PoolCreated): void {
     bundle.save()
   }
 
-  let pool = new UniswapPool(event.params.pool.toHexString()) as UniswapPool
-  let token0 = UniswapToken.load(event.params.token0.toHexString())
-  let token1 = UniswapToken.load(event.params.token1.toHexString())
+  let pool = new UniswapPool(event.params.pool) as UniswapPool
+  let token0 = UniswapToken.load(event.params.token0)
+  let token1 = UniswapToken.load(event.params.token1)
 
   // fetch info if null
   if (token0 === null) {
-    token0 = new UniswapToken(event.params.token0.toHexString())
+    token0 = new UniswapToken(event.params.token0)
     token0.address = event.params.token0
     token0.symbol = fetchTokenSymbol(event.params.token0)
     token0.name = fetchTokenName(event.params.token0)
@@ -42,11 +42,11 @@ export function handlePoolCreated(event: PoolCreated): void {
     token0.decimals = decimals.toI32()
     token0.priceEth = ZERO_BD
     token0.priceUsd = ZERO_BD
-    token0.allowedPools = new Array<string>(0)
+    token0.allowedPools = new Array<Bytes>(0)
   }
 
   if (token1 === null) {
-    token1 = new UniswapToken(event.params.token1.toHexString())
+    token1 = new UniswapToken(event.params.token1)
     token1.address = event.params.token1
     token1.symbol = fetchTokenSymbol(event.params.token1)
     token1.name = fetchTokenName(event.params.token1)
@@ -59,7 +59,7 @@ export function handlePoolCreated(event: PoolCreated): void {
     token1.decimals = decimals.toI32()
     token1.priceEth = ZERO_BD
     token1.priceUsd = ZERO_BD
-    token1.allowedPools = new Array<string>(0)
+    token1.allowedPools = new Array<Bytes>(0)
   }
 
   // update white listed pools

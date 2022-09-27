@@ -1,14 +1,14 @@
-import { Address, BigDecimal, BigInt } from "@graphprotocol/graph-ts"
+import { Address, BigDecimal, Bytes } from "@graphprotocol/graph-ts"
 import { User } from "../../generated/schema"
 import { ZERO_BD } from "../utils/constants"
 import { totals } from "./totals"
 
 export namespace users {
 
-    function getOrCreateUserEntity(id: string, address: Address): User{
-        let user = User.load(id)
+    function getOrCreateUserEntity(address: Address): User{
+        let user = User.load(address)
         if (!user) {
-            user = new User(id)
+            user = new User(address)
             user.address = address
             user.isSolver = false
             user.numberOfTrades = 0
@@ -22,9 +22,9 @@ export namespace users {
         return user as User
     }
 
-   export function getOrCreateTrader(orderOwner: string, timestamp: i32, owner: Address, tradedAmountEth: BigDecimal | null, tradedAmountUsd: BigDecimal | null) :void {
+   export function getOrCreateTrader(timestamp: i32, owner: Address, tradedAmountEth: BigDecimal | null, tradedAmountUsd: BigDecimal | null) :void {
 
-        let user = getOrCreateUserEntity(orderOwner, owner)
+        let user = getOrCreateUserEntity(owner)
         let prevTradedAmountUsd = user.tradedAmountUsd
         let prevTradedAmountEth = user.tradedAmountEth
 
@@ -51,14 +51,14 @@ export namespace users {
         user.save()
     }
 
-    export function getOrCreateSigner(orderOwner: string, owner: Address) :void {
-        let user = getOrCreateUserEntity(orderOwner, owner)
+    export function getOrCreateSigner(owner: Address) :void {
+        let user = getOrCreateUserEntity(owner)
         user.save()
     }
 
     export function getOrCreateSolver(solver: Address, solvedAmountEth: BigDecimal | null, solvedAmountUsd: BigDecimal | null): void{
 
-        let user = getOrCreateUserEntity(solver.toHexString(), solver)
+        let user = getOrCreateUserEntity(solver)
         let prevNumOfTrades = user.numberOfTrades
         let prevSolvedAmountUsd = user.solvedAmountUsd
         let prevSolvedAmountEth = user.solvedAmountEth

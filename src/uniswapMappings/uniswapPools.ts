@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
 import { Bundle, UniswapPool, UniswapToken } from '../../generated/schema'
-import { BigDecimal, BigInt } from '@graphprotocol/graph-ts'
+import { BigDecimal, BigInt, Bytes } from '@graphprotocol/graph-ts'
 import {
   Burn as BurnEvent,
   Initialize,
@@ -12,7 +12,7 @@ import { ZERO_BD } from '../utils/constants'
 import { findEthPerToken, getEthPriceInUSD, sqrtPriceX96ToTokenPrices } from '../utils/pricing'
 
 export function handleInitialize(event: Initialize): void {
-  let pool = UniswapPool.load(event.address.toHexString())
+  let pool = UniswapPool.load(event.address)
   if (pool) {
     pool.tick = BigInt.fromI32(event.params.tick)
   }
@@ -45,7 +45,7 @@ export function handleInitialize(event: Initialize): void {
 }
 
 export function handleMint(event: MintEvent): void {
-  let poolAddress = event.address.toHexString()
+  let poolAddress = event.address
   let pool = UniswapPool.load(poolAddress)
 
   let token0Id = pool ? pool.token0 : null
@@ -94,7 +94,7 @@ export function handleMint(event: MintEvent): void {
 }
 
 export function handleBurn(event: BurnEvent): void {
-  let poolAddress = event.address.toHexString()
+  let poolAddress = event.address
   let pool = UniswapPool.load(poolAddress)
 
   let token0Id = pool ? pool.token0 : null
@@ -143,10 +143,10 @@ export function handleBurn(event: BurnEvent): void {
 
 export function handleSwap(event: SwapEvent): void {
   let bundle = Bundle.load('1')
-  let pool = UniswapPool.load(event.address.toHexString())
+  let pool = UniswapPool.load(event.address)
 
   // hot fix for bad pricing
-  if (pool && pool.id == '0x9663f2ca0454accad3e094448ea6f77443880454') {
+  if (pool && pool.id == Bytes.fromHexString('0x9663f2ca0454accad3e094448ea6f77443880454')) {
     return
   }
 

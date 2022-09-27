@@ -1,4 +1,4 @@
-import { Address, BigDecimal, BigInt, dataSource } from "@graphprotocol/graph-ts"
+import { Address, BigDecimal, BigInt, Bytes, dataSource } from "@graphprotocol/graph-ts"
 import { ERC20 } from "../../generated/GPV2Settlement/ERC20"
 import { Token, TokenDailyTotal, TokenHourlyTotal, TokenTradingEvent } from "../../generated/schema"
 import { ZERO_BD, ZERO_BI, MINUS_ONE_BD, ONE_BI } from "../utils/constants"
@@ -11,14 +11,13 @@ let DEFAULT_DECIMALS = 18
 export namespace tokens {
 
   export function getOrCreateToken(tokenAddress: Address, timestamp: i32): Token {
-    let tokenId = tokenAddress.toHexString()
-    let token = Token.load(tokenId)
+    let token = Token.load(tokenAddress)
     let network = dataSource.network()
 
     // check if token exists
     if (!token) {
       // creates a new token and fill properites
-      token = new Token(tokenId)
+      token = new Token(tokenAddress)
       token.address = tokenAddress
       token.firstTradeTimestamp = timestamp ? timestamp : 0
 
@@ -70,8 +69,7 @@ export namespace tokens {
   }
 
   export function getTokenDecimals(tokenAddress: Address): number {
-    let tokenId = tokenAddress.toHexString()
-    let token = Token.load(tokenId)
+    let token = Token.load(tokenAddress)
 
     if (token) {
       return token.decimals
@@ -83,8 +81,8 @@ export namespace tokens {
     return tokenDecimals.reverted ? DEFAULT_DECIMALS : tokenDecimals.value
   }
 
-  export function createTokenTradingEvent(timestamp: i32, tokenId: string, tradeId: string, amount: BigInt, amountEth: BigDecimal | null, amountUsd: BigDecimal | null, tokenPrice: BigDecimal | null): void {
-    let id = tokenId + timestamp.toString()
+  export function createTokenTradingEvent(timestamp: i32, tokenId: Bytes, tradeId: string, amount: BigInt, amountEth: BigDecimal | null, amountUsd: BigDecimal | null, tokenPrice: BigDecimal | null): void {
+    let id = tokenId.toHexString() + timestamp.toString()
     let tradingEvent = new TokenTradingEvent(id)
     tradingEvent.token = tokenId
     tradingEvent.trade = tradeId
@@ -96,10 +94,10 @@ export namespace tokens {
     updateTokenHourlyTotal(timestamp, tokenId, amount, amountEth, amountUsd, tokenPrice)
   }
 
-  function getOrCreateTokenDailyTotal(tokenId: string, timestamp: i32): TokenDailyTotal {
+  function getOrCreateTokenDailyTotal(tokenId: Bytes, timestamp: i32): TokenDailyTotal {
 
     let dailyTimestamp = getDayTotalTimestamp(timestamp)
-    let dailyTimestampId = tokenId + "-" + dailyTimestamp.toString()
+    let dailyTimestampId = tokenId.toHexString() + "-" + dailyTimestamp.toString()
     let total = TokenDailyTotal.load(dailyTimestampId)
 
     if (!total) {
@@ -120,10 +118,10 @@ export namespace tokens {
     return total as TokenDailyTotal
   }
 
-  function getOrCreateTokenHourlyTotal(tokenId: string, timestamp: i32): TokenHourlyTotal {
+  function getOrCreateTokenHourlyTotal(tokenId: Bytes, timestamp: i32): TokenHourlyTotal {
 
     let hourlyTimestamp = getHourTotalTimestamp(timestamp)
-    let hourlyTimestampId = tokenId + "-" + hourlyTimestamp.toString()
+    let hourlyTimestampId = tokenId.toHexString() + "-" + hourlyTimestamp.toString()
     let total = TokenHourlyTotal.load(hourlyTimestampId)
 
     if (!total) {
@@ -144,7 +142,7 @@ export namespace tokens {
     return total as TokenHourlyTotal
   }
 
-  function updateTokenDailyTotal(timestamp: i32, tokenId: string, amount: BigInt, amountEth: BigDecimal | null, amountUsd: BigDecimal | null, tokenPrice: BigDecimal | null): void {
+  function updateTokenDailyTotal(timestamp: i32, tokenId: Bytes, amount: BigInt, amountEth: BigDecimal | null, amountUsd: BigDecimal | null, tokenPrice: BigDecimal | null): void {
 
     let total = getOrCreateTokenDailyTotal(tokenId, timestamp)
 
@@ -200,7 +198,7 @@ export namespace tokens {
     let denominator = prevVolumeBD.plus(currentVolumeBD)
     return numerator.div(denominator) as BigDecimal
   }
-  function updateTokenHourlyTotal(timestamp: i32, tokenId: string, amount: BigInt, amountEth: BigDecimal | null, amountUsd: BigDecimal | null, tokenPrice: BigDecimal | null): void {
+  function updateTokenHourlyTotal(timestamp: i32, tokenId: Bytes, amount: BigInt, amountEth: BigDecimal | null, amountUsd: BigDecimal | null, tokenPrice: BigDecimal | null): void {
 
     let total = getOrCreateTokenHourlyTotal(tokenId, timestamp)
 

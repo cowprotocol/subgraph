@@ -7,12 +7,12 @@ export namespace pairs {
 
   export class TokenProps {
     token: string
-    volume: BigInt
+    volume: BigDecimal
     price: BigDecimal | null
     relativePrice: BigDecimal
     constructor(
       _token: string,
-      _volume: BigInt,
+      _volume: BigDecimal,
       _price: BigDecimal | null,
       _relativePrice: BigDecimal
     ) {
@@ -23,10 +23,10 @@ export namespace pairs {
     }
   }
 
-  export function createOrUpdatePair(timestamp: i32, buyTokenId: string, sellTokenId: string, buyAmount: BigInt, sellAmount: BigInt,
+  export function createOrUpdatePair(timestamp: i32, buyTokenId: string, sellTokenId: string, 
     sellAmountEth: BigDecimal | null, sellAmountUsd: BigDecimal | null, buyTokenPriceUsd: BigDecimal | null, sellTokenPriceUsd: BigDecimal | null,
     buyAmountDecimals: BigDecimal, sellAmountDecimals: BigDecimal): void {
-    let canonicalMarket = getCanonicalMarket(buyTokenId, sellTokenId, buyAmount, sellAmount, buyTokenPriceUsd, sellTokenPriceUsd, buyAmountDecimals, sellAmountDecimals)
+    let canonicalMarket = getCanonicalMarket(buyTokenId, sellTokenId, buyTokenPriceUsd, sellTokenPriceUsd, buyAmountDecimals, sellAmountDecimals)
 
     let token0Props = canonicalMarket.get("token0")
     let token0 = token0Props.token
@@ -50,7 +50,7 @@ export namespace pairs {
       sellAmountEth, sellAmountUsd)
   }
 
-  function getCanonicalMarket(buyTokenId: string, sellTokenId: string, buyAmount: BigInt, sellAmount: BigInt,
+  function getCanonicalMarket(buyTokenId: string, sellTokenId: string, 
     buyTokenPriceUsd: BigDecimal | null, sellTokenPriceUsd: BigDecimal | null,
     buyAmountDecimals: BigDecimal, sellAmountDecimals: BigDecimal): Map<string, TokenProps> {
     let buyTokenAddress = Address.fromString(buyTokenId)
@@ -70,8 +70,8 @@ export namespace pairs {
       sellTokenExpressedOnBuyToken = sellAmountDecimals.div(buyAmountDecimals)
     }
 
-    let buyTokenProps = new TokenProps(buyTokenId, buyAmount, buyTokenPriceUsd, buyTokenExpressedOnSellToken)
-    let sellTokenProps = new TokenProps(sellTokenId, sellAmount, sellTokenPriceUsd, sellTokenExpressedOnBuyToken)
+    let buyTokenProps = new TokenProps(buyTokenId, buyAmountDecimals, buyTokenPriceUsd, buyTokenExpressedOnSellToken)
+    let sellTokenProps = new TokenProps(sellTokenId, sellAmountDecimals, sellTokenPriceUsd, sellTokenExpressedOnBuyToken)
 
     if (buyTokenNumber.lt(sellTokenNumber)) {
       value.set("token0", buyTokenProps)
@@ -84,7 +84,7 @@ export namespace pairs {
     return value
   }
 
-  function totalsUpdate(timestamp: i32, pair: Pair, pairDaily: PairDaily, pairHourly: PairHourly, volumeToken0: BigInt, volumeToken1: BigInt,
+  function totalsUpdate(timestamp: i32, pair: Pair, pairDaily: PairDaily, pairHourly: PairHourly, volumeToken0: BigDecimal, volumeToken1: BigDecimal,
     priceToken0: BigDecimal | null, priceToken1: BigDecimal | null, token0RelativePrice: BigDecimal, token1RelativePrice: BigDecimal,
     sellAmountEth: BigDecimal | null, sellAmountUsd: BigDecimal | null): void {
 
@@ -152,8 +152,8 @@ export namespace pairs {
       pairTotal = new Pair(id)
       pairTotal.token0 = token0
       pairTotal.token1 = token1
-      pairTotal.volumeToken0 = ZERO_BI
-      pairTotal.volumeToken1 = ZERO_BI
+      pairTotal.volumeToken0 = ZERO_BD
+      pairTotal.volumeToken1 = ZERO_BD
       pairTotal.volumeTradedEth = ZERO_BD
       pairTotal.volumeTradedUsd = ZERO_BD
     }
@@ -171,8 +171,8 @@ export namespace pairs {
       pairDailyTotal.token0 = token0
       pairDailyTotal.token1 = token1
       pairDailyTotal.timestamp = timestamp
-      pairDailyTotal.volumeToken0 = ZERO_BI
-      pairDailyTotal.volumeToken1 = ZERO_BI
+      pairDailyTotal.volumeToken0 = ZERO_BD
+      pairDailyTotal.volumeToken1 = ZERO_BD
       pairDailyTotal.volumeTradedEth = ZERO_BD
       pairDailyTotal.volumeTradedUsd = ZERO_BD
     }
@@ -191,8 +191,8 @@ export namespace pairs {
       pairHourlyTotal.token0 = token0
       pairHourlyTotal.token1 = token1
       pairHourlyTotal.timestamp = timestamp
-      pairHourlyTotal.volumeToken0 = ZERO_BI
-      pairHourlyTotal.volumeToken1 = ZERO_BI
+      pairHourlyTotal.volumeToken0 = ZERO_BD
+      pairHourlyTotal.volumeToken1 = ZERO_BD
       pairHourlyTotal.volumeTradedEth = ZERO_BD
       pairHourlyTotal.volumeTradedUsd = ZERO_BD
     }

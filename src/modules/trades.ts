@@ -92,7 +92,7 @@ export namespace trades {
 
         totals.addVolumesAndFees(ethAmountForVolumes, usdAmountForVolumes, feeAmountEth, feeAmountUsd, timestamp)
 
-        pairs.createOrUpdatePair(timestamp, buyTokenId, sellTokenId, buyAmount, sellAmount, 
+        pairs.createOrUpdatePair(timestamp, buyTokenId, sellTokenId, 
             sellAmountEth, sellAmountUsd, buyTokenPriceUsd, sellTokenPriceUsd, buyAmountDecimals, sellAmountDecimals)
     }
 

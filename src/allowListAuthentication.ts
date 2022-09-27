@@ -6,10 +6,12 @@ import { users } from "./modules"
 
 export function handleSolverAdded(event: SolverAdded): void {
     let solverAddress = event.params.solver
-    users.setIsSolverTrue(solverAddress)
+    let timestamp = event.block.timestamp.toI32()
+    users.setIsSolverTrue(solverAddress, timestamp)
 }
 
 export function handleSolverRemoved(event: SolverRemoved): void { 
     let solverAddress = event.params.solver
-    users.setIsSolverFalse(solverAddress)
+    let timestamp = event.block.timestamp.toI32()
+    users.setIsSolverFalse(solverAddress, timestamp)
 }

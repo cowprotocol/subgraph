@@ -11,6 +11,8 @@ type User @entity {
   isSolver: Boolean!
   "Contains all the settlements solved by a solver"
   settlementsSolved: [Settlement!]! @derivedFrom(field: "solver")
+  "The quantity of settlements solved by the user"
+  numberOfSettlements: Int
   "Stores last time is solver flag changed"
   lastIsSolverUpdateTimestamp: Int
   "Solved trades" 

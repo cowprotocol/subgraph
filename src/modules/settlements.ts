@@ -4,10 +4,14 @@ import { convertTokenToDecimal } from "../utils"
 import { ZERO_BD } from "../utils/constants"
 import { totals } from "./totals"
 import { getEthPriceInUSD } from "../utils/pricing"
+import { users } from "./users"
 
 export namespace settlements {
 
-    export function getOrCreateSettlement(txHash: Bytes, tradeTimestamp: i32, solver: Address, txGasPrice: BigInt, feeAmountUsd: BigDecimal | null): void { 
+    export function getOrCreateSettlement(txHash: Bytes, tradeTimestamp: i32, solver: Address, txGasPrice: BigInt, 
+        feeAmountUsd: BigDecimal | null, ethAmountForVolumes: BigDecimal | null, usdAmountForVolumes : BigDecimal | null): void { 
+
+        let user = users.getOrCreateSolver(solver, ethAmountForVolumes, usdAmountForVolumes)
 
         let settlementId = txHash.toHexString()
         let network = dataSource.network()
@@ -34,6 +38,7 @@ export namespace settlements {
             settlement.txCostNative = txCostNative
             settlement.aggregatedFeeAmountUsd = ZERO_BD
             settlement.profitability = ZERO_BD
+            user.numberOfSettlements = user.numberOfSettlements + 1
             totals.addSettlementCount(tradeTimestamp)
         } 
         if(feeAmountUsd) {
@@ -41,6 +46,7 @@ export namespace settlements {
             settlement.aggregatedFeeAmountUsd = prevFeeAmountUsd.plus(feeAmountUsd)
         }
         settlement.profitability = settlement.aggregatedFeeAmountUsd.minus(settlement.txCostUsd)
+        user.save()
         settlement.save()
     }
 }

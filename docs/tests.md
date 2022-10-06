@@ -29,6 +29,11 @@ describe(FileName, () => { // FileName will be replaced by it's file name
       test(WhatAreWeTesting, () => { // Here we will name the test using what's the result we are waiting after test is executed.
 ```
 
+
+## Before running the tests:
+
+If you never have run the `deploy` script, you need to create a `subgraph.yaml` file first by running this: `mustache config/mainnet.json subgraph.yaml.mustache > subgraph.yaml` on your console.
+
 ### About test running.
 
 - `yarn test`: running this command all tests on folder `tests` will be run. 

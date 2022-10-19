@@ -20,7 +20,7 @@ export namespace tokens {
       // creates a new token and fill properites
       token = new Token(tokenId)
       token.address = tokenAddress
-      token.firstTradeTimestamp = timestamp
+      token.firstTradeTimestamp = timestamp ? timestamp : 0
 
       // try contract calls for filling decimals, name and symbol
       let erc20Token = ERC20.bind(tokenAddress)
@@ -53,14 +53,15 @@ export namespace tokens {
       token.totalVolumeUsd = ZERO_BD
 
       // add token created to the totals
-      totals.addTokenCount(timestamp, tokenId)
+      // code commented https://github.com/cowprotocol/subgraph/issues/47#issuecomment-1183515135
+      //totals.addTokenCount(timestamp, tokenId)
+      totals.updateTokenTotalsCount()
     }
 
     // adding timestamp for token created by uniswap logic
     // start counting that token
     if (!token.firstTradeTimestamp) {
       token.firstTradeTimestamp = timestamp
-      totals.addTokenCount(timestamp, tokenId)
     }
 
     token.save()
@@ -82,7 +83,7 @@ export namespace tokens {
     return tokenDecimals.reverted ? DEFAULT_DECIMALS : tokenDecimals.value
   }
 
-  export function createTokenTradingEvent(timestamp: i32, tokenId: string, tradeId: string, amount: BigInt, amountEth: BigDecimal, amountUsd: BigDecimal, tokenPrice: BigDecimal | null): void {
+  export function createTokenTradingEvent(timestamp: i32, tokenId: string, tradeId: string, amount: BigInt, amountEth: BigDecimal | null, amountUsd: BigDecimal | null, tokenPrice: BigDecimal | null): void {
     let id = tokenId + timestamp.toString()
     let tradingEvent = new TokenTradingEvent(id)
     tradingEvent.token = tokenId
@@ -143,15 +144,15 @@ export namespace tokens {
     return total as TokenHourlyTotal
   }
 
-  function updateTokenDailyTotal(timestamp: i32, tokenId: string, amount: BigInt, amountEth: BigDecimal, amountUsd: BigDecimal, tokenPrice: BigDecimal | null): void {
+  function updateTokenDailyTotal(timestamp: i32, tokenId: string, amount: BigInt, amountEth: BigDecimal | null, amountUsd: BigDecimal | null, tokenPrice: BigDecimal | null): void {
 
     let total = getOrCreateTokenDailyTotal(tokenId, timestamp)
 
     // check if it is first trade
     if (total.totalTrades == ZERO_BI) {
       total.totalVolume = amount
-      total.totalVolumeEth = amountEth
-      total.totalVolumeUsd = amountUsd
+      total.totalVolumeEth = amountEth ? amountEth : ZERO_BD
+      total.totalVolumeUsd = amountUsd ? amountUsd : ZERO_BD
       total.totalTrades = ONE_BI
       if (tokenPrice) {
         let priceBD = tokenPrice as BigDecimal
@@ -166,8 +167,8 @@ export namespace tokens {
       let prevTotalVolumeUsd = total.totalVolumeUsd
       let prevTotalTrades = total.totalTrades
       total.totalVolume = prevTotalVolume.plus(amount)
-      total.totalVolumeEth = prevTotalVolumeEth.plus(amountEth)
-      total.totalVolumeUsd = prevTotalVolumeUsd.plus(amountUsd)
+      total.totalVolumeEth = amountEth ? prevTotalVolumeEth.plus(amountEth) : prevTotalVolumeEth
+      total.totalVolumeUsd = amountUsd ? prevTotalVolumeUsd.plus(amountUsd) : prevTotalVolumeUsd
       total.totalTrades = prevTotalTrades.plus(ONE_BI)
       if (tokenPrice) {
         let priceBD = tokenPrice as BigDecimal
@@ -199,15 +200,15 @@ export namespace tokens {
     let denominator = prevVolumeBD.plus(currentVolumeBD)
     return numerator.div(denominator) as BigDecimal
   }
-  function updateTokenHourlyTotal(timestamp: i32, tokenId: string, amount: BigInt, amountEth: BigDecimal, amountUsd: BigDecimal, tokenPrice: BigDecimal | null): void {
+  function updateTokenHourlyTotal(timestamp: i32, tokenId: string, amount: BigInt, amountEth: BigDecimal | null, amountUsd: BigDecimal | null, tokenPrice: BigDecimal | null): void {
 
     let total = getOrCreateTokenHourlyTotal(tokenId, timestamp)
 
     // check if it is first trade
     if (total.totalTrades == ZERO_BI) {
       total.totalVolume = amount
-      total.totalVolumeEth = amountEth
-      total.totalVolumeUsd = amountUsd
+      total.totalVolumeEth = amountEth ? amountEth : ZERO_BD
+      total.totalVolumeUsd = amountUsd ? amountUsd : ZERO_BD
       total.totalTrades = ONE_BI
       if (tokenPrice) {
         let priceBD = tokenPrice as BigDecimal
@@ -222,8 +223,8 @@ export namespace tokens {
       let prevTotalVolumeUsd = total.totalVolumeUsd
       let prevTotalTrades = total.totalTrades
       total.totalVolume = prevTotalVolume.plus(amount)
-      total.totalVolumeEth = prevTotalVolumeEth.plus(amountEth)
-      total.totalVolumeUsd = prevTotalVolumeUsd.plus(amountUsd)
+      total.totalVolumeEth = amountEth ? prevTotalVolumeEth.plus(amountEth) : prevTotalVolumeEth
+      total.totalVolumeUsd = amountUsd ? prevTotalVolumeUsd.plus(amountUsd) : prevTotalVolumeUsd
       total.totalTrades = prevTotalTrades.plus(ONE_BI)
       if (tokenPrice) {
         let priceBD = tokenPrice as BigDecimal

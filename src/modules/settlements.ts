@@ -37,8 +37,10 @@ export namespace settlements {
             settlement.profitability = ZERO_BD
             totals.addSettlementCount(tradeTimestamp)
         } 
-        let prevFeeAmountUsd = settlement.aggregatedFeeAmountUsd
-        settlement.aggregatedFeeAmountUsd = prevFeeAmountUsd.plus(feeAmountUsd)
+        if(feeAmountUsd) {
+            let prevFeeAmountUsd = settlement.aggregatedFeeAmountUsd
+            settlement.aggregatedFeeAmountUsd = prevFeeAmountUsd.plus(feeAmountUsd)
+        }
         settlement.profitability = settlement.aggregatedFeeAmountUsd.minus(settlement.txCostUsd)
         settlement.save()
     }

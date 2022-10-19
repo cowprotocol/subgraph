@@ -32,7 +32,7 @@ export class StaticTokenDefinition {
       'DGD',
       BigInt.fromI32(9)
     )
-    staticDefinitions.push(tokenDGD)
+    staticDefinitions[0] = tokenDGD
 
     // Add AAVE
     let tokenAAVE = new StaticTokenDefinition(
@@ -42,6 +42,7 @@ export class StaticTokenDefinition {
       BigInt.fromI32(18)
     )
     staticDefinitions.push(tokenAAVE)
+    staticDefinitions[1] = tokenAAVE
 
     // Add LIF
     let tokenLIF = new StaticTokenDefinition(
@@ -50,7 +51,7 @@ export class StaticTokenDefinition {
       'Lif',
       BigInt.fromI32(18)
     )
-    staticDefinitions.push(tokenLIF)
+    staticDefinitions[2] = tokenLIF
 
     // Add SVD
     let tokenSVD = new StaticTokenDefinition(
@@ -59,7 +60,7 @@ export class StaticTokenDefinition {
       'savedroid',
       BigInt.fromI32(18)
     )
-    staticDefinitions.push(tokenSVD)
+    staticDefinitions[3] = tokenSVD
 
     // Add TheDAO
     let tokenTheDAO = new StaticTokenDefinition(
@@ -68,7 +69,7 @@ export class StaticTokenDefinition {
       'TheDAO',
       BigInt.fromI32(16)
     )
-    staticDefinitions.push(tokenTheDAO)
+    staticDefinitions[4] = tokenTheDAO
 
     // Add HPB
     let tokenHPB = new StaticTokenDefinition(
@@ -77,7 +78,7 @@ export class StaticTokenDefinition {
       'HPBCoin',
       BigInt.fromI32(18)
     )
-    staticDefinitions.push(tokenHPB)
+    staticDefinitions[5] = tokenHPB
 
     return staticDefinitions
   }

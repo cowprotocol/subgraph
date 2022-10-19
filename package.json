@@ -10,8 +10,8 @@
     "deploy:gc": "cross-env NETWORK=gc SUBGRAPH=gnosis/cow-gc yarn deploy"
   },
   "dependencies": {
-    "@graphprotocol/graph-cli": "0.20.0",
-    "@graphprotocol/graph-ts": "0.20.0",
+    "@graphprotocol/graph-cli": "^0.31.0",
+    "@graphprotocol/graph-ts": "^0.27.0",
     "mustache": "^4.2.0"
   },
   "devDependencies": {

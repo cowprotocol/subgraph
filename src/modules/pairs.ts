@@ -8,12 +8,12 @@ export namespace pairs {
   export class TokenProps {
     token: string
     volume: BigInt
-    price: BigDecimal
+    price: BigDecimal | null
     relativePrice: BigDecimal
     constructor(
       _token: string,
       _volume: BigInt,
-      _price: BigDecimal,
+      _price: BigDecimal | null,
       _relativePrice: BigDecimal
     ) {
       this.token = _token
@@ -24,7 +24,7 @@ export namespace pairs {
   }
 
   export function createOrUpdatePair(timestamp: i32, buyTokenId: string, sellTokenId: string, buyAmount: BigInt, sellAmount: BigInt,
-    sellAmountEth: BigDecimal, sellAmountUsd: BigDecimal, buyTokenPriceUsd: BigDecimal, sellTokenPriceUsd: BigDecimal,
+    sellAmountEth: BigDecimal | null, sellAmountUsd: BigDecimal | null, buyTokenPriceUsd: BigDecimal | null, sellTokenPriceUsd: BigDecimal | null,
     buyAmountDecimals: BigDecimal, sellAmountDecimals: BigDecimal): void {
     let canonicalMarket = getCanonicalMarket(buyTokenId, sellTokenId, buyAmount, sellAmount, buyTokenPriceUsd, sellTokenPriceUsd, buyAmountDecimals, sellAmountDecimals)
 
@@ -51,7 +51,7 @@ export namespace pairs {
   }
 
   function getCanonicalMarket(buyTokenId: string, sellTokenId: string, buyAmount: BigInt, sellAmount: BigInt,
-    buyTokenPriceUsd: BigDecimal, sellTokenPriceUsd: BigDecimal,
+    buyTokenPriceUsd: BigDecimal | null, sellTokenPriceUsd: BigDecimal | null,
     buyAmountDecimals: BigDecimal, sellAmountDecimals: BigDecimal): Map<string, TokenProps> {
     let buyTokenAddress = Address.fromString(buyTokenId)
     let sellTokenAddress = Address.fromString(sellTokenId)
@@ -85,8 +85,8 @@ export namespace pairs {
   }
 
   function totalsUpdate(timestamp: i32, pair: Pair, pairDaily: PairDaily, pairHourly: PairHourly, volumeToken0: BigInt, volumeToken1: BigInt,
-    priceToken0: BigDecimal, priceToken1: BigDecimal, token0RelativePrice: BigDecimal, token1RelativePrice: BigDecimal,
-    sellAmountEth: BigDecimal, sellAmountUsd: BigDecimal): void {
+    priceToken0: BigDecimal | null, priceToken1: BigDecimal | null, token0RelativePrice: BigDecimal, token1RelativePrice: BigDecimal,
+    sellAmountEth: BigDecimal | null, sellAmountUsd: BigDecimal | null): void {
 
     let prevPairTotalVolume0 = pair.volumeToken0
     let prevPairTotalVolume1 = pair.volumeToken1
@@ -107,8 +107,12 @@ export namespace pairs {
     // Updates volumes for a pair 
     pair.volumeToken0 = prevPairTotalVolume0.plus(volumeToken0)
     pair.volumeToken1 = prevPairTotalVolume1.plus(volumeToken1)
-    pair.volumeTradedEth = prevPairTotalEth.plus(sellAmountEth)
-    pair.volumeTradedUsd = prevPairTotalUsd.plus(sellAmountUsd)
+    if (prevPairTotalEth !== null && sellAmountEth) {
+        pair.volumeTradedEth = prevPairTotalEth.plus(sellAmountEth)
+    }
+    if (prevPairTotalUsd !== null && sellAmountUsd) {
+      pair.volumeTradedUsd = prevPairTotalUsd.plus(sellAmountUsd)
+    }
     pair.token0Usd = priceToken0
     pair.token1Usd = priceToken1
     pair.token0PriceInToken1 = token0RelativePrice
@@ -119,8 +123,8 @@ export namespace pairs {
     // update volumes for a pair daily totals
     pairDaily.volumeToken0 = prevPairDailyVolume0.plus(volumeToken0)
     pairDaily.volumeToken1 = prevPairDailyVolume1.plus(volumeToken1)
-    pairDaily.volumeTradedEth = prevPairDailyEth.plus(sellAmountEth)
-    pairDaily.volumeTradedUsd = prevPairDailyUsd.plus(sellAmountUsd)
+    pairDaily.volumeTradedEth = sellAmountEth && prevPairDailyEth ? prevPairDailyEth.plus(sellAmountEth) : prevPairDailyEth
+    pairDaily.volumeTradedUsd = sellAmountUsd && prevPairDailyUsd ? prevPairDailyUsd.plus(sellAmountUsd) : prevPairDailyUsd
     pairDaily.token0Usd = priceToken0
     pairDaily.token1Usd = priceToken1
     pairDaily.token0PriceInToken1 = token0RelativePrice
@@ -130,8 +134,8 @@ export namespace pairs {
     // update volumes for a pair hourly totals
     pairHourly.volumeToken0 = prevPairHourlyVolume0.plus(volumeToken0)
     pairHourly.volumeToken1 = prevPairHourlyVolume1.plus(volumeToken1)
-    pairHourly.volumeTradedEth = prevPairHourlyEth.plus(sellAmountEth)
-    pairHourly.volumeTradedUsd = prevPairHourlyUsd.plus(sellAmountUsd)
+    pairHourly.volumeTradedEth = sellAmountEth && prevPairHourlyEth ? prevPairHourlyEth.plus(sellAmountEth) : prevPairHourlyEth
+    pairHourly.volumeTradedUsd = sellAmountUsd && prevPairHourlyUsd ? prevPairHourlyUsd.plus(sellAmountUsd) : prevPairHourlyUsd
     pairHourly.token0Usd = priceToken0
     pairHourly.token1Usd = priceToken1
     pairHourly.token0PriceInToken1 = token0RelativePrice

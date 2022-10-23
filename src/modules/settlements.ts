@@ -7,7 +7,7 @@ import { getEthPriceInUSD } from "../utils/pricing"
 
 export namespace settlements {
 
-    export function getOrCreateSettlement(blockNumber: BigInt, txHash: Bytes, tradeTimestamp: i32, solver: Address, txGasPrice: BigInt, feeAmountUsd: BigDecimal): void { 
+    export function getOrCreateSettlement(blockNumber: BigInt, txHash: Bytes, tradeTimestamp: i32, solver: Address, txGasPrice: BigInt, feeAmountUsd: BigDecimal | null): void { 
 
         let settlementId = txHash.toHexString()
         let network = dataSource.network()

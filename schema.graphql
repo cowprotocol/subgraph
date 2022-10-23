@@ -108,6 +108,7 @@ type Trade @entity {
   buyAmountUsd: BigDecimal
   "Sell amount in Usd"
   sellAmountUsd: BigDecimal
+  gasUsed: BigInt!
 }
 
 type Settlement @entity {

@@ -18,17 +18,9 @@ export namespace totals {
             total.feesEth = ZERO_BD
             total.feesUsd = ZERO_BD
             total.numberOfTrades = ZERO_BI
-            total.settleCalls = ZERO_BI
         }
         
         return total as Total
-    }
-
-    export function addSettleCall(): void {
-        let totals = getOrCreateTotals()
-        let prevSettleCalls = totals.settleCalls
-        totals.settleCalls = prevSettleCalls.plus(ONE_BI);
-        totals.save()
     }
 
     function getOrCreateDailyTotals(timestamp: i32): DailyTotal {

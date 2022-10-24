@@ -200,8 +200,6 @@ type Total @entity {
   feesUsd: BigDecimal
   "Total fees in Eth"
   feesEth: BigDecimal
-  "times settle function was called"
-  settleCalls: BigInt!
 }
 
 type DailyTotal @entity {

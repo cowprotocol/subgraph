@@ -7,6 +7,7 @@ import {
   test,
   dataSourceMock,
 } from "matchstick-as";
+import { Token } from "../../generated/schema";
 import { handleTrade } from "../../src/mapping";
 import {
   STABLECOIN_ADDRESS_GC,

@@ -5,3 +5,7 @@ generated/
 node_modules/
 .env
 subgraph.yaml
+tests/.bin
+tests/.latest.json
+tests/*/.bin
+tests/*/.latest.json

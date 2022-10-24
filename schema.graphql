@@ -405,3 +405,8 @@ type PairHourly @entity {
   "Total volume in Usd"
   volumeTradedUsd: BigDecimal
 }
+
+type Receiver @entity {
+  id: ID!
+  address: Bytes!
+}

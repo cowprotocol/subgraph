@@ -3,9 +3,10 @@ import {
   OrderInvalidated,
   PreSignature,
   Settlement,
-  Trade
+  Trade,
+  SettleCall
 } from "../generated/GPV2Settlement/GPV2Settlement"
-import { tokens, trades, orders, users } from "./modules"
+import { tokens, trades, orders, users, totals } from "./modules"
 import { getPrices } from "./utils/getPrices"
 import { MINUS_ONE_BD } from "./utils/constants"
 import { BigDecimal, BigInt, dataSource } from "@graphprotocol/graph-ts"
@@ -138,3 +139,5 @@ export function handleTrade(event: Trade): void {
   order.save()
 
 }
+
+export function handleSettle(call: SettleCall): void {}

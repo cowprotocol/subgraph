@@ -43,9 +43,6 @@ export namespace trades {
         let sellAmountEth = _sellTokenPriceEth ? _sellTokenPriceEth.times(sellAmountDecimals) : null
         let feeAmountEth = _sellTokenPriceEth ?_sellTokenPriceEth.times(feeAmountDecimals) : null
 
-        // This statement need to be after tokens prices calculation.
-        settlements.getOrCreateSettlement(blockNumber, txHash, timestamp, solver, txGasPrice, feeAmountUsd)
-
         let trade = TradeEntity.load(tradeId)
 
         if (!trade) {
@@ -88,8 +85,10 @@ export namespace trades {
             ethAmountForVolumes = buyAmountEth
         }
 
+        // This statement need to be after tokens prices calculation.
+        settlements.getOrCreateSettlement(blockNumber, txHash, timestamp, solver, txGasPrice, feeAmountUsd, ethAmountForVolumes, usdAmountForVolumes)
+
         users.getOrCreateTrader(owner, timestamp, ownerAddress, ethAmountForVolumes, usdAmountForVolumes)
-        users.getOrCreateSolver(solver, ethAmountForVolumes, usdAmountForVolumes)
 
         totals.addVolumesAndFees(ethAmountForVolumes, usdAmountForVolumes, feeAmountEth, feeAmountUsd, timestamp)
 

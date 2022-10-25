@@ -86,7 +86,7 @@ export namespace trades {
         }
 
         // This statement need to be after tokens prices calculation.
-        settlements.getOrCreateSettlement(txHash, timestamp, solver, txGasPrice, feeAmountUsd, ethAmountForVolumes, usdAmountForVolumes)
+        settlements.getOrCreateSettlement(blockNumber, txHash, timestamp, solver, txGasPrice, feeAmountUsd, ethAmountForVolumes, usdAmountForVolumes)
 
         users.getOrCreateTrader(owner, timestamp, ownerAddress, ethAmountForVolumes, usdAmountForVolumes)
 

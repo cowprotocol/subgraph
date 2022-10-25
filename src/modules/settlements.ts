@@ -7,7 +7,7 @@ import { getEthPriceInUSD } from "../utils/pricing"
 
 export namespace settlements {
 
-    export function getOrCreateSettlement(blockNumber: BigInt, txHash: Bytes, tradeTimestamp: i32, solver: Address, txGasPrice: BigInt, feeAmountUsd: BigDecimal | null): void { 
+    export function getOrCreateSettlement(blockNumber: BigInt, txHash: Bytes, tradeTimestamp: i32, solver: Address, txGasCost: BigInt, feeAmountUsd: BigDecimal | null): void { 
 
         let settlementId = txHash.toHexString()
         let network = dataSource.network()
@@ -16,7 +16,7 @@ export namespace settlements {
 
         let DEFAULT_DECIMALS =  BigInt.fromI32(18)
         let txCostUsd = ZERO_BD
-        let txCostNative = convertTokenToDecimal(txGasPrice, DEFAULT_DECIMALS)
+        let txCostNative = convertTokenToDecimal(txGasCost, DEFAULT_DECIMALS)
         if (network == 'xdai') {
             txCostUsd = txCostNative
         } else {

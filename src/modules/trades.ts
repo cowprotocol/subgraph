@@ -21,6 +21,7 @@ export namespace trades {
         let solver = event.transaction.from
         let ownerAddress = event.params.owner
         let owner = ownerAddress.toHexString()
+        let blockNumber = event.block.number
 
         let buyAmountDecimals = convertTokenToDecimal(buyAmount, BigInt.fromI32(buyToken.decimals))
         

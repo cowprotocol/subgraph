@@ -8,7 +8,7 @@ import { users } from "./users"
 
 export namespace settlements {
 
-    export function getOrCreateSettlement(txHash: Bytes, tradeTimestamp: i32, solver: Address, txGasPrice: BigInt, 
+    export function getOrCreateSettlement(blockNumber: BigInt, txHash: Bytes, tradeTimestamp: i32, solver: Address, txGasPrice: BigInt, 
         feeAmountUsd: BigDecimal | null, ethAmountForVolumes: BigDecimal | null, usdAmountForVolumes : BigDecimal | null): void { 
 
         let user = users.getOrCreateSolver(solver, ethAmountForVolumes, usdAmountForVolumes)
@@ -32,6 +32,7 @@ export namespace settlements {
         if (!settlement) {
             settlement = new Settlement(settlementId)
             settlement.txHash = txHash
+            settlement.blockNumber = blockNumber
             settlement.firstTradeTimestamp = tradeTimestamp
             settlement.solver = solver.toHexString()
             settlement.txCostUsd = txCostUsd

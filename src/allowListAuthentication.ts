@@ -1,7 +1,7 @@
 import {
     SolverAdded,
     SolverRemoved
-} from "../generated/GPv2VaultRelayer/GPv2VaultRelayer"
+} from "../generated/GPv2AllowListAuthentication/GPv2AllowListAuthentication"
 import { users } from "./modules"
 
 export function handleSolverAdded(event: SolverAdded): void {

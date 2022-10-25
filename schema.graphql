@@ -119,6 +119,8 @@ type Settlement @entity {
   id: ID!
   "Transaction hash"
   txHash: Bytes!
+  "Block number"
+  blockNumber: BigInt!
   "First trade timestamp"
   firstTradeTimestamp: Int!
   "Collection of trades"

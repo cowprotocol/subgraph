@@ -4,7 +4,9 @@
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
-    "generateConfigs": "mustache config/mainnet.json subgraph.yaml.mustache > subgraph.yaml",
+    "generateConfigs": "yarn generateGcConfigs && yarn generateMainnetConfigs",
+    "generateGcConfigs": "mustache config/gc.json subgraph.yaml.mustache > subgraph.yaml && yarn codegen",
+    "generateMainnetConfigs": "mustache config/mainnet.json subgraph.yaml.mustache > subgraph.yaml && yarn codegen",
     "test": "yarn generateConfigs && graph test",
     "test:env": "node src/scripts/test.js",
     "test:gc": "yarn generateConfigs && graph test gc",

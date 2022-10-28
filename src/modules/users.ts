@@ -17,6 +17,7 @@ export namespace users {
             user.tradedAmountEth = ZERO_BD
             user.tradedAmountUsd = ZERO_BD
             user.firstTradeTimestamp = 0
+            user.numberOfSettlements= 0
         } 
 
         return user as User
@@ -56,14 +57,13 @@ export namespace users {
         user.save()
     }
 
-    export function getOrCreateSolver(solver: Address, solvedAmountEth: BigDecimal | null, solvedAmountUsd: BigDecimal | null): void{
+    export function getOrCreateSolver(solver: Address, solvedAmountEth: BigDecimal | null, solvedAmountUsd: BigDecimal | null): User {
 
         let user = getOrCreateUserEntity(solver.toHexString(), solver)
         let prevNumOfTrades = user.numberOfTrades
         let prevSolvedAmountUsd = user.solvedAmountUsd
         let prevSolvedAmountEth = user.solvedAmountEth
         
-        user.isSolver = true
         user.numberOfTrades = prevNumOfTrades + 1
         if (solvedAmountUsd) {
             if (prevSolvedAmountUsd) {
@@ -80,6 +80,21 @@ export namespace users {
             }
         }
         
+        return user as User
+    }
+
+    export function setIsSolverTrue(solver: Address, timestamp: i32): void{
+        let user = getOrCreateUserEntity(solver.toHexString(), solver)
+        user.isSolver = true
+        user.lastIsSolverUpdateTimestamp = timestamp
         user.save()
     }
+
+    export function setIsSolverFalse(solver: Address, timestamp: i32): void{
+        let user = getOrCreateUserEntity(solver.toHexString(), solver)
+        user.isSolver = false
+        user.lastIsSolverUpdateTimestamp = timestamp
+        user.save()
+    }
+
 }

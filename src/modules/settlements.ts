@@ -20,7 +20,7 @@ export namespace settlements {
 
         let DEFAULT_DECIMALS =  BigInt.fromI32(18)
         let txCostUsd = ZERO_BD
-        let txCostNative = convertTokenToDecimal(txGasCost, DEFAULT_DECIMALS)
+        let txCostNative = convertTokenToDecimal(txCost, DEFAULT_DECIMALS)
         if (network == 'xdai') {
             txCostUsd = txCostNative
         } else {

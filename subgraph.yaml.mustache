@@ -15,7 +15,7 @@ dataSources:
       {{/startBlock}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - Trade
@@ -44,6 +44,7 @@ dataSources:
           handler: handleSettlement
         - event: Trade(indexed address,address,address,uint256,uint256,uint256,bytes)
           handler: handleTrade
+          receipt: true
       file: ./src/mapping.ts
   - kind: ethereum
     name: GPv2AllowListAuthentication
@@ -56,7 +57,7 @@ dataSources:
       {{/startBlock}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
         - Entity
@@ -81,7 +82,7 @@ dataSources:
       {{/uniV3StartBlock}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       file: ./src/uniswapMappings/uniswapPoolFactory.ts
       entities:
@@ -109,7 +110,7 @@ templates:
       abi: Pool
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.6
+      apiVersion: 0.0.7
       language: wasm/assemblyscript
       file: ./src/uniswapMappings/uniswapPools.ts
       entities:

@@ -8,7 +8,7 @@ import { users } from "./users"
 
 export namespace settlements {
 
-    export function getOrCreateSettlement(blockNumber: BigInt, txHash: Bytes, tradeTimestamp: i32, solver: Address, txGasPrice: BigInt, 
+    export function getOrCreateSettlement(blockNumber: BigInt, txHash: Bytes, tradeTimestamp: i32, solver: Address, txCost: BigInt, 
         feeAmountUsd: BigDecimal | null, ethAmountForVolumes: BigDecimal | null, usdAmountForVolumes : BigDecimal | null): void { 
 
         let user = users.getOrCreateSolver(solver, ethAmountForVolumes, usdAmountForVolumes)
@@ -20,7 +20,7 @@ export namespace settlements {
 
         let DEFAULT_DECIMALS =  BigInt.fromI32(18)
         let txCostUsd = ZERO_BD
-        let txCostNative = convertTokenToDecimal(txGasPrice, DEFAULT_DECIMALS)
+        let txCostNative = convertTokenToDecimal(txCost, DEFAULT_DECIMALS)
         if (network == 'xdai') {
             txCostUsd = txCostNative
         } else {

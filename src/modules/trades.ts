@@ -3,7 +3,7 @@ import { BigInt, BigDecimal } from "@graphprotocol/graph-ts"
 import { Token, Trade as TradeEntity } from "../../generated/schema"
 import { convertTokenToDecimal } from "../utils"
 import { settlements, tokens, totals, users, pairs } from "./"
-import { ZERO_ADDRESS, ZERO_BD, ZERO_BI } from "../utils/constants"
+import { ZERO_ADDRESS, ZERO_BD, ZERO_BI, ONE_BI } from "../utils/constants"
 
 export namespace trades {
 
@@ -23,6 +23,16 @@ export namespace trades {
         let owner = ownerAddress.toHexString()
         let blockNumber = event.block.number
 
+        let receipt = event.receipt
+
+        let gasUsed = ONE_BI
+
+        if (receipt) {
+            gasUsed = receipt.gasUsed
+        }
+
+        let txCost = gasUsed.times(txGasPrice)
+        
         let buyAmountDecimals = convertTokenToDecimal(buyAmount, BigInt.fromI32(buyToken.decimals))
         
         let _buyTokenPriceUsd = buyToken.priceUsd
@@ -73,6 +83,7 @@ export namespace trades {
         trade.sellAmountEth = sellAmountEth
         trade.buyAmountUsd = buyAmountUsd
         trade.sellAmountUsd = sellAmountUsd
+        trade.gasUsed = gasUsed
         trade.save()
 
         // determine the amount to calculate volumes. 
@@ -86,7 +97,7 @@ export namespace trades {
         }
 
         // This statement need to be after tokens prices calculation.
-        settlements.getOrCreateSettlement(blockNumber, txHash, timestamp, solver, txGasPrice, feeAmountUsd, ethAmountForVolumes, usdAmountForVolumes)
+        settlements.getOrCreateSettlement(blockNumber, txHash, timestamp, solver, txCost, feeAmountUsd, ethAmountForVolumes, usdAmountForVolumes)
 
         users.getOrCreateTrader(owner, timestamp, ownerAddress, ethAmountForVolumes, usdAmountForVolumes)
 

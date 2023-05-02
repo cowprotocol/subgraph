@@ -15,8 +15,11 @@ assert(SUBGRAPH, "SUBGRAPH env var is required");
 const AUTH_TOKEN = process.env.AUTH_TOKEN;
 assert(AUTH_TOKEN, "AUTH_TOKEN env var is required");
 
-const VERSION = process.env.VERSION;
-assert(VERSION, "VERSION env var is required");
+const VERSION = process.env.npm_package_version;
+assert(
+  VERSION,
+  "npm_package_version env var is required. This is defined by npm when version field is defined in the package.json file."
+);
 
 console.log(`Prepare subgraph config for network ${NETWORK}`);
 console.log(`  Generate subgraph.yaml`);

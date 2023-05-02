@@ -1,6 +1,7 @@
 {
   "name": "gpv2poc",
   "license": "UNLICENSED",
+  "version": "0.0.3",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",

@@ -1,5 +1,4 @@
 {
     "network": "gnosis",
-    "startBlock": 16465100,
-    "usesUniV2": true
+    "startBlock": 16465100
 }

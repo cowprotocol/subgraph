@@ -1,18 +1,21 @@
 {
   "name": "gpv2poc",
   "license": "UNLICENSED",
+  "version": "0.0.1",
   "scripts": {
     "codegen": "graph codegen",
     "build": "graph build",
     "deploy": "node src/scripts/deploy.js",
-    "deploy:mainnet": "cross-env NETWORK=mainnet SUBGRAPH=gnosis/cow yarn deploy",
-    "deploy:rinkeby": "cross-env NETWORK=rinkeby SUBGRAPH=gnosis/cow-rinkeby yarn deploy",
-    "deploy:gc": "cross-env NETWORK=gc SUBGRAPH=gnosis/cow-gc yarn deploy"
+    "deploy:all": "run-s deploy:mainnet deploy:goerli deploy:gc",
+    "deploy:mainnet": "cross-env NETWORK=mainnet SUBGRAPH=cow yarn deploy",
+    "deploy:goerli": "cross-env NETWORK=goerli SUBGRAPH=cow-goerli yarn deploy",
+    "deploy:gc": "cross-env NETWORK=gnosis SUBGRAPH=cow-gc yarn deploy"
   },
   "dependencies": {
-    "@graphprotocol/graph-cli": "^0.31.0",
+    "@graphprotocol/graph-cli": "^0.48.0",
     "@graphprotocol/graph-ts": "^0.27.0",
-    "mustache": "^4.2.0"
+    "mustache": "^4.2.0",
+    "yarn-run-all": "^3.1.1"
   },
   "devDependencies": {
     "chalk": "^2.4.1",

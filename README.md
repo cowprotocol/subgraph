@@ -8,6 +8,7 @@ _This is a work in progress_
 - [Subgraph on sepolia](https://thegraph.com/studio/subgraph/cow-subgraph-sepolia/)
 - [Subgraph on gnosis chain network](https://thegraph.com/studio/subgraph/cow-subgraph-gnosis/)
 - [Subgraph on arbitrum one network](https://thegraph.com/studio/subgraph/cow-subgraph-arb/)
+- [Subgraph on base](https://thegraph.com/studio/subgraph/cow-subgraph-base/)
 
 For more information about:
 
